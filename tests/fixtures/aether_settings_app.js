@@ -1,12 +1,10 @@
-const {createApp,h,ref,Teleport}=Vue;
-createApp({setup(){const opened=ref(false),selected=ref('game'),managed=ref(false),volume=ref(50);window.nativeSettings={opened,selected,managed,volume};
-  return()=>h('div',{class:'aether-console'},[
-    h('header',{class:'console-header'},[h('span','Aether'),h('div',{class:'header-actions'},[h('button',{onClick:()=>opened.value=true},'设置'),h('button','登出')])]),
-    h('div',{class:'console-layout'},[h('aside',{class:'canvas-panel'},'LIVE FEED'),h('main','角色状态')]),
-    opened.value?h(Teleport,{to:'body'},h('div',{class:'v-overlay-container'},h('div',{class:'v-overlay__content',role:'dialog','aria-label':'设置'},h('section',{class:'settings-card'},[
-      h('h2',{class:'settings-title'},'设置'),h('div',{class:'settings-tabs',role:'tablist'},h('div',{class:'v-slide-group__content'},['game','audio'].map((value,index)=>h('button',{role:'tab','aria-selected':String(selected.value===value),tabindex:selected.value===value?0:-1,onClick:()=>selected.value=value},index?'音频':'游戏')))),
-      h('div',{class:'settings-window'},selected.value==='game'?[h('label',[h('input',{type:'checkbox',checked:managed.value,onChange:event=>managed.value=event.target.checked}),'加入地下城自动托管'])]:[h('label',['音乐',h('input',{type:'range',min:0,max:100,value:volume.value,onInput:event=>volume.value=Number(event.target.value)})])]),
-      h('footer',{class:'settings-actions'},h('button',{onClick:()=>opened.value=false},'关闭'))
-    ])))):null
-  ]);
-}}).mount('#app');
+const {createApp,h,ref,Teleport,defineComponent,provide,inject,Transition}=Vue;
+const VTab=defineComponent({name:'VTab',props:{value:String},setup(props,{slots}){const tabs=inject('tabs');return()=>h('button',{class:'v-tab',role:'tab','aria-selected':String(tabs.value()===props.value),tabindex:tabs.value()===props.value?0:-1,onClick:()=>tabs.select(props.value)},slots.default?.());}});
+const VTabs=defineComponent({name:'VTabs',props:{modelValue:String},emits:['update:modelValue'],setup(props,{slots,emit,attrs}){provide('tabs',{value:()=>props.modelValue,select:value=>emit('update:modelValue',value)});return()=>h('div',{...attrs,class:['settings-tabs',attrs.class],role:'tablist'},h('div',{class:'v-slide-group__content'},slots.default?.()));}});
+const VWindowItem=defineComponent({name:'VWindowItem',props:{value:String},setup(props,{slots}){const group=inject('window');return()=>h(Transition,{name:'native-page'},()=>group.value()===props.value?h('div',{class:'v-window-item',role:'tabpanel'},slots.default?.()):null);}});
+const VWindow=defineComponent({name:'VWindow',props:{modelValue:String},setup(props,{slots,attrs}){provide('window',{value:()=>props.modelValue});return()=>h('div',{...attrs,class:['settings-window',attrs.class]},slots.default?.());}});
+const SettingsDialog=defineComponent({__name:'SettingsDialog',components:{VTabs,VTab,VWindow,VWindowItem},emits:['close'],setup(props,{emit}){const selected=ref('game'),managed=ref(false),volume=ref(50);window.nativeSettings={selected,managed,volume};return {selected,managed,volume,close:()=>emit('close')};},template:`<Teleport to="body"><div class="v-overlay-container"><div class="v-overlay__content" role="dialog" aria-label="设置"><section class="settings-card"><h2 class="settings-title">设置</h2><VTabs v-model="selected"><VTab value="game">游戏</VTab><VTab value="audio">音频</VTab></VTabs><VWindow :model-value="selected"><VWindowItem value="game"><label><input type="checkbox" v-model="managed">加入地下城自动托管</label></VWindowItem><VWindowItem value="audio"><label>音乐<input type="range" min="0" max="100" v-model="volume"></label></VWindowItem></VWindow><footer class="settings-actions"><button @click="close">关闭</button></footer></section></div></div></Teleport>`});
+createApp({setup(){const opened=ref(false);return()=>h('div',{class:'aether-console'},[
+ h('header',{class:'console-header'},[h('span','Aether'),h('div',{class:'header-actions'},[h('button',{onClick:()=>opened.value=true},'设置'),h('button','登出')])]),
+ h('div',{class:'console-layout'},[h('aside',{class:'canvas-panel'},'LIVE FEED'),h('main','角色状态')]),opened.value?h(SettingsDialog,{onClose:()=>opened.value=false}):null
+]);}}).mount('#app');
