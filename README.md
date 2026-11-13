@@ -78,6 +78,7 @@ npx playwright install chromium
 node tests/test_aether_userscript_updates.cjs
 node tests/test_aether_multiview_ui.cjs
 node tests/test_aether_backpack_ui.cjs
+node --test tests/test_aether_skillbook_elements.cjs
 node tests/test_aether_reinforce_ui.cjs
 node tests/test_aether_reinforce_forecast.cjs
 node tests/test_aether_voucher_ui.cjs
