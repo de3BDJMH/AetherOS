@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.5.0
+// @version      0.5.1
 // @description  官网多角色桌面窗口与背包筛选、装备置顶，保留官方界面与手动操作。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -32,7 +32,7 @@
     function save(value){cache=value;try{localStorage.setItem(KEY,JSON.stringify(value));}catch{}}
     function recent(value,period){const now=Date.now();return Number.isFinite(value)&&value>=0&&value<=now&&now-value<period;}
     const style=element('style');style.textContent=`
-      #aether-script-update{position:fixed;top:16px;right:16px;z-index:2147483646;width:min(330px,calc(100vw - 24px));box-sizing:border-box;padding:16px;border:1px solid #ffffff16;border-radius:13px;background:#242930f5;box-shadow:0 8px 28px #0005;color:#e7e9ed;font:13px/1.5 'Segoe UI',system-ui,sans-serif;color-scheme:dark;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}#aether-script-update[hidden],#aether-script-update [hidden]{display:none!important}#aether-script-update strong{display:block;font-size:13px;font-weight:600}#aether-script-update p{margin:6px 0 13px;color:#a9b3bf;font-size:12px}#aether-script-update .asu-actions{display:flex;justify-content:flex-end;gap:8px}#aether-script-update button,#aether-script-update a{display:inline-flex;align-items:center;justify-content:center;margin:0;padding:5px 10px;border:1px solid #ffffff10;border-radius:6px;background:#ffffff07;color:#c6cfda;font:12px/1.5 'Segoe UI',system-ui,sans-serif;text-decoration:none;cursor:pointer}#aether-script-update a{background:#8ed4bf;border-color:transparent;color:#14221e}#aether-script-update button:hover{background:#ffffff10}#aether-script-update a:hover{background:#a4e0ce}#aether-script-update button:focus-visible,#aether-script-update a:focus-visible{outline:2px solid #92d8c6;outline-offset:2px}#aether-multiview .amv-script-version{margin-right:auto;align-self:center;font-size:10px;color:#969fab}#aether-multiview .amv-roles footer{gap:8px}@media(max-width:450px){#aether-script-update{top:10px;right:12px}}
+      #aether-script-update{position:fixed;top:calc(64px + env(safe-area-inset-top,0px));right:16px;z-index:2147483646;width:min(330px,calc(100vw - 24px));box-sizing:border-box;padding:16px;border:1px solid #ffffff16;border-radius:13px;background:#242930f5;box-shadow:0 8px 28px #0005;color:#e7e9ed;font:13px/1.5 'Segoe UI',system-ui,sans-serif;color-scheme:dark;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}#aether-script-update[hidden],#aether-script-update [hidden]{display:none!important}#aether-script-update strong{display:block;font-size:13px;font-weight:600}#aether-script-update p{margin:6px 0 13px;color:#a9b3bf;font-size:12px}#aether-script-update .asu-actions{display:flex;justify-content:flex-end;gap:8px}#aether-script-update button,#aether-script-update a{display:inline-flex;align-items:center;justify-content:center;margin:0;padding:5px 10px;border:1px solid #ffffff10;border-radius:6px;background:#ffffff07;color:#c6cfda;font:12px/1.5 'Segoe UI',system-ui,sans-serif;text-decoration:none;cursor:pointer}#aether-script-update a{background:#8ed4bf;border-color:transparent;color:#14221e}#aether-script-update button:hover{background:#ffffff10}#aether-script-update a:hover{background:#a4e0ce}#aether-script-update button:focus-visible,#aether-script-update a:focus-visible{outline:2px solid #92d8c6;outline-offset:2px}#aether-multiview .amv-script-version{margin-right:auto;align-self:center;font-size:10px;color:#969fab}#aether-multiview .amv-roles footer{gap:8px}@media(max-width:450px){#aether-script-update{top:calc(60px + env(safe-area-inset-top,0px));right:12px}}
     `;document.head.append(style);
     const notice=element('section'),title=element('strong'),description=element('p'),actions=element('div',undefined,'asu-actions'),link=element('a','更新脚本'),retry=button('重试',()=>check(true)),later=button('稍后',dismiss);notice.id='aether-script-update';notice.hidden=true;notice.setAttribute('role','status');notice.setAttribute('aria-live','polite');link.target='_blank';link.rel='noopener noreferrer';link.dataset.asuInstall='';retry.dataset.asuRetry='';later.dataset.asuLater='';actions.append(link,retry,later);notice.append(title,description,actions);document.body.append(notice);
     function dismiss(){if(noticeVersion){const value=read();save({...value,dismissedVersion:noticeVersion,dismissedAt:Date.now()});}notice.hidden=true;}
@@ -46,6 +46,19 @@
     }
     function schedule(){clearTimeout(timer);timer=setTimeout(()=>check(),UPDATE_DELAY);}
     window.addEventListener('aether-userscript-check-updates',()=>check(true));window.addEventListener('storage',event=>{if(event.key===KEY){cache=read();offer(cache);}});document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule();});window.addEventListener('pageshow',schedule);cache=read();offer(cache);schedule();
+  }
+  function initScriptNavigation(){
+    if(window.top!==window)return;
+    const tools=element('div'),update=button(undefined,()=>window.dispatchEvent(new Event('aether-userscript-check-updates')));tools.id='aether-nav-tools';update.id='aether-nav-update';update.dataset.amvCheckUpdate='';update.setAttribute('aria-label','检查更新');update.title='检查 AetherOS 更新（v'+SCRIPT_VERSION+'）';
+    function decorate(node,label,kind){if(node.querySelector('.amv-nav-icon'))return;const icon=document.createElementNS('http://www.w3.org/2000/svg','svg'),path=document.createElementNS(icon.namespaceURI,'path');icon.classList.add('amv-nav-icon');icon.setAttribute('viewBox','0 0 24 24');icon.setAttribute('aria-hidden','true');path.setAttribute('d',kind==='update'?'M20 7v5h-5M4 17v-5h5M6.1 7a7 7 0 0 1 11.8-1L20 9M4 15l2.1 3A7 7 0 0 0 17.9 17':'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z');icon.append(path);node.replaceChildren(icon,element('span',label,'amv-nav-label'));node.setAttribute('aria-label',label);node.title=kind==='update'?update.title:label;}
+    decorate(update,'检查更新','update');
+    const style=element('style');style.textContent=`
+      #aether-nav-tools{display:flex;align-items:center;gap:.5rem;flex-shrink:0}#aether-nav-tools>button,#aether-nav-tools>#aether-multiview-launch{position:static;display:inline-flex;align-items:center;justify-content:center;gap:.35rem;width:auto;height:1.85rem;margin:0;padding:0 .65rem;border:1px solid #ffffff17;border-radius:999px;background:#ffffff08;box-shadow:none;color:var(--text-muted,#9bacc4);font:inherit;font-size:.78rem;letter-spacing:.04em;line-height:1;white-space:nowrap;cursor:pointer}#aether-nav-tools>button:hover,#aether-nav-tools>#aether-multiview-launch:hover{color:var(--accent,#61f4de);border-color:#61f4de73;background:#61f4de14}#aether-nav-tools>button:focus-visible{outline:2px solid #92d8c6;outline-offset:2px}#aether-nav-tools .amv-nav-icon{display:block;width:16px;height:16px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}@media(max-width:680px){#aether-nav-tools{gap:.35rem}#aether-nav-tools>button,#aether-nav-tools>#aether-multiview-launch{width:1.85rem;padding:0}#aether-nav-tools .amv-nav-label{display:none}}
+    `;document.head.append(style);
+    let launch=null;function mount(){const header=document.querySelector('.aether-console .console-header');launch=launch||document.getElementById('aether-multiview-launch');if(!header||!launch)return;const host=header.querySelector(':scope>.header-actions')||header;decorate(launch,'多角色同屏','desktop');if(launch.parentElement!==tools)tools.prepend(launch);if(update.parentElement!==tools)tools.append(update);if(tools.parentElement!==host)host.append(tools);}
+    // 官网导航异步出现或重新挂载时恢复入口，不观察背包和战斗的普通内容更新。
+    const selector='.aether-console,.console-header,.header-actions',root=document.getElementById('app')||document.body;
+    new MutationObserver(records=>{if(records.some(record=>record.target.matches?.('.console-header,.console-header>.header-actions')||[...record.addedNodes,...record.removedNodes].some(node=>node.nodeType===1&&(node.matches(selector)||node.querySelector(selector)||node===tools))))mount();}).observe(root,{childList:true,subtree:true});setTimeout(mount,0);
   }
   function initBackpackFilters(){
     const guard=Symbol.for('aether.backpack.filters');if(window[guard])return;window[guard]=true;
@@ -114,6 +127,7 @@
   if(window.top!==window)return;
   ready(initBackpackFilters);
   ready(initScriptUpdates);
+  ready(initScriptNavigation);
   ready(()=>{
     if(document.getElementById('aether-multiview'))return;
     const style=element('style');style.textContent=`
