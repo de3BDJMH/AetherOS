@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.5.1
+// @version      0.5.2
 // @description  官网多角色桌面窗口与背包筛选、装备置顶，保留官方界面与手动操作。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -16,7 +16,7 @@
 (() => {
   'use strict';
   if(location.origin!=='https://game.diving-fish.com'||!location.pathname.startsWith('/aether/'))return;
-  const SCRIPT_VERSION='0.5.1';
+  const SCRIPT_VERSION='0.5.2';
   const ACTIVE='aether_active_character',CONFIG='aether-multiview-layout-v1',PREFIX='aether-multiview:',CHANNEL='aether-multiview-state',ORIGIN=location.origin;
   const ready=fn=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn,{once:true}):fn();
   const element=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node;};
@@ -55,7 +55,7 @@
     const style=element('style');style.textContent=`
       #aether-nav-tools{display:flex;align-items:center;gap:.5rem;flex-shrink:0}#aether-nav-tools>button,#aether-nav-tools>#aether-multiview-launch{position:static;display:inline-flex;align-items:center;justify-content:center;gap:.35rem;width:auto;height:1.85rem;margin:0;padding:0 .65rem;border:1px solid #ffffff17;border-radius:999px;background:#ffffff08;box-shadow:none;color:var(--text-muted,#9bacc4);font:inherit;font-size:.78rem;letter-spacing:.04em;line-height:1;white-space:nowrap;cursor:pointer}#aether-nav-tools>button:hover,#aether-nav-tools>#aether-multiview-launch:hover{color:var(--accent,#61f4de);border-color:#61f4de73;background:#61f4de14}#aether-nav-tools>button:focus-visible{outline:2px solid #92d8c6;outline-offset:2px}#aether-nav-tools .amv-nav-icon{display:block;width:16px;height:16px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}@media(max-width:680px){#aether-nav-tools{gap:.35rem}#aether-nav-tools>button,#aether-nav-tools>#aether-multiview-launch{width:1.85rem;padding:0}#aether-nav-tools .amv-nav-label{display:none}}
     `;document.head.append(style);
-    let launch=null;function mount(){const header=document.querySelector('.aether-console .console-header');launch=launch||document.getElementById('aether-multiview-launch');if(!header||!launch)return;const host=header.querySelector(':scope>.header-actions')||header;decorate(launch,'\u591a\u89d2\u8272\u540c\u5c4f','desktop');if(launch.parentElement!==tools)tools.prepend(launch);if(update.parentElement!==tools)tools.append(update);if(tools.parentElement!==host)host.append(tools);}
+    let launch=null;function mount(){const header=document.querySelector('.aether-console .console-header');launch=launch||document.getElementById('aether-multiview-launch');if(!header||!launch)return;const host=header.querySelector(':scope>.header-actions')||header;decorate(launch,'\u591a\u89d2\u8272\u540c\u5c4f','desktop');if(launch.parentElement!==tools)tools.prepend(launch);if(update.parentElement!==tools)tools.append(update);if(tools.parentElement!==host||host.firstChild!==tools)host.prepend(tools);}
     // 官网导航异步出现或重新挂载时恢复入口，不观察背包和战斗的普通内容更新。
     const selector='.aether-console,.console-header,.header-actions',root=document.getElementById('app')||document.body;
     new MutationObserver(records=>{if(records.some(record=>record.target.matches?.('.console-header,.console-header>.header-actions')||[...record.addedNodes,...record.removedNodes].some(node=>node.nodeType===1&&(node.matches(selector)||node.querySelector(selector)||node===tools))))mount();}).observe(root,{childList:true,subtree:true});setTimeout(mount,0);
