@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.5.2
+// @version      0.6.0
 // @description  官网多角色桌面窗口与背包筛选、装备置顶，保留官方界面与手动操作。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start

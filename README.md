@@ -19,6 +19,9 @@ Aether 官网的用户脚本：把同一水鱼账号下的多个角色放进一�
 - 桌面中的空闲黑屏侧栏隐藏，剧情画面保留。
 - 装备按名称、星级、元素筛选，支持按单件装备置顶；消耗品按技能书、光谱、其他分类并筛选。材料页保持原样。
 - 筛选复用官网已加载的背包数据，不额外查询游戏接口；官网分页、提示和手动操作继续使用。
+- 背包强化列表每页显示 30 件，支持名称、星级、元素筛选，减少重复强化时的装备行重绘。强化接口、连续强化和免费券继续由官网处理；已装备页保持原样。
+
+强化优化作用于官网返回的渲染列表，首次进入页面仍可能有原始列表的挂载开销。父组件构建完整列表和官网状态请求也继续存在。详见[排查与验证记录](docs/reinforcement-performance.md)。
 
 ## 更新
 
@@ -46,7 +49,7 @@ node --check AetherOS.user.js
 
 生成文件保留 UTF-8 编码标记，并转义运行文案，避免中文乱码。
 
-安装测试工具后运行以下三个隔离测试即可，不需要游戏账号：
+安装测试工具后运行以下四个隔离测试即可，不需要游戏账号：
 
 ```sh
 npm install --no-save --package-lock=false playwright
@@ -54,6 +57,7 @@ npx playwright install chromium
 node tests/test_aether_userscript_updates.cjs
 node tests/test_aether_multiview_ui.cjs
 node tests/test_aether_backpack_ui.cjs
+node tests/test_aether_reinforce_ui.cjs
 ```
 
-默认使用 Chromium；设置 `AETHER_TEST_BROWSER=msedge` 可使用本机 Edge。背包测试只下载公开 Vue 3.5.26 测试运行库，也可用 `AETHER_TEST_VUE_PATH` 指定已有文件。测试拦截全部游戏请求，使用模拟角色和背包，不接触真实游戏数据。
+默认使用 Chromium；设置 `AETHER_TEST_BROWSER=msedge` 可使用本机 Edge。背包与强化测试只下载公开 Vue 3.5.26 测试运行库，也可用 `AETHER_TEST_VUE_PATH` 指定已有文件。测试拦截全部游戏请求，使用模拟角色和背包，不接触真实游戏数据。
