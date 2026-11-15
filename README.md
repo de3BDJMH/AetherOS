@@ -21,6 +21,8 @@ Aether 官网的用户脚本：把同一水鱼账号下的多个角色放进一�
 - 筛选复用官网已加载的背包数据，不额外查询游戏接口；官网分页、提示和手动操作继续使用。
 - 背包强化列表每页显示 30 件，支持名称、部位、星级、元素筛选，沿用普通背包与云端的装备置顶，置顶在分页前优先排序；减少重复强化时的装备行重绘。强化接口、连续强化和免费券继续由官网处理；已装备页保持原样。
 
+强化详情下的“强化记录”会从官网当前失败次数接续，保存每一级第几次成功、成功时间和已记录的材料/用券次数。记录按角色与装备唯一标识保存在当前浏览器，穿脱或刷新后保留；不参与置顶云同步。之前已经成功但没有记录的等级无法补回，网络结果不明确时等待重新选择装备后核对，不猜次数。
+
 强化优化作用于官网返回的渲染列表，首次进入页面仍可能有原始列表的挂载开销。父组件构建完整列表和官网状态请求也继续存在。详见[排查与验证记录](docs/reinforcement-performance.md)。
 
 ## 置顶云同步
@@ -81,6 +83,7 @@ node tests/test_aether_backpack_ui.cjs
 node --test tests/test_aether_skillbook_elements.cjs
 node tests/test_aether_reinforce_ui.cjs
 node tests/test_aether_reinforce_forecast.cjs
+node --test tests/test_aether_reinforce_history.cjs
 node tests/test_aether_voucher_ui.cjs
 node tests/test_aether_pin_sync_ui.cjs
 ```
