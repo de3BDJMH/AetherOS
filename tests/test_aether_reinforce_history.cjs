@@ -1,5 +1,5 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),{test}=require('node:test');
-const source=fs.readFileSync(path.resolve(__dirname,'../src/aetheros.js'),'utf8'),start=source.indexOf('  function createReinforceHistory('),end=source.indexOf('  function createReinforceBridge(',start),create=Function(source.slice(start,end)+';return createReinforceHistory;')();
+const source=fs.readFileSync(path.resolve(__dirname,'../src/aetheros.js'),'utf8'),start=source.indexOf('  const historyRandom='),end=source.indexOf('  function createReinforceBridge(',start),create=Function(source.slice(start,end)+';return createReinforceHistory;')();
 function setup(){const data=new Map(),storage={getItem:key=>data.get(key)||null,setItem:(key,value)=>data.set(key,value)},history=create(storage,()=>123456);return {data,storage,history};}
 const info=(level=7,fails=5)=>({equipment:{reinforce_level:level,name:'测试装备'},next:{fails}}),result=(success,new_level,extra={})=>({code:0,data:{success,new_level,...extra}});
 test('中途读取服务器失败次数，下一次成功计入原有失败',()=>{
