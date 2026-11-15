@@ -23,6 +23,8 @@ Aether 官网的用户脚本：把同一水鱼账号下的多个角色放进一�
 
 强化详情下的“强化记录”会从官网当前失败次数接续，保存每一级第几次成功、成功时间和已记录的材料/用券次数。记录按角色与装备唯一标识保存在当前浏览器，穿脱或刷新后保留；连接置顶云同步后，强化记录也会自动合并同步到 Web，可在“角色管理 → 强化历史”中查询。首次同步方式只影响置顶，不会覆盖或删除强化历史。之前已经成功但没有记录的等级无法补回，网络结果不明确时等待重新选择装备后核对，不猜次数。
 
+装备较多时，在“设置 → AetherOS → 置顶云同步”使用“读取当前角色／读取全部角色”。每个角色只查询一次状态，按装备标识合并背包与穿戴，导入已强化装备的当前等级与失败次数；原有历史保留，连接后同步到 Web。不会执行强化，也不能补回过去未记录的成功次数。批量读取支持停止，登录失效或限流会停止后续请求。
+
 强化优化作用于官网返回的渲染列表，首次进入页面仍可能有原始列表的挂载开销。父组件构建完整列表和官网状态请求也继续存在。详见[排查与验证记录](docs/reinforcement-performance.md)。
 
 ## 置顶云同步
@@ -85,6 +87,8 @@ node tests/test_aether_reinforce_ui.cjs
 node tests/test_aether_reinforce_forecast.cjs
 node --test tests/test_aether_reinforce_history.cjs
 node --test tests/test_aether_history_merge.cjs
+node --test tests/test_aether_history_bulk.cjs
+node tests/test_aether_history_bulk_ui.cjs
 node tests/test_aether_history_sync_ui.cjs
 node tests/test_aether_voucher_ui.cjs
 node tests/test_aether_pin_sync_ui.cjs
