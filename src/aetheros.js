@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.13.0
+// @version      0.14.0
 // @description  官网多角色桌面、背包筛选与置顶云同步、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -128,6 +128,194 @@
     }
     function schedule(){clearTimeout(timer);timer=setTimeout(()=>check(),UPDATE_DELAY);}
     window.addEventListener('aether-userscript-check-updates',()=>check(true));window.addEventListener('storage',event=>{if(event.key===KEY){cache=read();offer(cache);}});document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule();});window.addEventListener('pageshow',schedule);cache=read();offer(cache);schedule();
+  }
+  const SAVED_GEAR={weapon:'武器',top:'上衣',bottom:'下装',gloves:'手部',shoes:'鞋子',accessory:'饰品'};
+  const SAVED_SKILLS={addon:'附加技能',custom:'自定义技能',aether:'以太爆发'};
+  const SAVED_PRISMS={core:'纯净',red:'红色',blue:'蓝色',green:'绿色'};
+
+  function captureCustomLoadout(status,prism){
+    if(!Array.isArray(status?.equipment_slots)||!Array.isArray(status?.skills?.slots)||!prism?.equipped)throw Error('官网配装数据不完整');
+    const equipment={},skills={},spectra={};
+    for(const slot of Object.keys(SAVED_GEAR)){
+      const row=status.equipment_slots.find(value=>value.slot===slot);
+      if(!row||row.item&&typeof row.item.uuid!=='string')throw Error('无法读取'+SAVED_GEAR[slot]);
+      equipment[slot]=row.item?{uuid:row.item.uuid,name:row.item.name||row.item.uuid}:null;
+    }
+    for(const slot of Object.keys(SAVED_SKILLS)){
+      const row=status.skills.slots.find(value=>value.slot===slot),choices=status.skills.available?.[slot];
+      if(!row||!choices||!Object.hasOwn(choices,'selected'))throw Error('无法读取'+SAVED_SKILLS[slot]);
+      const code=choices.selected;
+      if(code!==null&&typeof code!=='string')throw Error(SAVED_SKILLS[slot]+'编号无效');
+      const skill=choices.options?.find(value=>value.skill_code===code)?.skill||row.skill;
+      skills[slot]=code?{code,name:skill?.name||code}:null;
+    }
+    for(const color of Object.keys(SAVED_PRISMS)){
+      const rows=prism.equipped[color];
+      if(!Array.isArray(rows)||rows.some(row=>typeof row?.talent_id!=='string'||!row.talent_id))throw Error('无法读取'+SAVED_PRISMS[color]+'光谱');
+      spectra[color]=rows.map(row=>({id:row.talent_id,name:row.name||row.talent_id}));
+    }
+    return {equipment,skills,spectra};
+  }
+
+  function prismIds(build,color){return build.spectra[color].map(row=>row.id);}
+  async function applyCustomLoadout(target,{read,write,progress=()=>{}}){
+    let world=await read(),current=world.build,changes=0;
+    const inventory=new Map();
+    for(const item of [...(world.status.backpack?.equipment||[]),...world.status.equipment_slots.map(row=>row.item)])if(item?.uuid)inventory.set(item.uuid,item);
+    for(const [slot,label] of Object.entries(SAVED_GEAR)){
+      const desired=target.equipment[slot];if(!desired)continue;
+      const item=inventory.get(desired.uuid);
+      if(!item||item.broken||item.slot!==slot)throw Error(label+'「'+desired.name+'」已不可用');
+    }
+    for(const [color,label] of Object.entries(SAVED_PRISMS)){
+      const ids=prismIds(target,color),owned=new Set([...(world.prism.owned?.[color]||[]),...(world.prism.equipped[color]||[])].map(row=>row.talent_id));
+      if(ids.length>(world.prism.slots?.[color]??0)||ids.some(id=>!owned.has(id)))throw Error(label+'光谱有未解锁的槽位或已不可用的光谱');
+    }
+    const send=async(label,path,body)=>{progress(label);try{await write(path,body);changes++;}catch(error){throw Error(label+'失败：'+error.message);}};
+    for(const [slot,label] of Object.entries(SAVED_GEAR)){
+      const desired=target.equipment[slot];
+      if(desired?.uuid===current.equipment[slot]?.uuid)continue;
+      if(desired)await send('穿戴'+label,'/status/equip',{slot,entry_uuid:desired.uuid});
+      else await send('卸下'+label,'/status/unequip',{slot});
+    }
+    if(changes){world=await read();current=world.build;}
+    const gearChanges=changes;
+    const prismChanges=[];
+    for(const [color,label] of Object.entries(SAVED_PRISMS)){
+      const expected=prismIds(target,color),actual=prismIds(current,color);let prefix=0;
+      while(prefix<expected.length&&expected[prefix]===actual[prefix])prefix++;
+      if(prefix===expected.length&&prefix===actual.length)continue;
+      const owned=new Map((world.prism.owned?.[color]||[]).map(row=>[row.talent_id,row]));
+      for(const row of world.prism.equipped[color])if(!owned.has(row.talent_id))owned.set(row.talent_id,row);
+      if(expected.length>(world.prism.slots?.[color]??0)||expected.slice(prefix).some(id=>!owned.has(id)||owned.get(id).requirement_met===false))throw Error(label+'光谱装填条件未满足');
+      prismChanges.push({color,label,expected,actual,prefix});
+    }
+    for(const {color,label,expected,actual,prefix} of prismChanges){
+      for(let index=actual.length-1;index>=prefix;index--)await send('卸下'+label+'光谱第 '+(index+1)+' 格','/prism/uninstall',{spectrum:color,index});
+      for(const talent_id of expected.slice(prefix))await send('装填'+label+'光谱','/prism/install',{spectrum:color,talent_id});
+    }
+    if(changes!==gearChanges){world=await read();current=world.build;}
+    for(const [slot,label] of Object.entries(SAVED_SKILLS)){
+      const desired=target.skills[slot];
+      if(desired?.code===current.skills[slot]?.code)continue;
+      const option=world.status.skills.available[slot]?.options?.find(row=>row.skill_code===desired?.code);
+      if(desired&&(!option||option.can_equip===false))throw Error(label+'「'+desired.name+'」当前不能装配');
+      await send('切换'+label,'/status/skills',{slot,skill_code:desired?.code??null});
+    }
+    if(changes)current=(await read()).build;
+    for(const [slot,label] of Object.entries(SAVED_GEAR))if(current.equipment[slot]?.uuid!==target.equipment[slot]?.uuid)throw Error(label+'核对失败');
+    for(const [slot,label] of Object.entries(SAVED_SKILLS))if(current.skills[slot]?.code!==target.skills[slot]?.code)throw Error(label+'核对失败');
+    for(const [color,label] of Object.entries(SAVED_PRISMS))if(JSON.stringify(prismIds(current,color))!==JSON.stringify(prismIds(target,color)))throw Error(label+'光谱顺序核对失败');
+    return changes;
+  }
+
+  function initCustomLoadouts(){
+    const guard=Symbol.for('aether.custom.loadouts');if(window[guard])return;window[guard]=true;
+    const prefix='aether-custom-loadouts-v1:';
+    const role=()=>sessionStorage.getItem(ACTIVE)?.trim()||'';
+    const isId=value=>typeof value==='string'&&value.length>0;
+    function valid(row){
+      if(!isId(row?.id)||!isId(row.name)||!row.equipment||!row.skills||!row.spectra)return false;
+      const slotsValid=(slots,stored,id)=>Object.keys(slots).every(slot=>stored[slot]===null||isId(stored[slot]?.[id])&&isId(stored[slot]?.name));
+      return slotsValid(SAVED_GEAR,row.equipment,'uuid')&&slotsValid(SAVED_SKILLS,row.skills,'code')&&Object.keys(SAVED_PRISMS).every(color=>Array.isArray(row.spectra[color])&&row.spectra[color].every(item=>isId(item?.id)&&isId(item?.name)));
+    }
+    const load=who=>{const rows=JSON.parse(localStorage.getItem(prefix+who)||'[]');if(!Array.isArray(rows)||!rows.every(valid))throw Error('本机预设格式无效');return rows;};
+    function save(who,id,transform){
+      const rows=load(who),index=rows.findIndex(row=>row.id===id);
+      if(id&&index<0)throw Error('此预设已在另一个窗口修改，请重新打开');
+      const next=transform(rows[index]);
+      if(index<0){if(rows.length>=50)throw Error('每个角色最多保存 50 套');rows.unshift(next);}
+      else if(next)rows[index]=next;
+      else rows.splice(index,1);
+      localStorage.setItem(prefix+who,JSON.stringify(rows));
+    }
+    async function request(who,path,body){
+      if(role()!==who)throw Error('当前角色已切换');
+      const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),12000);
+      try{
+        const url=new URL('/api/aether'+path,ORIGIN);url.searchParams.set('_aether_character',who);
+        const response=await fetch(url,{method:body?'POST':'GET',credentials:'same-origin',cache:'no-store',redirect:'error',headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined,signal:controller.signal});
+        const payload=await response.json().catch(()=>null);
+        if(!response.ok||payload?.code!==0)throw Error(payload?.message||'官网请求失败（HTTP '+response.status+'）');
+        return payload.data;
+      }catch(error){if(error.name==='AbortError')throw Error('官网响应超时，请重新读取当前配装');throw error;}
+      finally{clearTimeout(timeout);}
+    }
+    async function read(who){
+      const [status,prism]=await Promise.all([request(who,'/status'),request(who,'/prism')]);
+      if(role()!==who)throw Error('当前角色已切换');
+      return {status,prism,build:captureCustomLoadout(status,prism)};
+    }
+    async function lock(who,work){
+      if(navigator.locks?.request)return navigator.locks.request('aether-custom-loadout:'+who,{ifAvailable:true},locked=>{if(!locked)throw Error('该角色在其他窗口有配装操作');return work();});
+      return work();
+    }
+    function refresh(who){
+      if(role()!==who)return;
+      const stores=document.querySelector('#app')?.__vue_app__?.config?.globalProperties?.$pinia?._s;
+      Promise.allSettled([stores?.get('player')?.fetchStatus?.(),stores?.get('prism')?.fetch?.()]);
+    }
+    const style=element('style');style.textContent=`
+      .aosp-loadouts{margin-top:16px;padding-top:14px;border-top:1px solid #8ba9d333;color:inherit;font-size:.82rem;line-height:1.5}.aosp-loadouts header,.aosp-loadout-title,.aosp-loadout-actions{display:flex;align-items:center;flex-wrap:wrap;gap:7px}.aosp-loadouts header,.aosp-loadout-title{justify-content:space-between}.aosp-loadouts h3{margin:0;font-size:.9rem}.aosp-loadout-list{display:grid;gap:7px;margin-top:8px}.aosp-loadout-card{padding:9px 10px;border:1px solid #8ba9d335;border-radius:9px;background:#80a4df0c;min-width:0}.aosp-loadout-name{overflow-wrap:anywhere}.aosp-loadout-card details{margin-top:5px}.aosp-loadout-card summary{cursor:pointer}.aosp-loadout-card p{margin:.2rem 0;overflow-wrap:anywhere}.aosp-loadouts :is(button,input){font:inherit;color:inherit;padding:4px 8px;border:1px solid #8ba9d350;border-radius:6px;background:#80a4df12}.aosp-loadouts button{cursor:pointer}.aosp-loadouts button:disabled{opacity:.45;cursor:default}.aosp-loadout-actions button:first-child,.aosp-loadouts header button{color:var(--accent,#a4ddd5)}.aosp-loadout-form{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.aosp-loadout-form input{flex:1 1 12rem;min-width:0}.aosp-loadout-feedback{margin:6px 0 0;min-height:1.3em;overflow-wrap:anywhere}.aosp-loadout-feedback.is-error{color:#ff9aa4}.aosp-loadouts [hidden]{display:none!important}
+    `;document.head.append(style);
+    function mount(dialog,body){
+      const section=element('section',undefined,'aosp-loadouts'),header=element('header'),form=element('form',undefined,'aosp-loadout-form'),input=element('input'),submit=element('button','保存'),list=element('div',undefined,'aosp-loadout-list'),feedback=element('p',undefined,'aosp-loadout-feedback');let busy=false,editor=null,character=role();
+      const add=button('保存当前配装',()=>edit(null,false));
+      header.append(element('h3','自定义预设'),add);input.maxLength=60;input.required=true;input.placeholder='例如：望雪台水系';input.setAttribute('aria-label','自定义预设名称');submit.type='submit';form.hidden=true;
+      form.append(input,submit,button('取消',()=>{editor=null;form.hidden=true;}));feedback.setAttribute('role','status');section.append(header,form,feedback,list);body.append(section);
+      function message(value,error=false){feedback.textContent=value;feedback.classList.toggle('is-error',error);}
+      function edit(row,rename){editor={row,rename};form.hidden=false;input.value=row?.name||'';input.focus();input.select();}
+      function draw(){
+        list.replaceChildren();add.disabled=busy||!character;
+        if(!character){message('请先在官网选择角色');return;}
+        let rows;try{rows=load(character);}catch(error){message(error.message,true);return;}
+        if(!rows.length){list.append(element('small','还没有自定义预设 · 保存在当前浏览器'));return;}
+        for(const row of rows){
+          const card=element('article',undefined,'aosp-loadout-card'),top=element('div',undefined,'aosp-loadout-title'),actions=element('div',undefined,'aosp-loadout-actions'),details=element('details');
+          top.append(element('strong',row.name,'aosp-loadout-name'),actions);
+          actions.append(button('应用',()=>run(async who=>{
+            if(!confirm('应用「'+row.name+'」？这会更换 '+who+' 的当前配装。'))return;
+            message('正在核对 '+who+' 的配装…');
+            let attempted=false;
+            try{
+              const count=await applyCustomLoadout(row,{read:()=>read(who),write:(path,data)=>{attempted=true;return request(who,path,data);},progress:label=>message(label+'…')});
+              message(count?'已应用并核对「'+row.name+'」':'当前配装与「'+row.name+'」一致');
+            }catch(error){if(attempted)error.message+='。可能已完成部分切换，再次应用将从实际配装继续';throw error;}
+            finally{if(attempted)refresh(who);}
+          })),button('覆盖保存',()=>{if(confirm('用当前配装覆盖「'+row.name+'」？'))run(who=>capture(who,row.id,row.name));}),button('改名',()=>edit(row,true)),button('删除',()=>{if(confirm('删除「'+row.name+'」？'))run(who=>{save(who,row.id,()=>null);message('已删除');});}));
+          details.append(element('summary','查看配装'));
+          for(const [key,label] of Object.entries(SAVED_GEAR))details.append(element('p',label+' · '+(row.equipment[key]?.name||'空')));
+          for(const [key,label] of Object.entries(SAVED_SKILLS))details.append(element('p',label+' · '+(row.skills[key]?.name||'空')));
+          for(const [key,label] of Object.entries(SAVED_PRISMS))details.append(element('p',label+'光谱 · '+(row.spectra[key].map(item=>item.name).join(' → ')||'空')));
+          card.append(top,details);list.append(card);
+        }
+      }
+      async function run(task){
+        if(busy||!character||role()!==character)return;
+        busy=true;message('正在处理…');section.querySelectorAll('button,input').forEach(node=>node.disabled=true);
+        try{await lock(character,()=>task(character));}catch(error){message(error.message||'操作失败',true);}
+        finally{busy=false;section.querySelectorAll('button,input').forEach(node=>node.disabled=false);draw();}
+      }
+      async function capture(who,id,name){
+        message('正在读取 '+who+' 的配装…');const {build}=await read(who);
+        save(who,id,previous=>({id:previous?.id||crypto.randomUUID(),name,updatedAt:Date.now(),...build}));message('已保存「'+name+'」');
+      }
+      form.addEventListener('submit',event=>{event.preventDefault();const name=input.value.trim(),draft=editor;if(!name||!draft)return;
+        run(async who=>{if(draft.rename){save(who,draft.row.id,row=>({...row,name,updatedAt:Date.now()}));message('已改名');}else await capture(who,null,name);editor=null;form.hidden=true;});
+      });
+      draw();
+      return {section,refresh(force=false){const active=role();if(busy)return;if(character!==active){character=active;editor=null;form.hidden=true;message('');draw();}else if(force&&!editor)draw();}};
+    }
+    const dialogs=new Map();let queued=false;
+    function update(){queued=false;for(const [dialog,view]of dialogs)if(!dialog.isConnected||!view.section.isConnected)dialogs.delete(dialog);
+      for(const dialog of document.querySelectorAll('.ae-dialog')){
+        if(dialog.querySelector('.ae-dialog__title-text h2')?.textContent.trim()!=='装备预设')continue;
+        const body=dialog.querySelector('.ae-dialog__body');if(!body)continue;
+        if(dialogs.has(dialog))dialogs.get(dialog).refresh();else dialogs.set(dialog,mount(dialog,body));
+      }
+    }
+    new MutationObserver(records=>{if(!queued&&records.some(record=>!record.target.closest?.('.aosp-loadouts'))){queued=true;requestAnimationFrame(update);}}).observe(document.body,{childList:true,subtree:true});
+    window.addEventListener('storage',event=>{if(event.key===prefix+role())for(const view of dialogs.values())view.refresh(true);});update();
   }
   function initPluginSettings(){
     if(window[Symbol.for('aether.plugin.settings')])return;window[Symbol.for('aether.plugin.settings')]=true;
@@ -367,7 +555,7 @@
       prototype.removeItem=function(name){if(this===storage&&String(name)===ACTIVE){character='';try{set.call(storage,key,'""');}catch{}notify();return;}return remove.call(this,name);};
       const activate=()=>window.parent.postMessage({type:CHANNEL,id:context.id,activate:true},ORIGIN);document.addEventListener('pointerdown',activate,true);document.addEventListener('focusin',activate,true);document.addEventListener('keydown',event=>{if(event.key==='Escape')window.parent.postMessage({type:CHANNEL,id:context.id,dismiss:true},ORIGIN);},true);
       set.call(storage,key,JSON.stringify(character));if(storage.getItem(ACTIVE)!==character)throw new Error('角色隔离未生效');notify();
-      ready(initPluginSettings);ready(initBackpackFilters);ready(initReinforceFilters);
+      ready(initPluginSettings);ready(initBackpackFilters);ready(initReinforceFilters);ready(initCustomLoadouts);
     }catch{
       window.stop();window.parent.postMessage({type:CHANNEL,id:context.id,error:true},ORIGIN);
       ready(()=>{const text=element('div','角色隔离未就绪，请关闭此区域后重开。');text.style.cssText='position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;padding:24px;background:#111b29;color:#e4edf5;font:14px sans-serif';document.body.append(text);});
@@ -376,7 +564,7 @@
   }
   if(window.top!==window)return;
   ready(initBackpackFilters);ready(initReinforceFilters);
-  ready(initPluginSettings);
+  ready(initPluginSettings);ready(initCustomLoadouts);
   ready(initScriptUpdates);
   ready(initScriptNavigation);
   ready(initPinSync);ready(initReinforceHistorySync);ready(initReinforceBulkRead);
