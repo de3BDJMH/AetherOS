@@ -8,6 +8,25 @@ const origin = 'https://game.diving-fish.com';
 const accounts = ['alpha', 'beta', 'gamma'].map(username => ({username, name:username}));
 const note = '每日小号 <b>材料</b>';
 
+const fixture = `<!doctype html><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<main id="app"><button id="switch">切换角色</button><div class="character-gateway"></div></main>
+<script>
+function render() {
+  const gateway=document.querySelector('.character-gateway');
+  gateway.innerHTML='<p class="auth-meta">水鱼账号：测试</p><div class="character-list"></div>';
+  const list=gateway.querySelector('.character-list');
+  for(const role of ${JSON.stringify(accounts)}) {
+    const card=document.createElement('button');
+    card.className='character-card';
+    card.innerHTML='<span class="character-card__body"><strong>'+role.name+'</strong><small>'+role.username+' · Lv.50</small></span>';
+    card.onclick=()=>{window.selected=role.username;};
+    list.append(card);
+  }
+}
+document.querySelector('#switch').onclick=render;
+</script>`;
+
 async function check(browser, width) {
   const context = await browser.newContext({viewport:{width,height:850}});
   const page = await context.newPage();
@@ -23,55 +42,56 @@ async function check(browser, width) {
     assert.equal(route.request().method(), 'GET');
     if (pathname === '/api/aether/account') return route.fulfill({json:{code:0,data:{characters:accounts}}});
     assert.equal(pathname, '/aether/');
-    return route.fulfill({contentType:'text/html; charset=utf-8',body:'<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><main id="app"></main>'});
+    return route.fulfill({contentType:'text/html; charset=utf-8',body:fixture});
   });
-  const root = page.locator('#aether-multiview');
-  const edit = root.getByRole('button',{name:'排序与备注',exact:true});
-  const roles = root.locator('[data-amv-role]');
-  const taskNames = () => root.locator('[data-amv-task]').evaluateAll(nodes => nodes.map(node=>node.getAttribute('aria-label')));
-  const roleOrder = () => roles.evaluateAll(nodes=>nodes.map(node=>node.dataset.amvRole));
-  const launch = async () => {
-    await page.locator('#aether-multiview-launch').click();
-    await page.waitForFunction(() => !document.querySelector('[data-amv-all]').disabled);
-    if (!await edit.isVisible()) await root.getByRole('button',{name:'打开角色',exact:true}).click();
+  const native = page.locator('.character-gateway');
+  const edit = native.getByRole('button',{name:'排序与备注',exact:true});
+  const cards = native.locator('.character-card');
+  const roleOrder = () => cards.locator('strong').allTextContents();
+  const open = async () => {
+    await page.getByRole('button',{name:'切换角色',exact:true}).click();
+    await edit.waitFor();
   };
   try {
     await page.goto(origin+'/aether/');
-    await launch();
-    assert.deepEqual(await roleOrder(), ['alpha','beta','gamma']);
+    await page.evaluate(note=>localStorage.setItem('aether-role-preferences-v1',JSON.stringify({order:['gamma','alpha','beta'],notes:{gamma:note}})),note);
+    await open();
+    assert.deepEqual(await roleOrder(), ['gamma','alpha','beta']);
+    assert.equal(await cards.first().locator('.aether-role-note').textContent(),note);
     await edit.click();
-    assert.equal(await root.getByRole('button',{name:'上移 alpha'}).isDisabled(),true);
-    await root.getByRole('textbox',{name:'beta的备注'}).fill(note);
-    await root.getByRole('button',{name:'上移 beta'}).click();
-    await root.getByRole('button',{name:'保存',exact:true}).click();
-    assert.deepEqual(await roleOrder(), ['beta','alpha','gamma']);
-    assert.equal(await roles.first().locator('.amv-role-note').textContent(),note);
-    assert.equal(await roles.first().locator('b').count(),0);
-    await root.getByRole('button',{name:'打开全部',exact:true}).click();
-    assert.deepEqual(await taskNames(), ['beta','alpha','gamma']);
-    assert.match(await root.locator('[data-amv-task]').first().getAttribute('title'),/每日小号/);
-    await root.getByRole('button',{name:'打开角色',exact:true}).click();
-    await edit.click();
-    await root.getByRole('button',{name:'上移 gamma'}).click();
-    await root.getByRole('button',{name:'保存',exact:true}).click();
-    assert.deepEqual(await taskNames(), ['beta','gamma','alpha']);
+    assert.equal(await native.getByRole('button',{name:'上移 gamma'}).isDisabled(),true);
+    await native.getByRole('textbox',{name:'alpha的备注'}).fill(note);
+    await native.getByRole('button',{name:'上移 alpha'}).click();
+    await native.getByRole('button',{name:'保存',exact:true}).click();
+    assert.deepEqual(await roleOrder(), ['alpha','gamma','beta']);
+    assert.equal(await cards.first().locator('.aether-role-note').textContent(),note);
+    assert.equal(await cards.first().locator('b').count(),0);
+    await cards.first().click();
+    assert.equal(await page.evaluate(()=>window.selected),'alpha');
 
     await page.reload();
-    await launch();
-    assert.deepEqual(await roleOrder(), ['beta','gamma','alpha']);
-    assert.equal(await roles.first().locator('.amv-role-note').textContent(),note);
+    await open();
+    assert.deepEqual(await roleOrder(), ['alpha','gamma','beta']);
+    await open();
+    assert.equal(await native.locator('.aether-role-preferences').count(),1);
+    assert.deepEqual(await roleOrder(), ['alpha','gamma','beta']);
     await edit.click();
-    const input = root.getByRole('textbox',{name:'beta的备注'});
+    const input = native.getByRole('textbox',{name:'alpha的备注'});
     await input.fill('还未保存');
-    await root.getByRole('button',{name:'取消',exact:true}).click();
-    assert.equal(await roles.first().locator('.amv-role-note').textContent(),note);
+    await input.press('Escape');
+    assert.equal(await cards.first().locator('.aether-role-note').textContent(),note);
     await edit.click();
     await input.fill('');
     await input.press('Enter');
-    assert.equal(await roles.first().locator('.amv-role-note').count(),0);
-    assert.equal(await root.locator('.amv-roles').evaluate(node=>node.scrollWidth<=node.clientWidth+1),true);
-    assert.deepEqual(errors,[]);
-    console.log(width, '账号排序、任务栏同步、备注保存和清除通过');
+    assert.equal(await cards.first().locator('.aether-role-note').count(),0);
+    assert.equal(await native.evaluate(node=>node.scrollWidth<=node.clientWidth+1),true);
+
+    await page.locator('#aether-multiview-launch').click();
+    const root=page.locator('#aether-multiview');
+    await root.locator('[data-amv-role]').first().waitFor();
+    assert.equal(await root.getByRole('button',{name:'排序与备注',exact:true}).count(),0);
+    assert.deepEqual(await errors,[]);
+    console.log(width, '官网账号选择、旧备注沿用、官方切换、刷新与清除通过');
   } finally {
     await context.close();
   }
