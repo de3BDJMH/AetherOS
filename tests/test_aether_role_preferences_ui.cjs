@@ -46,6 +46,7 @@ async function check(browser, width) {
       if (pathname==='/api/aetheros/pins/sync') return route.fulfill({headers,json:{version:1,ack:0,revision:0,characters:{}}});
       if (pathname==='/api/aetheros/history/sync') return route.fulfill({headers,json:{version:1,cursor:0,accepted:[],records:[],has_more:false}});
       if (pathname==='/api/aetheros/custom-loadouts/sync') return route.fulfill({headers,json:{version:1,cursor:0,accepted:[],changes:[],has_more:false}});
+      if(pathname==='/api/aetheros/support-pins/sync') return route.fulfill({headers,json:{version:1,records:[]}});
       assert.equal(pathname,'/api/aetheros/role-preferences/sync');
       cloudCalls.push(payload);
       return route.fulfill({headers,json:{version:1,records:[...payload.changes,{key:'beta',stamp:10,edit_id:'00000000-0000-0000-0000-000000000010',value:'另一台设备的备注'}]}});
