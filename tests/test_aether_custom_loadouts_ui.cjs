@@ -39,8 +39,17 @@ async function main(){
     });
     const feedback=page.locator('.aosp-loadout-feedback'),section=page.locator('.aosp-loadouts'),card=page.locator('.aosp-loadout-card');
     const awaitMessage=message=>page.waitForFunction(value=>document.querySelector('.aosp-loadout-feedback')?.textContent.includes(value),message);
-    await page.goto(origin+'/aether/');assert.equal(calls.length,0);await page.locator('#open').click();await section.waitFor();assert.equal(await page.locator('.presets-list').innerText(),'官网原有槽位');
-    await section.getByRole('button',{name:'保存当前配装',exact:true}).click();await section.getByRole('textbox').fill('望雪台');await section.getByRole('button',{name:'保存',exact:true}).click();await awaitMessage('已保存');
+    const open=async()=>{await page.locator('#open').click();await page.locator('.aosp-loadouts').waitFor({state:'attached'});};
+    const tab=name=>page.locator('.aosp-loadout-switch').getByRole('button',{name,exact:true});
+    const pickCustom=async()=>{if(width<861)await tab('自定义预设').click();await section.waitFor();};
+    await page.goto(origin+'/aether/');assert.equal(calls.length,0);await open();assert.equal(await page.locator('.presets-list').innerText(),'官网原有槽位');
+    if(width<861){assert.equal(await section.isVisible(),false);await pickCustom();assert.equal(await page.locator('.presets-list').isVisible(),false);await tab('官方预设').click();assert.equal(await page.locator('.presets-list').isVisible(),true);await pickCustom();}
+    else {assert.equal(await tab('官方预设').isVisible(),false);const left=await page.locator('.presets-list').boundingBox(),right=await section.boundingBox();assert(left.x+left.width<=right.x&&Math.abs(left.y-right.y)<2);}
+    await section.getByRole('button',{name:'添加自定义预设',exact:true}).click();await awaitMessage('已建立空预设');assert.equal(calls.length,0);assert.equal(await card.getByRole('button',{name:'应用',exact:true}).isDisabled(),true);
+    const addBox=await section.getByRole('button',{name:'添加自定义预设',exact:true}).boundingBox(),emptyBox=await card.boundingBox();assert.equal(addBox.width,emptyBox.width);assert.equal(addBox.height,emptyBox.height);
+    assert.equal(await page.evaluate(key=>JSON.parse(localStorage.getItem(key))[0].empty,prefix+roles[0]),true);
+    await page.reload();await open();await pickCustom();await card.getByText('空预设',{exact:true}).waitFor();assert.equal(calls.length,0);
+    await card.getByRole('button',{name:'保存',exact:true}).click();await awaitMessage('已保存');assert.equal(await card.getByRole('button',{name:'应用',exact:true}).isDisabled(),false);
     assert.equal(calls.length,2);assert(calls.every(row=>row.body===null));
     const stored=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),prefix+roles[0]);assert.equal(stored[0].equipment.weapon.uuid,'sword');assert.equal(stored[0].skills.custom.code,'wave');assert.deepEqual(stored[0].spectra.red.map(row=>row.id),['alpha','beta']);
     await card.getByText('查看配装',{exact:true}).click();assert.match(await card.innerText(),/测试长剑/);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
@@ -49,10 +58,10 @@ async function main(){
     world.reject=null;calls.length=0;await card.getByRole('button',{name:'应用',exact:true}).click();await awaitMessage('已应用并核对');assert.deepEqual(world.state,snapshot());assert.deepEqual(calls.filter(row=>row.body).map(row=>row.endpoint),['/prism/install','/prism/install','/status/skills']);
     world.state=alternate();calls.length=0;await card.getByRole('button',{name:'应用',exact:true}).click();await awaitMessage('已应用并核对');assert.deepEqual(world.state,snapshot());assert.deepEqual(calls.filter(row=>row.endpoint==='/prism/uninstall').map(row=>row.body.index),[1,0]);
     world.state=alternate();world.inventory=[staff,boots];calls.length=0;await card.getByRole('button',{name:'应用',exact:true}).click();await awaitMessage('已不可用');assert(calls.every(row=>row.body===null));world.inventory=[staff,boots,sword];
-    await card.getByRole('button',{name:'改名',exact:true}).click();await section.getByRole('textbox').fill('水系预设');await section.getByRole('button',{name:'保存',exact:true}).click();await awaitMessage('已改名');
-    await page.evaluate(role=>sessionStorage.setItem('aether_active_character',role),roles[1]);await page.locator('#open').click();await section.getByText('还没有自定义预设',{exact:false}).waitFor();assert.equal(await card.count(),0);
-    await page.reload();await page.locator('#open').click();await card.getByText('水系预设',{exact:true}).waitFor();
-    await card.getByRole('button',{name:'覆盖保存',exact:true}).click();await awaitMessage('已保存');assert.equal(await page.evaluate(key=>JSON.parse(localStorage.getItem(key))[0].equipment.weapon.uuid,prefix+roles[0]),'staff');
+    await card.getByRole('button',{name:'改名',exact:true}).click();await section.getByRole('textbox').fill('水系预设');await section.locator('form').getByRole('button',{name:'保存',exact:true}).click();await awaitMessage('已改名');
+    await page.evaluate(role=>sessionStorage.setItem('aether_active_character',role),roles[1]);await open();await pickCustom();assert.equal(await card.count(),0);
+    await page.reload();await open();await pickCustom();await card.getByText('水系预设',{exact:true}).waitFor();
+    await card.getByRole('button',{name:'保存',exact:true}).click();await awaitMessage('已保存');assert.equal(await page.evaluate(key=>JSON.parse(localStorage.getItem(key))[0].equipment.weapon.uuid,prefix+roles[0]),'staff');
     await card.getByRole('button',{name:'删除',exact:true}).click();await awaitMessage('已删除');assert.equal(await card.count(),0);assert.deepEqual(errors,[]);
     await context.close();console.log(width,'保存、查看、同配装不写入、装备和技能切换、光谱重排、失败后续接、角色隔离、改名覆盖及删除通过');
   }}finally{await browser.close();}
