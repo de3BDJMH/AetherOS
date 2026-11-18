@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.15.0
+// @version      0.16.0
 // @description  官网多角色桌面、背包筛选与置顶云同步、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -16,7 +16,7 @@
 (() => {
   'use strict';
   if(location.origin!=='https://game.diving-fish.com'||!location.pathname.startsWith('/aether/'))return;
-  const SCRIPT_VERSION='0.15.0';
+  const SCRIPT_VERSION='0.16.0';
   const ACTIVE='aether_active_character',CONFIG='aether-multiview-layout-v1',PREFIX='aether-multiview:',CHANNEL='aether-multiview-state',ORIGIN=location.origin;
   const ready=fn=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn,{once:true}):fn();
   const element=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node;};
@@ -842,21 +842,146 @@
 #aether-multiview,#aether-multiview *{box-sizing:border-box}#aether-multiview[hidden],#aether-multiview [hidden]{display:none!important}#aether-multiview{position:fixed;inset:0;z-index:2147483600;display:flex;flex-direction:column;background:#101318;color:#e7e9ed;font:13px/1.5 'Segoe UI Variable','Segoe UI','Microsoft YaHei UI',system-ui,sans-serif;color-scheme:dark}#aether-multiview button,#aether-multiview-launch{appearance:none;margin:0;font:inherit;line-height:1.4;cursor:pointer;border:1px solid transparent;border-radius:7px;padding:6px 10px;color:inherit;background:#ffffff07;transition:background-color .14s,border-color .14s,opacity .14s}#aether-multiview button:hover{background:#ffffff10}#aether-multiview button:active{background:#ffffff09}#aether-multiview button:focus-visible,#aether-multiview select:focus-visible{outline:2px solid #92d8c6;outline-offset:2px}#aether-multiview button:disabled{opacity:.35;cursor:default}#aether-multiview select{margin:0}#aether-multiview svg.amv-control-icon{display:block;flex-shrink:0;width:16px;height:16px;pointer-events:none}#aether-multiview-launch{position:fixed;right:18px;bottom:18px;z-index:2147483500;padding:10px 14px;background:#242a32;color:#e7e9ed;border:1px solid #ffffff12;border-radius:10px;box-shadow:0 4px 16px #0003;font:13px 'Segoe UI',system-ui,sans-serif}html.amv-open #aether-multiview-launch,html.amv-open body>#app,html.amv-open body>.v-overlay-container{display:none!important}
 #aether-multiview .amv-desktop{position:relative;isolation:isolate;flex:1;min-height:0;overflow:hidden;background:#101318}#aether-multiview .amv-pane{position:absolute;display:flex;flex-direction:column;min-width:0;overflow:hidden;border:1px solid #ffffff0d;border-radius:11px;background:#1b2027;box-shadow:0 5px 18px #0003}#aether-multiview .amv-pane[data-active=true]{border-color:#ffffff25;box-shadow:0 12px 36px #0005}#aether-multiview .amv-pane>header{display:flex;align-items:center;gap:4px;flex-shrink:0;min-height:40px;padding:0 5px 0 11px;background:#1e232a;border-bottom:1px solid #0002;cursor:grab;touch-action:none;user-select:none}#aether-multiview .amv-pane[data-active=true]>header{background:#262c34}#aether-multiview .amv-pane>header strong{flex:1;min-width:0;padding-left:4px;font-size:12px;font-weight:550;color:#c1c6ce;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#aether-multiview .amv-pane[data-active=true]>header strong{color:#f1f2f4}#aether-multiview .amv-pane>header small{flex:0 0 5px;width:5px;height:5px;margin:0 5px;border-radius:50%;overflow:hidden;font-size:0;background:#bca270}#aether-multiview .amv-pane.is-ready>header small{background:#85c8b5}#aether-multiview .amv-pane>header button.amv-control{display:grid;place-items:center;flex-shrink:0;width:28px;height:28px;padding:0;border:0;border-radius:5px;color:#aeb5bf;background:transparent}#aether-multiview .amv-pane>header button.amv-control:hover{background:#ffffff10;color:#fff}#aether-multiview .amv-pane>header button[data-icon=close]:hover{background:#c42b1c;color:#fff}#aether-multiview .amv-pane>header .amv-scale{width:58px;height:26px;max-width:58px;margin:0 3px;padding:1px 2px 1px 5px;border:1px solid #ffffff06;border-radius:5px;background:#ffffff03;color:#c8cdd5;font:11px 'Segoe UI',system-ui;cursor:pointer}#aether-multiview .amv-pane>header .amv-scale:hover{border-color:#ffffff16;background:#ffffff08}#aether-multiview .amv-pane:not(.is-ready) iframe,#aether-multiview.amv-moving iframe{pointer-events:none}#aether-multiview .amv-viewport{position:relative;flex:1;min-height:0;overflow:hidden}#aether-multiview iframe{position:absolute;inset:0 auto auto 0;display:block;width:calc(100% / var(--amv-scale,.5));height:calc(100% / var(--amv-scale,.5));border:0;background:#0b1320;transform:scale(var(--amv-scale,.5));transform-origin:0 0}
 #aether-multiview .amv-roles,#aether-multiview .amv-snap-menu,#aether-multiview .amv-snap-assist{position:absolute;padding:18px;border:1px solid #ffffff12;border-radius:14px;background:#242930f5;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 10px 32px #0005}#aether-multiview .amv-roles{z-index:20;left:10px;bottom:66px;width:min(430px,calc(100vw - 20px));max-height:min(65vh,600px);overflow:auto}#aether-multiview .amv-roles h2{margin:0 2px 5px;font-size:15px;font-weight:600;letter-spacing:-.02em}#aether-multiview .amv-status{margin:0 2px 15px;font-size:11px;color:#969fab}#aether-multiview .amv-role-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}#aether-multiview .amv-role-list button{display:flex;align-items:center;gap:9px;min-width:0;padding:9px 7px;text-align:left;border:0;background:transparent}#aether-multiview .amv-role-list button:hover{background:#ffffff09}#aether-multiview .amv-role-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:2px}#aether-multiview .amv-role-copy strong{font-size:12px;font-weight:550;overflow-wrap:anywhere}#aether-multiview .amv-role-copy small{font-size:10px;color:#969fab;overflow-wrap:anywhere}#aether-multiview .amv-role-list button[data-open=true]:after{content:'';flex:0 0 5px;width:5px;height:5px;border-radius:50%;background:#87cdb9}#aether-multiview .amv-roles footer{display:flex;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid #ffffff09}#aether-multiview [data-amv-all]{padding:6px 12px;background:#8ed4bf;color:#14221e;font-size:12px;font-weight:550}#aether-multiview [data-amv-all]:hover{background:#a4e0ce}
+#aether-multiview .amv-role-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+#aether-multiview .amv-role-heading h2{margin-bottom:0}#aether-multiview .amv-role-heading button{color:#a8dece;font-size:11px;padding:4px 8px}
+#aether-multiview .amv-role-copy .amv-role-note{color:#a8d6c9;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#aether-multiview .amv-role-list.is-editing{grid-template-columns:1fr}
+#aether-multiview .amv-role-editor-row{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(5rem,1.25fr) auto;align-items:center;gap:7px;padding:5px 0}
+#aether-multiview .amv-role-editor-row .amv-avatar{width:24px;height:24px}
+#aether-multiview .amv-role-editor-row input{min-width:0;width:100%;padding:5px 6px;border:1px solid #ffffff18;border-radius:6px;background:#ffffff07;color:inherit;font:inherit}
+#aether-multiview .amv-role-editor-row input:focus-visible{outline:2px solid #92d8c6;outline-offset:1px}
+#aether-multiview .amv-role-move,#aether-multiview .amv-role-editor-actions{display:flex;gap:4px}
+#aether-multiview .amv-role-move button{display:grid;place-items:center;width:29px;height:30px;padding:0;background:#ffffff09}#aether-multiview .amv-role-move button:disabled{opacity:.25}
+#aether-multiview .amv-role-editor-actions{justify-content:flex-end;margin-top:10px;gap:6px}
+#aether-multiview .amv-role-editor-actions button:last-child{color:#a8dece;background:#92d8c619}
+#aether-multiview .amv-role-editor-status{margin:6px 0 0;color:#ffb0b4;font-size:11px}#aether-multiview .amv-role-editor-status:empty{display:none}
 #aether-multiview .amv-taskbar{position:relative;z-index:10;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;flex-shrink:0;min-height:58px;padding:5px 10px;border-top:1px solid #ffffff0a;background:#1d222ae8;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}#aether-multiview .amv-taskbar>.amv-shell-control{display:grid;place-items:center;width:40px;height:40px;padding:0;border:0;border-radius:8px;background:transparent;color:#c2c9d2}#aether-multiview .amv-taskbar>.amv-shell-control svg{width:19px;height:19px}#aether-multiview .amv-taskbar>[data-amv-manage]{color:#a0d9c9}#aether-multiview .amv-taskbar>.amv-shell-control:hover,#aether-multiview .amv-taskbar>[aria-expanded=true]{background:#ffffff0b}#aether-multiview .amv-tasks{display:flex;align-items:center;justify-content:safe center;gap:4px;min-width:0;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#ffffff20 transparent}#aether-multiview .amv-task{position:relative;flex:0 0 44px;width:44px;height:46px;display:grid;place-items:center;padding:3px 4px 7px;border:0;border-radius:8px;background:transparent}#aether-multiview .amv-task:hover{background:#ffffff08}#aether-multiview .amv-task[aria-pressed=true]{background:#ffffff0b}#aether-multiview .amv-task:after{content:'';position:absolute;left:calc(50% - 3px);bottom:2px;width:6px;height:3px;border-radius:3px;background:#8c96a3}#aether-multiview .amv-task[aria-pressed=true]:after{left:calc(50% - 7px);width:14px;background:#91d3c0}#aether-multiview .amv-task[data-minimized=true]{opacity:.55}#aether-multiview .amv-avatar{display:grid;place-items:center;position:relative;flex-shrink:0;width:32px;height:32px;border-radius:8px;overflow:hidden;background:#353c47;color:#d8dde5}#aether-multiview .amv-avatar img{display:block;width:100%;height:100%;margin:0;object-fit:cover}#aether-multiview .amv-avatar-fallback{font-size:15px;font-weight:550;line-height:1}#aether-multiview .amv-title-avatar{width:20px;height:20px;border-radius:5px;opacity:.9}#aether-multiview .amv-title-avatar .amv-avatar-fallback{font-size:11px}
 #aether-multiview .amv-snap-menu,#aether-multiview .amv-snap-assist{z-index:30}#aether-multiview .amv-snap-menu{width:min(350px,calc(100vw - 16px));max-height:calc(100dvh - 80px);overflow:auto}#aether-multiview .amv-snap-menu>strong{display:block;font-size:12px;font-weight:550;margin-bottom:15px;color:#cdd3dc}#aether-multiview .amv-snap-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 12px}#aether-multiview .amv-snap-card small{display:block;margin-top:7px;color:#9ca5b2;font-size:10px;line-height:1.5;text-align:center}#aether-multiview .amv-snap-mini{position:relative;height:48px}#aether-multiview .amv-snap-mini button{position:absolute;margin:0;padding:0;border:1px solid #ffffff0b;border-radius:3px;background:#56606e}#aether-multiview .amv-snap-mini button:hover,#aether-multiview .amv-snap-mini button:focus-visible{background:#93d1c0;border-color:#b2e1d3}#aether-multiview .amv-snap-mini button:disabled{opacity:.18}#aether-multiview .amv-snap-preview{position:absolute;z-index:2147483646;pointer-events:none;border:1px solid #95d9c6b3;border-radius:10px;background:#95d9c612}#aether-multiview .amv-snap-assist{left:50%;bottom:70px;transform:translateX(-50%);width:min(440px,calc(100vw - 16px));max-height:50vh;overflow:auto}#aether-multiview .amv-snap-assist header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;font-size:12px}#aether-multiview .amv-snap-assist header strong{font-weight:550}#aether-multiview .amv-snap-assist header button{padding:4px 9px;font-size:11px;color:#b9c4d0}#aether-multiview .amv-assist-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}#aether-multiview .amv-assist-list button{display:flex;align-items:center;gap:9px;text-align:left;font-size:11px;overflow-wrap:anywhere;padding:9px 7px;border:0;background:transparent}#aether-multiview .amv-assist-list button:hover{background:#ffffff09}#aether-multiview .amv-assist-list .amv-avatar{width:28px;height:28px;border-radius:6px}#aether-multiview .amv-empty{margin:0;position:absolute;inset:0;display:grid;place-content:center;padding:32px;color:#7e8998;font-size:12px;text-align:center;pointer-events:none}
 #aether-multiview .amv-handle{position:absolute;z-index:2;touch-action:none}#aether-multiview .amv-handle[data-edge=n],#aether-multiview .amv-handle[data-edge=s]{left:12px;right:12px;height:5px;cursor:ns-resize}#aether-multiview .amv-handle[data-edge=n]{top:0}#aether-multiview .amv-handle[data-edge=s]{bottom:0}#aether-multiview .amv-handle[data-edge=e],#aether-multiview .amv-handle[data-edge=w]{top:12px;bottom:12px;width:5px;cursor:ew-resize}#aether-multiview .amv-handle[data-edge=e]{right:0}#aether-multiview .amv-handle[data-edge=w]{left:0}#aether-multiview .amv-handle[data-edge=ne],#aether-multiview .amv-handle[data-edge=se],#aether-multiview .amv-handle[data-edge=sw],#aether-multiview .amv-handle[data-edge=nw]{width:12px;height:12px}#aether-multiview .amv-handle[data-edge=ne]{right:0;top:0;cursor:nesw-resize}#aether-multiview .amv-handle[data-edge=se]{right:0;bottom:0;cursor:nwse-resize}#aether-multiview .amv-handle[data-edge=se]:after{content:'';position:absolute;right:3px;bottom:3px;width:4px;height:4px;border-right:1px solid #a9b6c14d;border-bottom:1px solid #a9b6c14d}#aether-multiview .amv-handle[data-edge=sw]{left:0;bottom:0;cursor:nesw-resize}#aether-multiview .amv-handle[data-edge=nw]{left:0;top:0;cursor:nwse-resize}#aether-multiview .is-maximized .amv-handle{display:none}#aether-multiview.amv-moving{user-select:none}@media(prefers-reduced-motion:reduce){#aether-multiview button{transition:none}}@media(max-width:450px){#aether-multiview .amv-role-list{grid-template-columns:1fr}#aether-multiview .amv-taskbar{gap:4px;padding:5px 6px}#aether-multiview .amv-taskbar>.amv-shell-control{width:34px}#aether-multiview .amv-pane>header{gap:2px;padding-left:7px}#aether-multiview .amv-pane>header .amv-title-avatar{display:none}#aether-multiview-launch{right:12px;bottom:12px}}
     `;document.head.append(style);
     const launch=button('\u591a\u89d2\u8272\u540c\u5c4f',open),root=element('section'),status=element('p','\u6b63\u5728\u8bfb\u53d6\u5b98\u7f51\u89d2\u8272\u5217\u8868\u2026','amv-status'),roles=element('section',undefined,'amv-roles'),roleList=element('div',undefined,'amv-role-list'),stage=element('div',undefined,'amv-desktop'),taskbar=element('footer',undefined,'amv-taskbar'),tasks=element('div',undefined,'amv-tasks'),empty=element('p','\u70b9\u51fb\u5e95\u90e8\u201c\u6253\u5f00\u89d2\u8272\u201d\u9009\u62e9\u8d26\u53f7\uff1b\u62d6\u52a8\u6807\u9898\u680f\u79fb\u52a8\uff0c\u62d6\u52a8\u8fb9\u89d2\u8c03\u6574\u5927\u5c0f\u3002','amv-empty'),snapMenu=element('section',undefined,'amv-snap-menu'),snapList=element('div',undefined,'amv-snap-list'),preview=element('div',undefined,'amv-snap-preview'),assist=element('section',undefined,'amv-snap-assist'),assistHint=element('strong'),assistList=element('div',undefined,'amv-assist-list');launch.id='aether-multiview-launch';root.id='aether-multiview';root.hidden=true;roles.hidden=true;snapMenu.hidden=true;assist.hidden=true;preview.hidden=true;preview.setAttribute('aria-hidden','true');status.setAttribute('aria-live','polite');root.setAttribute('aria-label','Aether \u591a\u89d2\u8272\u540c\u5c4f');roles.setAttribute('aria-label','\u89d2\u8272\u5217\u8868');stage.setAttribute('aria-label','\u89d2\u8272\u684c\u9762');taskbar.setAttribute('aria-label','\u89d2\u8272\u7a97\u53e3\u680f');snapMenu.setAttribute('aria-label','\u8d34\u9760\u5e03\u5c40');snapMenu.setAttribute('role','dialog');stage.append(empty,preview);
     let characters=[],busy=false,active=false,loaded=false,previousInert=false,pending=null,activeId=null,gesture=null,z=0,snapOwner=null,snapTimer=null,snapCloseTimer=null,snapGroup=null;const panes=new Map(),timers=new Set();let config={scale:50,characters:null,windows:Object.create(null)};try{const value=JSON.parse(localStorage.getItem(CONFIG)||'null');if([40,50,60,75,100].includes(value?.scale))config.scale=value.scale;if(Array.isArray(value?.characters))config.characters=value.characters.filter(name=>typeof name==='string');if(value?.windows&&typeof value.windows==='object'&&!Array.isArray(value.windows))config.windows=Object.assign(Object.create(null),value.windows);}catch{}
-    const manage=button('\u6253\u5f00\u89d2\u8272',()=>{closeSnap();closeAssist();roles.hidden=!roles.hidden;manage.setAttribute('aria-expanded',String(!roles.hidden));renderRoles();}),all=button('\u6253\u5f00\u5168\u90e8',()=>{characters.forEach((row,index)=>openPane(row.username,index*400));closeMenus();}),close=button('\u9000\u51fa\u684c\u9762',leave),roleFooter=element('footer'),assistHeader=element('header');manage.dataset.amvManage='';manage.setAttribute('aria-expanded','false');all.dataset.amvAll='';close.dataset.amvClose='';manage.classList.add('amv-shell-control');manage.setAttribute('aria-label','\u6253\u5f00\u89d2\u8272');manage.title='\u6253\u5f00\u89d2\u8272';close.classList.add('amv-shell-control');close.setAttribute('aria-label','\u9000\u51fa\u684c\u9762');close.title='\u9000\u51fa\u684c\u9762';controlIcon(manage,'start');controlIcon(close,'exit');taskbar.append(manage,tasks,close);const checkUpdate=button('\u68c0\u67e5\u66f4\u65b0',()=>window.dispatchEvent(new Event('aether-userscript-check-updates')));checkUpdate.dataset.amvCheckUpdate='';const syncPins=button('\u540c\u6b65\u7f6e\u9876',()=>window.dispatchEvent(new Event('aether-pins-settings')));syncPins.dataset.amvPinOpen='';roleFooter.append(element('span','v'+SCRIPT_VERSION,'amv-script-version'),syncPins,checkUpdate,all);roles.append(element('h2','Aether \u591a\u89d2\u8272\u540c\u5c4f'),status,roleList,roleFooter);snapMenu.append(element('strong','\u8d34\u9760\u5e03\u5c40'),snapList);assistHeader.append(assistHint,button('\u5b8c\u6210',closeAssist));assist.append(assistHeader,assistList);root.append(stage,taskbar,roles,snapMenu,assist);document.body.append(root,launch);
+    const manage=button('\u6253\u5f00\u89d2\u8272',()=>{if(!roles.hidden){closeMenus();return;}closeSnap();closeAssist();roles.hidden=false;manage.setAttribute('aria-expanded','true');preferences=readPreferences();renderRoles();}),all=button('\u6253\u5f00\u5168\u90e8',()=>{orderedRoles().forEach((row,index)=>openPane(row.username,index*400));closeMenus();}),close=button('\u9000\u51fa\u684c\u9762',leave),roleFooter=element('footer'),assistHeader=element('header');manage.dataset.amvManage='';manage.setAttribute('aria-expanded','false');all.dataset.amvAll='';close.dataset.amvClose='';manage.classList.add('amv-shell-control');manage.setAttribute('aria-label','\u6253\u5f00\u89d2\u8272');manage.title='\u6253\u5f00\u89d2\u8272';close.classList.add('amv-shell-control');close.setAttribute('aria-label','\u9000\u51fa\u684c\u9762');close.title='\u9000\u51fa\u684c\u9762';controlIcon(manage,'start');controlIcon(close,'exit');taskbar.append(manage,tasks,close);const checkUpdate=button('\u68c0\u67e5\u66f4\u65b0',()=>window.dispatchEvent(new Event('aether-userscript-check-updates')));checkUpdate.dataset.amvCheckUpdate='';const syncPins=button('\u540c\u6b65\u7f6e\u9876',()=>window.dispatchEvent(new Event('aether-pins-settings')));syncPins.dataset.amvPinOpen='';roleFooter.append(element('span','v'+SCRIPT_VERSION,'amv-script-version'),syncPins,checkUpdate,all);roles.append(element('h2','Aether \u591a\u89d2\u8272\u540c\u5c4f'),status,roleList,roleFooter);snapMenu.append(element('strong','\u8d34\u9760\u5e03\u5c40'),snapList);assistHeader.append(assistHint,button('\u5b8c\u6210',closeAssist));assist.append(assistHeader,assistList);root.append(stage,taskbar,roles,snapMenu,assist);document.body.append(root,launch);
     const clamp=(value,min,max)=>Math.max(min,Math.min(max,value)),bounds=()=>({w:stage.clientWidth,h:stage.clientHeight}),finite=(value,fallback)=>Number.isFinite(value)?value:fallback;
     function controlIcon(node,kind){if(node.dataset.icon===kind)return;const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg'),paths={minimize:'M5 10h10',maximize:'M5 5h10v10H5Z',restore:'M7 5V3h10v10h-2M3 7h10v10H3Z',reload:'M15 6A6 6 0 1 0 16 12M15 3v4h-4',close:'m5 5 10 10M15 5 5 15',start:'M3 3h5v5H3ZM12 3h5v5h-5ZM3 12h5v5H3ZM12 12h5v5h-5Z',exit:'M8 4H4v12h4m4-11 5 5-5 5M8 10h9'};svg.setAttribute('viewBox','0 0 20 20');svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');svg.setAttribute('stroke-width','1.25');svg.setAttribute('stroke-linecap','round');svg.setAttribute('stroke-linejoin','round');svg.setAttribute('aria-hidden','true');svg.classList.add('amv-control-icon');const path=document.createElementNS(ns,'path');path.setAttribute('d',paths[kind]);svg.append(path);node.dataset.icon=kind;node.replaceChildren(svg);}
     function name(username){const row=characters.find(row=>row.username===username);return row?.name&&row.name!==username?row.name+' \u00b7 '+username:username||'\u9009\u62e9\u89d2\u8272';}
     function fit(rect){const area=bounds(),w=clamp(finite(rect.w,760),Math.min(320,Math.max(1,area.w-16)),Math.max(1,area.w-16)),h=clamp(finite(rect.h,600),Math.min(220,Math.max(1,area.h-16)),Math.max(1,area.h-16));return {x:clamp(finite(rect.x,8),8,Math.max(8,area.w-w-8)),y:clamp(finite(rect.y,8),8,Math.max(8,area.h-h-8)),w,h};}
     function initial(index){const area=bounds();return fit({x:16+(index%8)*32,y:16+(index%8)*26,w:Math.min(760,area.w-32),h:Math.min(600,area.h-32)});}
     function save(){if(!loaded)return;config.characters=[...new Set([...panes.values()].map(pane=>pane.character))];for(const pane of panes.values())config.windows[pane.character]={...pane.rect,minimized:pane.minimized,maximized:pane.maximized,order:pane.order,scale:pane.scale,snap:pane.snap};try{localStorage.setItem(CONFIG,JSON.stringify(config));}catch{}}
-    function renderRoles(){roleList.replaceChildren();characters.forEach(row=>{const existing=[...panes.values()].find(pane=>pane.character===row.username),choice=button('',()=>{openPane(row.username);roles.hidden=true;manage.setAttribute('aria-expanded','false');}),icon=element('span',undefined,'amv-avatar'),copy=element('span',undefined,'amv-role-copy');updateIcon(icon,row.username);copy.append(element('strong',row.name||row.username));if(row.name&&row.name!==row.username)copy.append(element('small',row.username));choice.append(icon,copy);choice.setAttribute('aria-label',name(row.username));choice.title=name(row.username)+(existing?' \u00b7 \u5df2\u6253\u5f00':'');choice.disabled=!loaded;choice.dataset.amvRole=row.username;choice.dataset.open=!!existing;choice.setAttribute('aria-pressed',String(!!existing));roleList.append(choice);});}
-    function refresh(){empty.hidden=panes.size>0;if(loaded)status.textContent=panes.size+' / '+characters.length+' \u4e2a\u89d2\u8272\u7a97\u53e3';if(!roles.hidden)renderRoles();for(const task of tasks.querySelectorAll('[data-amv-task]'))if(!panes.has(task.dataset.amvTask))task.remove();for(const [id,pane] of panes){if(!pane.task){pane.task=button('',()=>{closeMenus();activate(id,true);});pane.task.className='amv-task';pane.task.dataset.amvTask=id;pane.taskIcon=element('span',undefined,'amv-avatar');pane.task.append(pane.taskIcon);tasks.append(pane.task);}updateIcon(pane.taskIcon,pane.character);pane.task.dataset.minimized=pane.minimized;pane.task.setAttribute('aria-pressed',String(activeId===id&&!pane.minimized));pane.task.setAttribute('aria-label',name(pane.character));pane.task.title=name(pane.character)+(pane.minimized?' \u00b7 \u5df2\u6700\u5c0f\u5316':'');}}
+    const preferencesKey='aether-role-preferences-v1';
+    function readPreferences(){
+      try{
+        const saved=JSON.parse(localStorage.getItem(preferencesKey)||'null');
+        const order=Array.isArray(saved?.order)?[...new Set(saved.order.filter(value=>typeof value==='string'&&value))]:[];
+        const notes=new Map(Object.entries(saved?.notes||{}).filter(([,value])=>typeof value==='string'&&value.trim()).map(([key,value])=>[key,value.trim().slice(0,80)]));
+        return {order,notes};
+      }catch{return {order:[],notes:new Map()};}
+    }
+    let preferences=readPreferences(),roleDraft=null;
+    function orderedRoles(order=preferences.order){
+      const rank=new Map(order.map((username,index)=>[username,index]));
+      return [...characters].sort((a,b)=>(rank.get(a.username)??Infinity)-(rank.get(b.username)??Infinity));
+    }
+    const editRoles=button('\u6392\u5e8f\u4e0e\u5907\u6ce8',()=>{
+      roleDraft={order:orderedRoles().map(row=>row.username),notes:new Map()};
+      editorStatus.textContent='';renderRoles();
+      roleList.querySelector('input')?.focus();
+    });
+    const saveRoles=button('\u4fdd\u5b58',()=>{
+      if(!roleDraft)return;
+      const latest=readPreferences(),initial=orderedRoles();
+      const changedOrder=roleDraft.order.some((username,index)=>username!==initial[index]?.username);
+      const order=changedOrder?[...roleDraft.order,...latest.order.filter(username=>!roleDraft.order.includes(username))]:latest.order;
+      const notes=latest.notes;
+      for(const [username,value] of roleDraft.notes){
+        if(value.trim())notes.set(username,value.trim().slice(0,80));
+        else notes.delete(username);
+      }
+      try{localStorage.setItem(preferencesKey,JSON.stringify({order,notes:Object.fromEntries(notes)}));}
+      catch{editorStatus.textContent='\u65e0\u6cd5\u4fdd\u5b58\uff0c\u8bf7\u68c0\u67e5\u6d4f\u89c8\u5668\u5b58\u50a8\u7a7a\u95f4\u540e\u91cd\u8bd5\u3002';return;}
+      preferences={order,notes};roleDraft=null;refresh();editRoles.focus();
+    });
+    const cancelRoles=button('\u53d6\u6d88',()=>{roleDraft=null;renderRoles();editRoles.focus();});
+    const editorStatus=element('p',undefined,'amv-role-editor-status');
+    editorStatus.setAttribute('role','status');
+    const roleEditorActions=element('div',undefined,'amv-role-editor-actions');
+    roleEditorActions.append(cancelRoles,saveRoles);roles.insertBefore(roleEditorActions,roleFooter);roles.insertBefore(editorStatus,roleFooter);
+    const roleHeading=element('div',undefined,'amv-role-heading');
+    const heading=roles.querySelector('h2');roles.prepend(roleHeading);roleHeading.append(heading,editRoles);
+    editRoles.disabled=true;
+
+    function renderRoles(){
+      roleEditorActions.hidden=!roleDraft;roleFooter.hidden=!!roleDraft;editRoles.hidden=!!roleDraft;
+      editRoles.disabled=!loaded||!characters.length;editorStatus.hidden=!roleDraft;
+      roleList.classList.toggle('is-editing',!!roleDraft);
+      roleList.replaceChildren();
+      const rows=orderedRoles(roleDraft?.order);
+      rows.forEach((row,index)=>{
+        const icon=element('span',undefined,'amv-avatar'),copy=element('span',undefined,'amv-role-copy');
+        updateIcon(icon,row.username);copy.append(element('strong',row.name||row.username));
+        if(row.name&&row.name!==row.username)copy.append(element('small',row.username));
+        if(roleDraft){
+          const editor=element('div',undefined,'amv-role-editor-row'),input=element('input');
+          input.type='text';input.maxLength=80;input.placeholder='\u5907\u6ce8';
+          input.setAttribute('aria-label',name(row.username)+'\u7684\u5907\u6ce8');
+          input.value=roleDraft.notes.get(row.username)??preferences.notes.get(row.username)??'';
+          input.addEventListener('input',()=>roleDraft?.notes.set(row.username,input.value));
+          input.addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.isComposing){event.preventDefault();saveRoles.click();}});
+          editor.append(icon,copy,input);
+          const actions=element('div',undefined,'amv-role-move');
+          for(const [direction,label,glyph] of [[-1,'\u4e0a\u79fb','\u2191'],[1,'\u4e0b\u79fb','\u2193']]){
+            const adjacent=index+direction;
+            const move=button(glyph,()=>{
+              [roleDraft.order[index],roleDraft.order[adjacent]]=[roleDraft.order[adjacent],roleDraft.order[index]];
+              renderRoles();
+              const moved=roleList.children[adjacent],target=moved?.querySelector('[data-direction="'+direction+'"]:not(:disabled)');
+              (target||moved?.querySelector('button:not(:disabled)'))?.focus();
+            });
+            move.disabled=adjacent<0||adjacent>=rows.length;
+            move.dataset.direction=direction;move.title=label;move.setAttribute('aria-label',label+' '+name(row.username));
+            actions.append(move);
+          }
+          editor.append(actions);roleList.append(editor);return;
+        }
+        const existing=[...panes.values()].some(pane=>pane.character===row.username);
+        const choice=button('',()=>{openPane(row.username);closeMenus();});
+        const note=preferences.notes.get(row.username);
+        if(note)copy.append(element('small',note,'amv-role-note'));
+        choice.append(icon,copy);choice.setAttribute('aria-label',name(row.username));
+        if(note)choice.setAttribute('aria-description',note);
+        choice.title=[name(row.username),note,existing?'\u5df2\u6253\u5f00':''].filter(Boolean).join(' \u00b7 ');
+        choice.disabled=!loaded;choice.dataset.amvRole=row.username;choice.dataset.open=existing;
+        choice.setAttribute('aria-pressed',String(existing));roleList.append(choice);
+      });
+    }
+    function refresh(){
+      empty.hidden=panes.size>0;
+      if(loaded)status.textContent=panes.size+' / '+characters.length+' \u4e2a\u89d2\u8272\u7a97\u53e3';
+      if(!roles.hidden&&!roleDraft)renderRoles();
+      for(const task of tasks.querySelectorAll('[data-amv-task]'))if(!panes.has(task.dataset.amvTask))task.remove();
+      const opened=[...panes.values()];
+      if(preferences.order.length){
+        const rank=new Map(orderedRoles().map((row,index)=>[row.username,index]));
+        opened.sort((a,b)=>(rank.get(a.character)??Infinity)-(rank.get(b.character)??Infinity));
+      }
+      opened.forEach((pane,index)=>{
+        if(!pane.task){
+          pane.task=button('',()=>{closeMenus();activate(pane.id,true);});
+          pane.task.className='amv-task';pane.task.dataset.amvTask=pane.id;
+          pane.taskIcon=element('span',undefined,'amv-avatar');pane.task.append(pane.taskIcon);
+        }
+        const current=tasks.children[index];
+        if(pane.task!==current)tasks.insertBefore(pane.task,current||null);
+        updateIcon(pane.taskIcon,pane.character);pane.task.dataset.minimized=pane.minimized;
+        pane.task.setAttribute('aria-pressed',String(activeId===pane.id&&!pane.minimized));
+        pane.task.setAttribute('aria-label',name(pane.character));
+        const note=preferences.notes.get(pane.character);
+        pane.task.title=[name(pane.character),note,pane.minimized?'\u5df2\u6700\u5c0f\u5316':''].filter(Boolean).join(' \u00b7 ');
+      });
+    }
+    window.addEventListener('storage',event=>{
+      if(event.key===preferencesKey&&!roleDraft){preferences=readPreferences();if(active)refresh();}
+    });
     function paint(pane){const area=bounds(),rect=pane.maximized?{x:8,y:8,w:Math.max(1,area.w-16),h:Math.max(1,area.h-16)}:fit(pane.snap?zoneRect(pane.snap):pane.rect);pane.display=rect;pane.node.style.setProperty('--amv-scale',pane.scale/100);pane.scaleSelect.value=String(pane.scale);Object.assign(pane.node.style,{left:rect.x+'px',top:rect.y+'px',width:rect.w+'px',height:rect.h+'px',zIndex:pane.order});pane.node.hidden=pane.minimized;pane.node.dataset.active=String(activeId===pane.id&&!pane.minimized);pane.node.classList.toggle('is-maximized',pane.maximized);controlIcon(pane.maximize,pane.maximized?'restore':'maximize');updateIcon(pane.titleIcon,pane.character);pane.maximize.setAttribute('aria-label',(pane.maximized?'\u8fd8\u539f':'\u6700\u5927\u5316')+' '+name(pane.character));}
     function layout(){panes.forEach(paint);positionSnap();if(snapGroup){const preset=presets.find(item=>item.id===snapGroup.layout),index=preset.zones.findIndex((_,i)=>!snapGroup.placed.has(i));if(index>=0)previewZone({layout:snapGroup.layout,index});}}
     function activate(id,restore=false){const pane=panes.get(id);if(!pane)return;if(restore)pane.minimized=false;if(pane.minimized)return;if(activeId!==id||restore){activeId=id;pane.order=++z;layout();refresh();save();}}
@@ -872,7 +997,7 @@
     function previewZone(target){const rect=zoneRect(target);preview.hidden=!rect||!canSnap(target);if(rect)Object.assign(preview.style,{left:rect.x+'px',top:rect.y+'px',width:rect.w+'px',height:rect.h+'px'});}
     function closeSnap(){clearTimeout(snapTimer);clearTimeout(snapCloseTimer);snapMenu.hidden=true;snapOwner=null;preview.hidden=true;}
     function closeAssist(){assist.hidden=true;snapGroup=null;preview.hidden=true;}
-    function closeMenus(){roles.hidden=true;manage.setAttribute('aria-expanded','false');closeSnap();closeAssist();}
+    function closeMenus(){roles.hidden=true;roleDraft=null;manage.setAttribute('aria-expanded','false');closeSnap();closeAssist();}
     function avatar(character){const row=characters.find(item=>item.username===character);try{if(row?.avatar){const url=new URL(row.avatar,ORIGIN);if(url.protocol==='https:'&&!url.username&&!url.password)return url.href;}}catch{}return '';}
     function updateIcon(holder,character){const label=characters.find(item=>item.username===character)?.name||character||'?',url=avatar(character);if(holder.dataset.iconCharacter===character&&holder.dataset.iconUrl===url)return;holder.dataset.iconCharacter=character;holder.dataset.iconUrl=url;holder.replaceChildren();const fallback=element('span',Array.from(label).slice(0,1).join(''),'amv-avatar-fallback');holder.append(fallback);if(url){const picture=element('img');picture.alt='';picture.referrerPolicy='no-referrer';picture.draggable=false;picture.addEventListener('load',()=>{picture.hidden=false;fallback.hidden=true;});picture.addEventListener('error',()=>{picture.hidden=true;fallback.hidden=false;});picture.hidden=true;picture.src=url;holder.append(picture);}}
     function positionSnap(){if(snapMenu.hidden)return;const pane=panes.get(snapOwner);if(!pane||pane.minimized){closeSnap();return;}const anchor=pane.maximize.getBoundingClientRect(),width=snapMenu.offsetWidth,height=snapMenu.offsetHeight;let y=anchor.bottom+6;if(y+height>innerHeight-64)y=anchor.top-height-6;snapMenu.style.left=clamp(anchor.right-width,8,Math.max(8,innerWidth-width-8))+'px';snapMenu.style.top=clamp(y,8,Math.max(8,innerHeight-height-64))+'px';}
