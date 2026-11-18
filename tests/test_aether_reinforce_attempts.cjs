@@ -1,0 +1,16 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),crypto=require('node:crypto').webcrypto;
+const source=fs.readFileSync(path.join(__dirname,'../src/aetheros.js'),'utf8'),start=source.indexOf('  const historyRandom='),end=source.indexOf('  function createReinforceBridge',start);
+assert.ok(start>0&&end>start);const context={crypto};vm.createContext(context);vm.runInContext(source.slice(start,end)+';globalThis.api={createReinforceHistory,mergeReinforceRecord,normalizeReinforceRecord};',context);
+const {createReinforceHistory,mergeReinforceRecord,normalizeReinforceRecord}=context.api,values=new Map(),storage={getItem:key=>values.get(key)||null,setItem:(key,value)=>values.set(key,value)};let time=1000;
+const history=createReinforceHistory(storage,()=>time),info={equipment:{reinforce_level:2,name:'测试剑',rarity:5},next:{fails:4},maxed:false};
+let attempt=history.begin('角色','equip',info,'attempt',false),record=history.read('角色','equip');assert.equal(record.events[attempt.id].started_at,1000);assert.equal(record.events[attempt.id].status,'pending');
+time=2000;history.finish(attempt,{code:0,data:{success:false,new_level:2,fails:5}});record=history.read('角色','equip');assert.equal(record.events[attempt.id].status,'failure');assert.equal(record.events[attempt.id].finished_at,2000);
+history.finish(attempt,{code:0,data:{success:false,new_level:2,fails:6}});assert.equal(Object.keys(history.read('角色','equip').events).length,1);
+time=3000;attempt=history.begin('角色','equip',{...info,next:{fails:5}},'attempt',true);time=4000;history.finish(attempt,{code:0,data:{success:true,new_level:3}});record=history.read('角色','equip');assert.equal(record.events[attempt.id].status,'success');assert.equal(record.events[attempt.id].method,'voucher');assert.equal(record.levels['3'].attempts,6);
+const stale=JSON.parse(JSON.stringify(record));stale.events[attempt.id].status='pending';stale.events[attempt.id].finished_at=null;assert.equal(mergeReinforceRecord(record,stale).events[attempt.id].status,'success');
+const old=JSON.parse(JSON.stringify(record));delete old.events;assert.equal(Object.keys(mergeReinforceRecord(record,old).events).length,2);
+time=5000;attempt=history.begin('角色','equip',{...info,equipment:{...info.equipment,reinforce_level:3},next:{fails:0}},'attempt',false);time=6000;history.finish(attempt,null,true);record=history.read('角色','equip');assert.equal(record.events[attempt.id].status,'unknown');assert.equal(record.events[attempt.id].started_at,5000);
+time=7000;attempt=history.begin('角色','other',info,'attempt_continuous',false);time=8000;history.finish(attempt,{code:0,data:{success:true,new_level:3,attempts:3}});assert.equal(history.read('角色','other').events[attempt.id].count,3);
+const malformed=JSON.parse(JSON.stringify(record));malformed.events[attempt.id]={target:0};assert.equal(normalizeReinforceRecord(malformed),null);
+time=9000;attempt=history.begin('角色','race',info,'attempt',false);history.observe('角色','race',{equipment:{reinforce_level:3},maxed:false,next:{fails:0}});time=10000;history.finish(attempt,{code:0,data:{success:true,new_level:3}});record=history.read('角色','race');assert.equal(record.events[attempt.id].status,'success');assert.equal(record.levels['3'].material,1);
+console.log('逐次起止时间、失败/成功/未知、连续请求次数、幂等与旧客户端兼容检查通过');
