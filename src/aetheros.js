@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.14.3
+// @version      0.15.0
 // @description  官网多角色桌面、背包筛选与置顶云同步、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -91,16 +91,16 @@
     function drafts(config){const values=[];for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(!key?.startsWith(DRAFT+config.client_id+':'))continue;try{const value=JSON.parse(localStorage.getItem(key));if(value&&typeof value.character==='string'&&typeof value.uuid==='string'&&typeof value.pinned==='boolean')values.push({key,character:value.character,uuid:value.uuid,pinned:value.pinned,order:value.order||0});}catch{}}return values.sort((a,b)=>a.order-b.order||a.key.localeCompare(b.key));}
     function flush(config){const batch=drafts(config);for(const draft of batch){config.next_seq++;config.pending.push({seq:config.next_seq,character:draft.character,uuid:draft.uuid,pinned:draft.pinned});}if(!save(config))throw new Error(message);for(const draft of batch)localStorage.removeItem(draft.key);return config;}
     function apply(data,config){const result=new Map(Object.entries(data.characters).map(([role,values])=>[role,new Set(values)]));for(const op of config.pending){if(!result.has(op.character))result.set(op.character,new Set());op.pinned?result.get(op.character).add(op.uuid):result.get(op.character).delete(op.uuid);}for(const role of Object.keys(snapshots()))if(!result.has(role))result.set(role,new Set());for(const [role,values]of result){const key=PREFIX+role,value=JSON.stringify([...values]);if(localStorage.getItem(key)===value)continue;localStorage.setItem(key,value);window.dispatchEvent(new StorageEvent('storage',{key,newValue:value}));}}
-    const modal=element('section',undefined,'amv-pin-modal'),card=element('div',undefined,'amv-pin-card'),title=element('strong','置顶云同步'),intro=element('p','在 Mugen-Web 生成本设备同步码，再粘贴连接。同步装备置顶和强化记录，不同步窗口布局和筛选。下方首次同步方式只影响置顶，强化记录始终合并保留。'),link=element('a','打开设备管理'),input=element('textarea'),choices=element('div',undefined,'amv-pin-choices'),feedback=element('p'),connect=button('连接并同步',bind),manual=button('立即同步',()=>{paused=false;window.dispatchEvent(new Event('aether-history-sync-now'));synchronize(true);}),disconnect=button('断开本机',unbind),close=button('关闭',()=>modal.hidden=true);let mode='merge';
+    const modal=element('section',undefined,'amv-pin-modal'),card=element('div',undefined,'amv-pin-card'),title=element('strong','置顶云同步'),intro=element('p','在 Mugen-Web 生成本设备同步码，再粘贴连接。同步装备置顶、强化记录和自定义装备预设。下方首次同步方式只影响置顶。'),link=element('a','打开设备管理'),input=element('textarea'),choices=element('div',undefined,'amv-pin-choices'),feedback=element('p'),connect=button('连接并同步',bind),manual=button('立即同步',()=>{paused=false;window.dispatchEvent(new Event('aether-history-sync-now'));window.dispatchEvent(new Event('aether-loadout-sync-now'));synchronize(true);}),disconnect=button('断开本机',unbind),close=button('关闭',()=>modal.hidden=true);let mode='merge';
     modal.hidden=true;modal.dataset.amvPinDialog='';card.setAttribute('role','dialog');card.setAttribute('aria-modal','true');card.setAttribute('aria-label','置顶云同步');input.rows=3;input.placeholder='粘贴 AETHEROS1. 开头的设备同步码';input.setAttribute('aria-label','设备同步码');link.target='_blank';link.rel='noopener noreferrer';link.href=DEFAULT_SERVER+'/admin/aether/sync';feedback.setAttribute('role','status');for(const [value,label]of [['merge','合并本机与云端'],['local','本机已有角色为准'],['cloud','使用云端置顶']]){const option=button(label,()=>{mode=value;choices.querySelectorAll('button').forEach(node=>node.setAttribute('aria-pressed',String(node===option)));});option.dataset.amvPinMode=value;option.setAttribute('aria-pressed',String(value===mode));choices.append(option);}const actions=element('div',undefined,'amv-pin-actions');actions.append(connect,manual,disconnect,close);card.append(title,intro,link,input,choices,feedback,actions);modal.append(card);document.body.append(modal);
     const style=element('style');style.textContent=`.amv-pin-modal{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;padding:16px;background:#080d17a8;box-sizing:border-box}.amv-pin-modal[hidden]{display:none!important}.amv-pin-card{width:min(480px,100%);max-height:calc(100dvh - 32px);overflow:auto;box-sizing:border-box;padding:20px;border:1px solid #ffffff24;border-radius:14px;background:#242930;color:#e7e9ed;box-shadow:0 12px 40px #0006;font:13px/1.6 system-ui}.amv-pin-card p{color:#aab7c7;margin:10px 0}.amv-pin-card strong{font-size:16px}.amv-pin-card a{color:#9ad6c1}.amv-pin-card textarea{display:block;width:100%;box-sizing:border-box;resize:vertical;margin:12px 0;padding:9px;border:1px solid #ffffff25;border-radius:7px;background:#111821;color:inherit;font:12px/1.5 system-ui}.amv-pin-card button{margin:0;padding:6px 9px;border:1px solid #ffffff20;border-radius:6px;background:#ffffff08;color:inherit;font:12px/1.5 system-ui;cursor:pointer}.amv-pin-card button:disabled{opacity:.4;cursor:default}.amv-pin-card button[aria-pressed=true]{border-color:#8dceb8;color:#a7e2cd}.amv-pin-choices,.amv-pin-actions{display:flex;gap:6px;flex-wrap:wrap}.amv-pin-card :focus-visible{outline:2px solid #8dceb8;outline-offset:2px}`;document.head.append(style);
     function render(){const config=load();if(config&&message==='未连接云同步')message='已连接，等待同步';feedback.textContent=message+(config?.pending.length?' · 待同步 '+config.pending.length+' 项':'');manual.disabled=busy||!config;disconnect.disabled=busy||!config;connect.disabled=busy;input.disabled=busy;link.href=(config?.server||DEFAULT_SERVER)+'/admin/aether/sync';for(const node of document.querySelectorAll('[data-amv-pin-open]'))node.title='置顶云同步：'+message;}
     function schedule(delay=500){clearTimeout(timer);if(load()&&!paused)timer=setTimeout(()=>synchronize(),delay);}
-    async function synchronize(force=false){if(busy||paused&&!force||!load())return;if(document.hidden&&!force){schedule(30000);return;}busy=true;render();try{await locked('network',async()=>{const sent=await locked('queue',()=>{const config=load();if(!config)return null;flush(config);return {server:config.server,token:config.token,client_id:config.client_id,initial:config.initial,operations:config.pending.slice(0,500)};});if(!sent)return;const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),12000);let response,data;try{response=await fetch(sent.server+'/api/aetheros/pins/sync',{method:'POST',credentials:'omit',referrerPolicy:'no-referrer',cache:'no-store',headers:{'Content-Type':'application/json','Authorization':'Bearer '+sent.token},body:JSON.stringify({client_id:sent.client_id,initial:sent.initial,operations:sent.operations}),signal:controller.signal});data=await response.json().catch(()=>({}));}finally{clearTimeout(timeout);}if(!response.ok){if([401,403,409,413,422].includes(response.status))paused=true;throw new Error(response.status===404?'同步服务尚未更新，请先更新 Mugen-Web':typeof data.detail==='string'?data.detail:'同步服务暂不可用');}if(data.version!==1||!Number.isSafeInteger(data.ack)||!Number.isSafeInteger(data.revision)||data.ack<0||data.revision<0||!data.characters||typeof data.characters!=='object'||Array.isArray(data.characters)||Object.values(data.characters).some(values=>!Array.isArray(values)||values.some(value=>typeof value!=='string')))throw new Error('同步响应无效，保留本机数据');await locked('queue',()=>{const config=load();if(!config||config.client_id!==sent.client_id||config.token!==sent.token)return;flush(config);config.pending=config.pending.filter(op=>op.seq>data.ack);config.initial=null;config.next_seq=Math.max(config.next_seq,data.ack);config.revision=data.revision;if(!save(config))throw new Error(message);apply(data,config);});message='置顶已同步';window.dispatchEvent(new Event('aether-history-sync-now'));});}catch(error){message=error.name==='AbortError'?'连接超时，置顶保留在本机':error instanceof TypeError?'暂时离线，置顶保留在本机':error.message||'暂时离线，置顶保留在本机';}finally{busy=false;render();const config=load();if(config&&!paused)schedule(config.pending.length?5000:30000);}}
+    async function synchronize(force=false){if(busy||paused&&!force||!load())return;if(document.hidden&&!force){schedule(30000);return;}busy=true;render();try{await locked('network',async()=>{const sent=await locked('queue',()=>{const config=load();if(!config)return null;flush(config);return {server:config.server,token:config.token,client_id:config.client_id,initial:config.initial,operations:config.pending.slice(0,500)};});if(!sent)return;const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),12000);let response,data;try{response=await fetch(sent.server+'/api/aetheros/pins/sync',{method:'POST',credentials:'omit',referrerPolicy:'no-referrer',cache:'no-store',headers:{'Content-Type':'application/json','Authorization':'Bearer '+sent.token},body:JSON.stringify({client_id:sent.client_id,initial:sent.initial,operations:sent.operations}),signal:controller.signal});data=await response.json().catch(()=>({}));}finally{clearTimeout(timeout);}if(!response.ok){if([401,403,409,413,422].includes(response.status))paused=true;throw new Error(response.status===404?'同步服务尚未更新，请先更新 Mugen-Web':typeof data.detail==='string'?data.detail:'同步服务暂不可用');}if(data.version!==1||!Number.isSafeInteger(data.ack)||!Number.isSafeInteger(data.revision)||data.ack<0||data.revision<0||!data.characters||typeof data.characters!=='object'||Array.isArray(data.characters)||Object.values(data.characters).some(values=>!Array.isArray(values)||values.some(value=>typeof value!=='string')))throw new Error('同步响应无效，保留本机数据');await locked('queue',()=>{const config=load();if(!config||config.client_id!==sent.client_id||config.token!==sent.token)return;flush(config);config.pending=config.pending.filter(op=>op.seq>data.ack);config.initial=null;config.next_seq=Math.max(config.next_seq,data.ack);config.revision=data.revision;if(!save(config))throw new Error(message);apply(data,config);});message='置顶已同步';window.dispatchEvent(new Event('aether-history-sync-now'));if(sent.initial)window.dispatchEvent(new Event('aether-loadout-sync-now'));});}catch(error){message=error.name==='AbortError'?'连接超时，置顶保留在本机':error instanceof TypeError?'暂时离线，置顶保留在本机':error.message||'暂时离线，置顶保留在本机';}finally{busy=false;render();const config=load();if(config&&!paused)schedule(config.pending.length?5000:30000);}}
     async function bind(){if(busy)return;if(!navigator.locks?.request){message='此浏览器缺少同步锁支持，请更新浏览器后连接';render();return;}let payload;try{const text=input.value.trim();if(!text.startsWith('AETHEROS1.'))throw new Error();payload=JSON.parse(atob(text.slice(10).replaceAll('-','+').replaceAll('_','/')));if(payload.version!==1||!validServer(payload.server)||!/^[A-Za-z0-9_-]{32,128}$/.test(payload.token))throw new Error();}catch{message='设备同步码格式不正确';render();return;}if(mode==='local'&&!confirm('将以本机已有角色的置顶为准覆盖云端对应角色，继续？'))return;if(load()&&!confirm('更换当前连接？本机置顶会保留，请确认首次同步方式。'))return;const config={version:1,server:payload.server,token:payload.token,client_id:random(),next_seq:0,pending:[],initial:{mode,characters:snapshots()},revision:0};paused=false;if(!save(config))return;input.value='';message='正在连接…';await synchronize(true);}
     async function unbind(){if(!confirm('断开本机同步？本机置顶会保留；未同步修改可在下次连接时合并。'))return;await locked('queue',()=>{localStorage.removeItem(KEY);});clearTimeout(timer);paused=false;message='已断开，本机置顶保留';render();}
     window.addEventListener('aether-pin-change',event=>{const detail=event.detail,config=load();if(!config||!detail||typeof detail.character!=='string'||typeof detail.uuid!=='string'||typeof detail.pinned!=='boolean')return;try{const existing=drafts(config),order=Math.max(0,...existing.map(value=>value.order||0))+1;localStorage.setItem(DRAFT+config.client_id+':'+random(),JSON.stringify({character:detail.character,uuid:detail.uuid,pinned:detail.pinned,order}));locked('queue',()=>{const latest=load();if(latest?.client_id===config.client_id)flush(latest);}).then(()=>{render();schedule();}).catch(()=>{message='同步队列无法保存，请保留本机数据并重新连接';paused=true;render();});}catch{message='同步队列无法保存，请保留本机数据并重新连接';paused=true;render();}});
-    const historyFeedback=element('p');feedback.after(historyFeedback);window.addEventListener('aether-history-sync-status',event=>{historyFeedback.textContent=event.detail.message;});
+    const historyFeedback=element('p'),loadoutFeedback=element('p'),loadoutLink=element('a','在 Web 查看装备预设');loadoutLink.hidden=true;feedback.after(historyFeedback,loadoutFeedback,loadoutLink);window.addEventListener('aether-loadout-sync-status',event=>{loadoutFeedback.textContent=event.detail.message;loadoutLink.hidden=!event.detail.server;if(event.detail.server)loadoutLink.href=event.detail.server+'/admin/aether?character_view=presets#aether-equipment';});window.addEventListener('aether-history-sync-status',event=>{historyFeedback.textContent=event.detail.message;});
     window.addEventListener('aether-pins-settings',()=>{modal.hidden=false;render();close.focus();});modal.addEventListener('click',event=>{if(event.target===modal)modal.hidden=true;});modal.addEventListener('keydown',event=>{event.stopPropagation();if(event.key==='Escape')modal.hidden=true;if(event.key==='Tab'){const controls=[...card.querySelectorAll('a[href],button:not(:disabled),textarea:not(:disabled)')],first=controls[0],last=controls.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}});window.addEventListener('online',()=>schedule(100));document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule(100);});window.addEventListener('storage',event=>{if(event.key===KEY)render();});render();schedule(1000);
   }
   function initScriptUpdates(){
@@ -229,27 +229,172 @@
     return changes;
   }
 
+  const LEGACY_LOADOUTS='aether-custom-loadouts-v1:', CLOUD_LOADOUTS='aether-custom-loadouts-v2:';
+  function validLoadout(row){
+    const isId=value=>typeof value==='string'&&value.length>0;
+    if(!isId(row?.name))return false;
+    if(row.empty===true)return true;
+    if(!row.equipment||!row.skills||!row.spectra)return false;
+    const slotsValid=(slots,stored,id)=>Object.keys(slots).every(slot=>stored[slot]===null||isId(stored[slot]?.[id])&&isId(stored[slot]?.name));
+    return slotsValid(SAVED_GEAR,row.equipment,'uuid')&&slotsValid(SAVED_SKILLS,row.skills,'code')&&Object.keys(SAVED_PRISMS).every(color=>Array.isArray(row.spectra[color])&&row.spectra[color].every(item=>isId(item?.id)&&isId(item?.name)));
+  }
+  const isLoadoutStamp=value=>Number.isSafeInteger(value)&&value>=0;
+  function validLoadoutChange(row){
+    return typeof row?.character==='string'&&row.character.length>0&&typeof row.id==='string'&&row.id.length>0&&
+      isLoadoutStamp(row.stamp)&&isLoadoutStamp(row.order)&&/^[0-9a-f-]{36}$/.test(row.change_id)&&
+      (row.preset===null||validLoadout(row.preset));
+  }
+  function loadoutDocument(character){
+    const raw=localStorage.getItem(CLOUD_LOADOUTS+character);
+    if(raw!==null){
+      const rows=JSON.parse(raw);
+      if(!Array.isArray(rows)||!rows.every(row=>validLoadoutChange(row)&&row.character===character))throw Error('本机预设格式无效');
+      return rows;
+    }
+    const legacy=JSON.parse(localStorage.getItem(LEGACY_LOADOUTS+character)||'[]');
+    if(!Array.isArray(legacy)||!legacy.every(row=>typeof row?.id==='string'&&row.id&&validLoadout(row)))throw Error('本机预设格式无效');
+    return legacy.map(({id,updatedAt,...preset},order)=>({
+      character,id,order,preset,stamp:isLoadoutStamp(updatedAt)?updatedAt:0,
+      change_id:'00000000-0000-0000-0000-000000000000',dirty:true,
+    }));
+  }
+  const orderedLoadouts=rows=>rows.filter(row=>row.preset).sort((a,b)=>a.order-b.order||(a.id<b.id?-1:1));
+
+  function initLoadoutSync(){
+    if(window.top!==window)return;
+    const configKey='aether-pin-sync-v1',stateKey='aether-custom-loadout-sync-v1';
+    let timer,busy=false,requested=false,offline=false;
+    function config(){
+      try{
+        const row=JSON.parse(localStorage.getItem(configKey)||'null'),url=new URL(row.server);
+        if(row.version!==1||row.initial!==null||url.origin!==row.server||
+          !(url.protocol==='https:'||url.protocol==='http:'&&['localhost','127.0.0.1'].includes(url.hostname))||
+          !/^[A-Za-z0-9_-]{32,128}$/.test(row.token)||!/^[A-Za-z0-9_-]{20,80}$/.test(row.client_id))return null;
+        return row;
+      }catch{return null;}
+    }
+    function status(message,server=''){
+      window[Symbol.for('aether.loadout.sync.status')]={message,server};
+      window.dispatchEvent(new CustomEvent('aether-loadout-sync-status',{detail:{message,server}}));
+    }
+    function schedule(delay=700){
+      clearTimeout(timer);
+      timer=setTimeout(synchronize,delay);
+    }
+    function characters(){
+      return new Set(Array.from({length:localStorage.length},(_,index)=>localStorage.key(index)).flatMap(key=>{
+        const prefix=[CLOUD_LOADOUTS,LEGACY_LOADOUTS].find(value=>key?.startsWith(value));
+        return prefix?[key.slice(prefix.length)]:[];
+      }).filter(Boolean));
+    }
+    function storeChanges(changes){
+      const byCharacter=new Map();
+      for(const row of changes){
+        if(!byCharacter.has(row.character))byCharacter.set(row.character,[]);
+        byCharacter.get(row.character).push(row);
+      }
+      for(const [character,incoming] of byCharacter){
+        const rows=new Map(loadoutDocument(character).map(row=>[row.id,row]));
+        for(const remote of incoming){
+          const local=rows.get(remote.id);
+          if(local&&(local.stamp>remote.stamp||local.stamp===remote.stamp&&local.change_id>remote.change_id))continue;
+          if(local&&local.change_id===remote.change_id&&local.stamp===remote.stamp&&!local.dirty)continue;
+          rows.set(remote.id,{...remote,dirty:false});
+        }
+        const key=CLOUD_LOADOUTS+character,value=JSON.stringify([...rows.values()]);
+        if(localStorage.getItem(key)!==value){
+          localStorage.setItem(key,value);
+          window.dispatchEvent(new StorageEvent('storage',{key,newValue:value}));
+        }
+      }
+    }
+    async function exchange(current){
+      let progress;
+      try{progress=JSON.parse(localStorage.getItem(stateKey)||'null');}catch{}
+      const names=characters();
+      if(progress?.server!==current.server||!isLoadoutStamp(progress.cursor)){
+        for(const character of names){
+          const rows=loadoutDocument(character);
+          localStorage.setItem(CLOUD_LOADOUTS+character,JSON.stringify(rows.map(row=>({...row,dirty:true}))));
+        }
+        progress={server:current.server,cursor:0};
+        localStorage.setItem(stateKey,JSON.stringify(progress));
+      }
+      const changes=[];
+      let bytes=0,waiting=false;
+      for(const character of names){
+        const rows=loadoutDocument(character);
+        for(const {dirty,...change} of rows){
+          if(!dirty)continue;
+          const size=new TextEncoder().encode(JSON.stringify(change)).length;
+          if(changes.length===40||bytes+size>600000){waiting=true;break;}
+          changes.push(change);bytes+=size;
+        }
+      }
+      const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),12000);
+      let response,data;
+      try{
+        response=await fetch(current.server+'/api/aetheros/custom-loadouts/sync',{
+          method:'POST',credentials:'omit',redirect:'error',referrerPolicy:'no-referrer',cache:'no-store',
+          headers:{'Content-Type':'application/json',Authorization:'Bearer '+current.token},
+          body:JSON.stringify({client_id:current.client_id,cursor:progress.cursor,changes}),signal:controller.signal,
+        });
+        data=await response.json().catch(()=>({}));
+      }finally{clearTimeout(timeout);}
+      if(!response.ok)throw Error(response.status===404?'Web 尚未更新，预设保留在本机':typeof data.detail==='string'?data.detail:'装备预设同步暂不可用');
+      if(data.version!==1||!isLoadoutStamp(data.cursor)||typeof data.has_more!=='boolean'||
+        !Array.isArray(data.changes)||data.changes.length>40||!data.changes.every(validLoadoutChange)||
+        !Array.isArray(data.accepted)||data.accepted.length!==changes.length||
+        !data.accepted.every((row,index)=>validLoadoutChange(row)&&row.character===changes[index].character&&row.id===changes[index].id))throw Error('装备预设同步响应无效');
+      const active=config();
+      if(active?.server!==current.server||active?.token!==current.token||active?.client_id!==current.client_id)return;
+      storeChanges([...data.accepted,...data.changes]);
+      localStorage.setItem(stateKey,JSON.stringify({server:current.server,cursor:data.cursor}));
+      status('装备预设已同步',current.server);
+      requested ||= waiting||data.has_more;
+    }
+    async function synchronize(){
+      if(busy){requested=true;return;}
+      const current=config();
+      if(!current){status('装备预设保留在本机，连接云同步后自动上传');return;}
+      if(document.hidden){schedule(60000);return;}
+      busy=true;requested=false;
+      try{
+        await navigator.locks.request('aether-loadout-sync',async()=>{
+          if(config()?.token===current.token)await exchange(current);
+        });
+        offline=false;
+      }catch(error){
+        offline=true;
+        status((error.name==='AbortError'||error instanceof TypeError?'装备预设暂时无法连接 Web':error.message)+'，本机数据已保留',current.server);
+      }finally{
+        busy=false;schedule(!offline&&requested?700:60000);
+      }
+    }
+    window.addEventListener('aether-loadout-change',()=>schedule());
+    window.addEventListener('aether-loadout-sync-now',()=>schedule(0));
+    window.addEventListener('storage',event=>{if(event.key===configKey||event.key?.startsWith(CLOUD_LOADOUTS))schedule();});
+    window.addEventListener('online',()=>schedule(0));
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule();});
+    status(config()?'装备预设等待同步':'装备预设保留在本机，连接云同步后自动上传');
+    schedule(1500);
+  }
+
   function initCustomLoadouts(){
     const guard=Symbol.for('aether.custom.loadouts');if(window[guard])return;window[guard]=true;
-    const prefix='aether-custom-loadouts-v1:';
     const role=()=>sessionStorage.getItem(ACTIVE)?.trim()||'';
-    const isId=value=>typeof value==='string'&&value.length>0;
-    function valid(row){
-      if(!isId(row?.id)||!isId(row.name))return false;
-      if(row.empty===true)return true;
-      if(!row.equipment||!row.skills||!row.spectra)return false;
-      const slotsValid=(slots,stored,id)=>Object.keys(slots).every(slot=>stored[slot]===null||isId(stored[slot]?.[id])&&isId(stored[slot]?.name));
-      return slotsValid(SAVED_GEAR,row.equipment,'uuid')&&slotsValid(SAVED_SKILLS,row.skills,'code')&&Object.keys(SAVED_PRISMS).every(color=>Array.isArray(row.spectra[color])&&row.spectra[color].every(item=>isId(item?.id)&&isId(item?.name)));
-    }
-    const load=who=>{const rows=JSON.parse(localStorage.getItem(prefix+who)||'[]');if(!Array.isArray(rows)||!rows.every(valid))throw Error('本机预设格式无效');return rows;};
+    const load=who=>orderedLoadouts(loadoutDocument(who)).map(row=>({...row.preset,id:row.id,updatedAt:row.stamp}));
     function save(who,id,transform){
-      const rows=load(who),index=rows.findIndex(row=>row.id===id);
-      if(id&&index<0)throw Error('此预设已在另一个窗口修改，请重新打开');
-      const next=transform(rows[index]);
-      if(index<0){if(rows.length>=50)throw Error('每个角色最多保存 50 套');rows.push(next);}
-      else if(next)rows[index]=next;
-      else rows.splice(index,1);
-      localStorage.setItem(prefix+who,JSON.stringify(rows));
+      const records=loadoutDocument(who),rows=orderedLoadouts(records),old=rows.find(row=>row.id===id);
+      if(id&&!old)throw Error('此预设已在另一个窗口修改，请重新打开');
+      if(!old&&rows.length>=50)throw Error('每个角色最多保存 50 套');
+      const next=transform(old?{...old.preset,id:old.id,updatedAt:old.stamp}:undefined);
+      const {id:identifier,updatedAt,...preset}=next||old||{};
+      const stamp=Math.max(Date.now(),(old?.stamp??0)+1);
+      const order=old?.order??Math.max(Date.now(),(rows.at(-1)?.order??0)+1);
+      const change={character:who,id:identifier,stamp,order,change_id:crypto.randomUUID(),preset:next?preset:null,dirty:true};
+      localStorage.setItem(CLOUD_LOADOUTS+who,JSON.stringify([...records.filter(row=>row.id!==identifier),change]));
+      window.dispatchEvent(new Event('aether-loadout-change'));
     }
     async function request(who,path,body){
       if(role()!==who)throw Error('当前角色已切换');
@@ -438,7 +583,7 @@
       }
     }
     new MutationObserver(records=>{if(!queued&&records.some(record=>!record.target.closest?.('.aosp-loadouts'))){queued=true;requestAnimationFrame(update);}}).observe(document.body,{childList:true,subtree:true});
-    window.addEventListener('storage',event=>{if(event.key===prefix+role())for(const view of dialogs.values())view.refresh(true);});update();
+    window.addEventListener('storage',event=>{if(event.key===CLOUD_LOADOUTS+role())for(const view of dialogs.values())view.refresh(true);});update();
   }
   function initPluginSettings(){
     if(window[Symbol.for('aether.plugin.settings')])return;window[Symbol.for('aether.plugin.settings')]=true;
@@ -690,7 +835,7 @@
   ready(initPluginSettings);ready(initCustomLoadouts);
   ready(initScriptUpdates);
   ready(initScriptNavigation);
-  ready(initPinSync);ready(initReinforceHistorySync);ready(initReinforceBulkRead);
+  ready(initPinSync);ready(initLoadoutSync);ready(initReinforceHistorySync);ready(initReinforceBulkRead);
   ready(()=>{
     if(document.getElementById('aether-multiview'))return;
     const style=element('style');style.textContent=`
