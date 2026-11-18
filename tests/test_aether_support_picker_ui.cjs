@@ -14,10 +14,11 @@ const make=(username,name,pin=0,variant='friend',disabled=false)=>({
   meta:{username,name,pin,level:50,atk:100,hp:1000},
   cardProps:{name,level:50,badge:{variant,label:variant},stats:{max_hp:1000,atk:100,spe:90},skills:[{name:'碧波'}],disabled},
 });
-const roster=[make('self','自己',2,'self'),make('npc','NPC',0,'npc'),...Array.from({length:24},(_,i)=>make('friend'+i,'好友'+i,0,'friend',i===23))];
+const roster=[make('self','自己',2,'self'),make('npc','NPC',0,'npc'),...Array.from({length:64},(_,i)=>make('friend'+i,'好友'+i,0,'friend',i===23))];
 const Card={name:'BattlerPickCard',__name:'BattlerPickCard',props:['name','disabled'],emits:['select'],setup(props,{emit}){
  return()=>h('button',{class:'bpc',disabled:props.disabled,onClick:()=>emit('select')},[h('span',{class:'bpc-name'},props.name),h('span',{class:'bpc-go'},' ›')]);
 }};
+const Pager={__name:'AetherPager',emits:['next'],setup(props,{emit}){return()=>h('nav',[h('button',{id:'next',onClick:()=>emit('next')},'下一页')]);}};
 const Picker={name:'BattlerPickList',__name:'BattlerPickList',props:{items:Array,pageSize:{type:Number,default:5}},emits:['select'],setup(props,{emit}){
  const search=ref(''),page=ref(1);
  const sorted=computed(()=>props.items.filter(item=>item.meta.name.includes(search.value)).slice().sort((a,b)=>b.meta.pin-a.meta.pin));
@@ -26,7 +27,7 @@ const Picker={name:'BattlerPickList',__name:'BattlerPickList',props:{items:Array
  return()=>h('section',{class:'bpl'},[
    h('div',{class:'bpl-toolbar'},[h('input',{placeholder:'搜索',value:search.value,onInput:e=>search.value=e.target.value})]),
    h('div',{class:'bpl-list'},shown.value.map(item=>h(Card,{key:item.key,...item.cardProps,onSelect:()=>emit('select',item.payload)}))),
-   h('button',{id:'next',onClick:()=>page.value++},'下一页'),
+   h(Pager,{onNext:()=>page.value++}),
  ]);
 }};
 const mode=ref('battle');
@@ -40,7 +41,7 @@ createApp({setup(){return()=>h('main',[
 async function check(browser,width){
  const context=await browser.newContext({viewport:{width,height:950}}),page=await context.newPage(),errors=[];
  page.on('pageerror',error=>errors.push(error.message));
- await context.addInitScript({content:source});
+ await context.addInitScript({content:"localStorage.setItem('aether-support-view-v1',localStorage.getItem('aether-support-view-v1')||JSON.stringify({view:'rows',pageSize:10}));\n"+source});
  let syncs=[];
  await context.route('**/*',route=>{
    const req=route.request(),url=new URL(req.url());
@@ -64,11 +65,11 @@ async function check(browser,width){
  });
  try{
    await page.goto(origin+'/aether/');
-   await page.waitForFunction(()=>document.querySelectorAll('.bpc').length===20);
+   await page.waitForFunction(()=>document.querySelectorAll('.bpc').length===66);
    assert.equal(await page.getByRole('button',{name:'置顶 自己',exact:true}).count(),0);
    assert.equal(await page.getByRole('button',{name:'置顶 NPC',exact:true}).count(),0);
    const search=page.getByPlaceholder('搜索');
-   await search.fill('好友24');
+   await search.fill('好友不存在');
    await page.waitForFunction(()=>!document.querySelector('.bpc'));
    await search.fill('好友21');
    await page.getByRole('button',{name:'置顶 好友21',exact:true}).click();
@@ -80,24 +81,25 @@ async function check(browser,width){
    assert.equal(await table.locator('table,th,td').count(),0);
    assert.equal(await table.locator('.aether-support-choose').evaluateAll(nodes=>new Set(nodes.slice(0,3).map(node=>Math.round(node.getBoundingClientRect().top))).size),1);
    assert(!(await table.innerText()).includes('碧波'));
-   assert.equal(await table.locator('.aether-support-tile').count(),20);
+   assert.equal(await table.locator('.aether-support-tile').count(),66);
    assert.equal(await table.locator('.aether-support-tile').first().getByRole('button',{name:'好友21',exact:true}).count(),1);
    await table.locator('.aether-support-tile').first().locator('.aether-support-choose').click();
    assert.equal(await page.evaluate(()=>window.selected.username),'friend21');
-   await page.getByLabel('助战列表每页数量').selectOption('50');
-   await page.waitForFunction(()=>document.querySelectorAll('.aether-support-grid .aether-support-tile').length===26);
+   assert.equal(await page.getByLabel('助战列表每页数量').count(),0);
+   assert.equal(await page.getByRole('button',{name:'下一页',exact:true}).isVisible(),false);
+   await page.waitForFunction(()=>document.querySelectorAll('.aether-support-grid .aether-support-tile').length===66);
    assert.equal(await table.getByRole('button',{name:'好友23',exact:true}).isDisabled(),true);
    await page.locator('#training').click();
-   await page.waitForFunction(()=>document.querySelectorAll('.aether-support-grid .aether-support-tile').length===26);
+   await page.waitForFunction(()=>document.querySelectorAll('.aether-support-grid .aether-support-tile').length===66);
    assert.equal(await page.getByRole('button',{name:'取消置顶 好友21',exact:true}).count(),1);
    await page.reload();
-   await page.waitForFunction(()=>document.querySelectorAll('.aether-support-grid .aether-support-tile').length===26);
+   await page.waitForFunction(()=>document.querySelectorAll('.aether-support-grid .aether-support-tile').length===66);
    assert.equal(await table.locator('.aether-support-tile').first().locator('strong').textContent(),'好友21');
    await page.getByRole('button',{name:'取消置顶 好友21',exact:true}).last().click();
    await page.waitForFunction(()=>document.querySelector('.aether-support-grid .aether-support-tile strong').textContent==='自己');
    await page.getByRole('button',{name:'行显示',exact:true}).click();
    await page.waitForFunction(()=>document.querySelector('.bpl-list').getAttribute('data-aether-view')==='rows');
-   assert.equal(await page.locator('.bpc').count(),26);
+   assert.equal(await page.locator('.bpc').count(),66);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
    await page.evaluate(()=>{
      localStorage.setItem('aether-pin-sync-v1',JSON.stringify({version:1,server:'https://web.example.invalid',token:'x'.repeat(32),client_id:'a'.repeat(32),initial:null,pending:[],revision:0}));

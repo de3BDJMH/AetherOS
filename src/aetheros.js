@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.19.1
+// @version      0.19.2
 // @description  官网多角色桌面、背包筛选与置顶云同步、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -1236,14 +1236,12 @@
     const settingsKey='aether-support-view-v1',controllers=new WeakMap();
     let preference;
     try{preference=JSON.parse(localStorage.getItem(settingsKey)||'null');}catch{}
-    let view=preference?.view==='table'?'table':'rows',pageSize=[10,20,50].includes(preference?.pageSize)?preference.pageSize:20;
+    let view=preference?.view==='table'?'table':'rows';
     const style=element('style');
     style.textContent=`
       .aether-support-tools{display:flex;align-items:center;flex-wrap:wrap;gap:.4rem;margin:.45rem 0 .65rem;font-size:.78rem}
-      .aether-support-tools button,.aether-support-tools select{padding:.28rem .58rem;border:1px solid #8399b63d;border-radius:.4rem;background:#91abd00a;color:inherit;font:inherit;cursor:pointer}
+      .aether-support-tools button{padding:.28rem .58rem;border:1px solid #8399b63d;border-radius:.4rem;background:#91abd00a;color:inherit;font:inherit;cursor:pointer}
       .aether-support-tools button[aria-pressed=true]{color:var(--accent,#93dece);border-color:var(--accent,#93dece);background:#61f4de12}
-      .aether-support-tools label{display:flex;align-items:center;gap:.4rem;margin-inline-start:auto}
-      .aether-support-tools select{color-scheme:dark}
       .aether-support-status{font-size:.74rem;color:var(--accent,#93dece);margin:.3rem 0}
       .aether-support-status:empty{display:none}
       .bpl-list.aether-support-list{position:relative}
@@ -1272,15 +1270,12 @@
       .aether-support-choose strong{font-size:.78rem;font-weight:600;line-height:1.45;overflow-wrap:anywhere}
       .aether-support-tile>.aether-support-pin{position:absolute;inset-block-start:.12rem;inset-inline-end:.12rem;width:1.5rem;height:1.5rem;background:transparent}
     `;document.head.append(style);
-    function saveView(){localStorage.setItem(settingsKey,JSON.stringify({view,pageSize}));schedule();}
+    function saveView(){localStorage.setItem(settingsKey,JSON.stringify({view}));schedule();}
 
     function mount(component,root){
       const toolbar=element('div',undefined,'aether-support-tools'),rows=button('行显示',()=>{view='rows';saveView();}),table=button('平铺显示',()=>{view='table';saveView();});
-      const label=element('label','每页'),size=element('select'),feedback=element('p',undefined,'aether-support-status');
-      size.setAttribute('aria-label','助战列表每页数量');
-      for(const count of [10,20,50]){const option=element('option',count+' 人');option.value=count;size.append(option);}
-      size.addEventListener('change',()=>{pageSize=Number(size.value);saveView();});
-      toolbar.append(rows,table);label.append(size);toolbar.append(label);
+      const feedback=element('p',undefined,'aether-support-status');
+      toolbar.append(rows,table);
       const anchor=root.querySelector('.bpl-toolbar');if(anchor)anchor.after(toolbar);else root.prepend(toolbar);
       toolbar.after(feedback);
       const wrapper=element('div',undefined,'aether-support-grid-wrap');root.append(wrapper);
@@ -1310,13 +1305,18 @@
           });
           signature=pinSignature;component.props.items=decorated;
         }
-        if(component.props.pageSize!==pageSize)component.props.pageSize=pageSize;
-        rows.setAttribute('aria-pressed',String(view==='rows'));table.setAttribute('aria-pressed',String(view==='table'));size.value=pageSize;
+        const total=Math.max(1,items.length);
+        if(component.props.pageSize!==total)component.props.pageSize=total;
+        rows.setAttribute('aria-pressed',String(view==='rows'));table.setAttribute('aria-pressed',String(view==='table'));
         const list=root.querySelector('.bpl-list');if(!list){wrapper.hidden=true;return;}
         list.classList.add('aether-support-list');list.dataset.aetherView=view;wrapper.hidden=view!=='table';
         const visible=[];
         function collect(vnode){
           if(!vnode||typeof vnode!=='object')return;
+          if(vnode.component?.type?.__name==='AetherPager'){
+            if(vnode.el?.nodeType===1)vnode.el.hidden=true;
+            return;
+          }
           if(vnode.component?.type?.__name==='BattlerPickCard'){visible.push(vnode);return;}
           if(vnode.component)collect(vnode.component.subTree);
           else if(Array.isArray(vnode.children))vnode.children.forEach(collect);
@@ -1388,7 +1388,7 @@
       if(records.some(record=>record.target.closest?.('.bpl')||[...record.addedNodes].some(node=>node.nodeType===1&&(node.matches('.bpl')||node.querySelector('.bpl')))))schedule();
     }).observe(document.body,{childList:true,characterData:true,subtree:true});
     for(const event of ['aether-support-pins-change','aether-role-preferences-change'])window.addEventListener(event,schedule);
-    window.addEventListener('storage',event=>{if([SUPPORT_PINS_KEY,settingsKey].includes(event.key)){try{const value=JSON.parse(localStorage.getItem(settingsKey)||'null');view=value?.view==='table'?'table':'rows';pageSize=[10,20,50].includes(value?.pageSize)?value.pageSize:20;}catch{}schedule();}});
+    window.addEventListener('storage',event=>{if([SUPPORT_PINS_KEY,settingsKey].includes(event.key)){try{const value=JSON.parse(localStorage.getItem(settingsKey)||'null');view=value?.view==='table'?'table':'rows';}catch{}schedule();}});
     window.addEventListener('resize',schedule);
     scan();
   }
