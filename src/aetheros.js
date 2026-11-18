@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.14.1
+// @version      0.14.2
 // @description  官网多角色桌面、背包筛选与置顶云同步、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -133,13 +133,26 @@
   const SAVED_SKILLS={addon:'附加技能',custom:'自定义技能',aether:'以太爆发'};
   const SAVED_PRISMS={core:'纯净',red:'红色',blue:'蓝色',green:'绿色'};
 
+  function loadoutItemIcon(icon){
+    const source=typeof icon==='string'?icon:icon?.url;if(!source)return null;
+    try{
+      const url=new URL(source,ORIGIN);
+      if(url.username||url.password||url.protocol!=='https:')return null;
+      const local=url.origin===ORIGIN&&url.pathname.startsWith('/api/aether/assets/');
+      const cdn=url.origin==='https://aliyun-static.diving-fish.com'&&url.pathname.startsWith('/aether/assets/');
+      if(!local&&!cdn)return null;
+      const number=(value,fallback,min,max)=>Number.isFinite(value)?Math.max(min,Math.min(max,value)):fallback;
+      return {url:url.href,scale:number(icon?.scale,1,.1,4),x:number(icon?.offset_x??icon?.x,0,-100,100),y:number(icon?.offset_y??icon?.y,0,-100,100),rotate:number(icon?.rotate,0,-360,360),hue:number(icon?.hue,0,-360,360),brightness:number(icon?.brightness,1,0,3)};
+    }catch{return null;}
+  }
+
   function captureCustomLoadout(status,prism){
     if(!Array.isArray(status?.equipment_slots)||!Array.isArray(status?.skills?.slots)||!prism?.equipped)throw Error('官网配装数据不完整');
     const equipment={},skills={},spectra={};
     for(const slot of Object.keys(SAVED_GEAR)){
       const row=status.equipment_slots.find(value=>value.slot===slot);
       if(!row||row.item&&typeof row.item.uuid!=='string')throw Error('无法读取'+SAVED_GEAR[slot]);
-      equipment[slot]=row.item?{uuid:row.item.uuid,name:row.item.name||row.item.uuid}:null;
+      equipment[slot]=row.item?{uuid:row.item.uuid,name:row.item.name||row.item.uuid,icon:loadoutItemIcon(row.item.icon)}:null;
     }
     for(const slot of Object.keys(SAVED_SKILLS)){
       const row=status.skills.slots.find(value=>value.slot===slot),choices=status.skills.available?.[slot];
@@ -258,29 +271,57 @@
       Promise.allSettled([stores?.get('player')?.fetchStatus?.(),stores?.get('prism')?.fetch?.()]);
     }
     const style=element('style');style.textContent=`
-      .aosp-loadout-layout{--aosp-card-height:108px}.aosp-loadout-head,.aosp-loadout-switch{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.aosp-loadout-head{grid-column:1/-1;grid-row:2;font-size:.8rem;font-weight:650;color:inherit}.aosp-loadout-switch{display:none}.aosp-loadout-head span{padding:0 4px}.aosp-loadouts{min-width:0;color:inherit;font-size:.8rem;line-height:1.5}.aosp-loadout-list{display:grid;gap:8px}.aosp-loadout-card,.aosp-loadouts .aosp-loadout-add{box-sizing:border-box;width:100%;min-width:0;min-height:var(--aosp-card-height);margin:0;padding:11px 12px;border:1px solid #82a5db3d;border-radius:10px;background:#80a4df0c;text-align:left}.aosp-loadout-card{display:grid;gap:8px;align-content:start}.aosp-loadout-title,.aosp-loadout-actions{display:flex;align-items:center;flex-wrap:wrap;gap:6px}.aosp-loadout-title{justify-content:space-between}.aosp-loadout-name{font-weight:650;overflow-wrap:anywhere}.aosp-loadout-gear{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}.aosp-loadout-gear span{display:grid;justify-items:center;gap:2px;padding:5px 1px;min-width:0;border:1px solid #89a9db25;border-radius:6px;background:#81a7e013;font-size:.64rem}.aosp-loadout-gear span.is-empty,.aosp-loadout-muted{opacity:.64}.aosp-loadout-gear i{font-size:1rem}.aosp-loadout-card details{font-size:.7rem}.aosp-loadout-card summary{cursor:pointer;color:var(--accent,#a4ddd5)}.aosp-loadout-card p{margin:.2rem 0;overflow-wrap:anywhere}.aosp-loadouts :is(button,input),.aosp-loadout-switch button{font:inherit;color:inherit;padding:5px 9px;border:1px solid #8ba9d350;border-radius:6px;background:#80a4df12}.aosp-loadouts button,.aosp-loadout-switch button{cursor:pointer}.aosp-loadouts button:disabled{opacity:.45;cursor:default}.aosp-loadout-actions button:first-child,.aosp-loadout-switch button[aria-pressed=true]{color:var(--accent,#a4ddd5);border-color:color-mix(in srgb,var(--accent,#a4ddd5) 45%,transparent)}.aosp-loadouts .aosp-loadout-add{display:grid;place-content:center;justify-items:center;gap:4px;border-style:dashed;background:#80a4df08;color:var(--accent,#a4ddd5);text-align:center}.aosp-loadout-add strong{font-size:1.45rem;line-height:1}.aosp-loadout-form{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.aosp-loadout-form input{flex:1 1 10rem;min-width:0}.aosp-loadout-feedback{margin:0 0 7px;overflow-wrap:anywhere}.aosp-loadout-feedback:empty{display:none}.aosp-loadout-feedback.is-error{color:#ff9aa4}.aosp-loadouts [hidden]{display:none!important}
-      @media(min-width:861px){.v-overlay__content:has(.aosp-loadout-layout){max-width:min(1040px,calc(100vw - 48px))!important}.aosp-loadout-layout{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;align-items:start;gap:10px 14px}.aosp-loadout-layout>.ae-dialog__hint{grid-row:1;grid-column:1/-1}.aosp-loadout-layout>:is(.presets-loading,.presets-list){grid-column:1;grid-row:3;min-width:0}.aosp-loadout-layout>.aosp-loadouts{grid-column:2;grid-row:3}}
-      @media(max-width:860px){.aosp-loadout-head{display:none}.aosp-loadout-switch{display:grid;gap:7px;margin-bottom:9px}.aosp-loadout-layout[data-aosp-tab=official]>.aosp-loadouts,.aosp-loadout-layout[data-aosp-tab=custom]>:not(.aosp-loadout-switch,.aosp-loadouts){display:none!important}}
-      .aosp-loadout-chips{display:flex;gap:4px;flex-wrap:wrap}.aosp-loadout-chips span{padding:1px 6px;border-radius:4px;border:1px solid #89a9db28;background:#89a9db0c;font-size:.66rem;overflow-wrap:anywhere}.aosp-loadout-chips [data-color=red]{color:#ff9aa4}.aosp-loadout-chips [data-color=blue]{color:#92c9ff}.aosp-loadout-chips [data-color=green]{color:#8be2b5}
+      .aosp-loadout-layout{--aosp-card-height:108px}.aosp-loadout-head,.aosp-loadout-switch{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.aosp-loadout-head{grid-column:1/-1;grid-row:2;font-size:.8rem;font-weight:650}.aosp-loadout-switch{display:none}.aosp-loadout-head span{padding:0 4px}.aosp-loadouts{min-width:0}.aosp-loadout-card,.aosp-loadout-add{min-height:var(--aosp-card-height);box-sizing:border-box}.aosp-loadout-card .preset-name{min-width:0;overflow-wrap:anywhere}.aosp-loadout-card .preset-name-text{overflow-wrap:anywhere}.aosp-loadout-badge{font-size:.65rem;color:var(--accent,#82dbd1);white-space:nowrap}.aosp-loadout-list{display:flex;flex-direction:column;gap:.75rem}.aosp-loadout-list>.preset-card,.aosp-loadout-layout>.presets-list>.preset-card{flex:none}.aosp-loadout-add{display:grid;place-content:center;justify-items:center;gap:4px;width:100%;border-style:dashed!important;text-align:center;color:var(--accent,#82dbd1);cursor:pointer}.aosp-loadout-add strong{font-size:1.4rem;line-height:1}.aosp-loadout-form{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.aosp-loadout-form input{flex:1 1 10rem;min-width:0;padding:5px 8px;border:1px solid #8ba9d350;border-radius:6px;color:inherit;font:inherit}.aosp-loadout-feedback{margin:0 0 7px;overflow-wrap:anywhere}.aosp-loadout-feedback:empty{display:none}.aosp-loadout-feedback.is-error{color:#ff9aa4}.aosp-loadouts [hidden]{display:none!important}.aosp-loadout-art{width:30px;height:30px;display:grid;place-items:center;overflow:hidden}.aosp-loadout-art img{width:100%;height:100%;object-fit:contain}.aosp-loadout-details{margin-bottom:.5rem;font-size:.73rem;overflow-wrap:anywhere}.aosp-loadout-details summary{cursor:pointer}
+      @media(min-width:861px){.v-overlay__content:has(.aosp-loadout-layout){max-width:min(1040px,calc(100vw - 48px))!important}.aosp-loadout-layout{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto auto minmax(0,1fr);height:min(66vh,680px);height:min(66dvh,680px);box-sizing:border-box;overflow:hidden!important;gap:10px 14px}.aosp-loadout-layout>.ae-dialog__hint{grid-row:1;grid-column:1/-1}.aosp-loadout-layout>:is(.presets-loading,.presets-list){grid-column:1;grid-row:3}.aosp-loadout-layout>.aosp-loadouts{grid-column:2;grid-row:3}.aosp-loadout-layout>:is(.presets-list,.aosp-loadouts){min-height:0;min-width:0;overflow-y:auto;overscroll-behavior-y:contain;padding-inline-end:5px}}
+      @media(max-width:860px){.aosp-loadout-head{display:none}.aosp-loadout-switch{display:grid;gap:7px;margin-bottom:9px}.aosp-loadout-switch button[aria-pressed=true]{color:var(--accent,#82dbd1);border-color:currentColor}.aosp-loadout-layout[data-aosp-tab=official]>.aosp-loadouts,.aosp-loadout-layout[data-aosp-tab=custom]>:not(.aosp-loadout-switch,.aosp-loadouts){display:none!important}}
     `;document.head.append(style);
     function mount(dialog,body){
-      const section=element('section',undefined,'aosp-loadouts'),head=element('div',undefined,'aosp-loadout-head'),tabs=element('nav',undefined,'aosp-loadout-switch'),form=element('form',undefined,'aosp-loadout-form'),input=element('input'),submit=element('button','保存'),list=element('div',undefined,'aosp-loadout-list'),feedback=element('p',undefined,'aosp-loadout-feedback');let busy=false,editor=null,character=role();
+      const scopes=body.getAttributeNames().filter(attr=>/^data-v-[\da-f]+$/i.test(attr));
+      const scoped=node=>{scopes.forEach(attr=>node.setAttribute(attr,''));return node;};
+      const native=(tag,text,classes)=>scoped(element(tag,text,classes));
+      function action(text,icon,handler,classes=''){
+        const node=scoped(button('',handler)),glyph=element('i',undefined,'mdi '+icon);glyph.setAttribute('aria-hidden','true');node.className='ae-btn '+classes;node.append(glyph,element('span',text));return node;
+      }
+      const section=element('section',undefined,'aosp-loadouts'),head=element('div',undefined,'aosp-loadout-head'),tabs=element('nav',undefined,'aosp-loadout-switch'),form=element('form',undefined,'aosp-loadout-form'),input=element('input'),submit=native('button','保存','ae-btn ae-btn--primary'),list=native('div',undefined,'presets-list aosp-loadout-list'),feedback=element('p',undefined,'aosp-loadout-feedback');
+      let busy=false,editor=null,character=role(),iconChecked=false,icons=new Map();
       body.classList.add('aosp-loadout-layout');head.append(element('span','官方预设'),element('span','自定义预设'));tabs.setAttribute('aria-label','装备预设分类');section.setAttribute('aria-label','自定义预设');
-      const official=button('官方预设',()=>selectTab('official')),custom=button('自定义预设',()=>selectTab('custom'));
-      function selectTab(value){body.dataset.aospTab=value;official.setAttribute('aria-pressed',String(value==='official'));custom.setAttribute('aria-pressed',String(value==='custom'));}
+      const official=action('官方预设','mdi-bookmark-multiple-outline',()=>selectTab('official')),custom=action('自定义预设','mdi-bookmark-plus-outline',()=>selectTab('custom'));
+      function selectTab(value){body.dataset.aospTab=value;official.setAttribute('aria-pressed',String(value==='official'));custom.setAttribute('aria-pressed',String(value==='custom'));if(value==='custom')draw();}
       tabs.append(official,custom);selectTab('official');input.maxLength=60;input.required=true;input.setAttribute('aria-label','自定义预设名称');submit.type='submit';form.hidden=true;
-      form.append(input,submit,button('取消',()=>{editor=null;form.hidden=true;}));feedback.setAttribute('role','status');section.append(form,feedback,list);body.prepend(tabs,head);body.append(section);
+      form.append(input,submit,action('取消','mdi-close',()=>{editor=null;form.hidden=true;}));feedback.setAttribute('role','status');section.append(form,feedback,list);body.prepend(tabs,head);body.append(section);
       function message(value,error=false){feedback.textContent=value;feedback.classList.toggle('is-error',error);}
       function edit(row){editor=row;form.hidden=false;input.value=row.name;input.focus();input.select();}
+      function collectIcons(status){
+        const items=[...(status?.backpack?.equipment||[]),...(status?.equipment_slots||[]).map(row=>row.item)];
+        for(const item of items)if(item?.uuid)icons.set(item.uuid,loadoutItemIcon(item.icon));
+      }
+      function restoreIcons(rows){
+        if(iconChecked||!character||!section.getClientRects().length)return;
+        const missing=rows.flatMap(row=>Object.values(row.equipment||{})).filter(item=>item&&item.icon===undefined&&!icons.has(item.uuid));
+        if(!missing.length)return;
+        iconChecked=true;const who=character;
+        request(who,'/status').then(status=>{
+          if(character!==who||role()!==who||!section.isConnected)return;
+          collectIcons(status);if(!busy&&!editor)draw();
+        }).catch(()=>{});
+      }
+      function itemArt(item,key){
+        const fallback=()=>native('span',undefined,'preset-equip-empty mdi '+(item?GEAR_SLOTS[key][1]:'mdi-minus'));
+        const art=item&&loadoutItemIcon(item.icon||icons.get(item.uuid));if(!art)return fallback();
+        const box=element('span',undefined,'aosp-loadout-art'),img=element('img');
+        img.alt='';img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';img.src=art.url;
+        img.style.transform=`translate(${art.x}%,${art.y}%) rotate(${art.rotate}deg) scale(${art.scale})`;img.style.filter=`hue-rotate(${art.hue}deg) brightness(${art.brightness})`;
+        img.addEventListener('error',()=>box.replaceWith(fallback()),{once:true});box.append(img);return box;
+      }
       function draw(){
         list.replaceChildren();
         if(!character){message('请先在官网选择角色');return;}
         let rows;try{rows=load(character);}catch(error){message(error.message,true);return;}
         for(const row of rows){
-          const card=element('article',undefined,'aosp-loadout-card'),top=element('div',undefined,'aosp-loadout-title'),actions=element('div',undefined,'aosp-loadout-actions'),details=element('details');
-          top.append(element('strong',row.name,'aosp-loadout-name'));
-          if(row.empty)top.append(element('small','空预设','aosp-loadout-muted'));
-          const apply=button('应用',()=>run(async who=>{
+          const card=native('article',undefined,'preset-card aosp-loadout-card'+(row.empty?' preset-card--empty':'')),top=native('div',undefined,'preset-card-top'),name=native('div',undefined,'preset-name'),actions=native('div',undefined,'preset-actions'),details=element('details',undefined,'aosp-loadout-details');
+          name.append(native('strong',row.name,'preset-name-text'));if(row.empty)name.append(native('small','空预设','preset-name-empty'));
+          top.append(name,element('small','自定义','aosp-loadout-badge'));
+          const apply=action('应用','mdi-check',()=>run(async who=>{
             if(!confirm('应用「'+row.name+'」？这会更换 '+who+' 的当前配装。'))return;
             message('正在核对 '+who+' 的配装…');
             let attempted=false;
@@ -289,24 +330,24 @@
               message(count?'已应用并核对「'+row.name+'」':'当前配装与「'+row.name+'」一致');
             }catch(error){if(attempted)error.message+='。可能已完成部分切换，再次应用将从实际配装继续';throw error;}
             finally{if(attempted)refresh(who);}
-          }));
+          }),'ae-btn--primary');
           apply.disabled=!!row.empty;
-          actions.append(apply,button('保存',()=>{if(row.empty||confirm('用当前配装覆盖「'+row.name+'」？'))run(who=>capture(who,row.id,row.name));}),button('改名',()=>edit(row)),button('删除',()=>{if(confirm('删除「'+row.name+'」？'))run(who=>{save(who,row.id,()=>null);message('已删除');});}));
+          actions.append(apply,action('保存','mdi-content-save',()=>{if(row.empty||confirm('用当前配装覆盖「'+row.name+'」？'))run(who=>capture(who,row.id,row.name));}),action('改名','mdi-pencil',()=>edit(row)),action('删除','mdi-delete',()=>{if(confirm('删除「'+row.name+'」？'))run(who=>{save(who,row.id,()=>null);message('已删除');});},'ae-btn--danger'));
           card.append(top);
           if(!row.empty){
-            const gear=element('div',undefined,'aosp-loadout-gear');
+            const gear=native('div',undefined,'preset-equip-row');
             for(const [key,label] of Object.entries(SAVED_GEAR)){
-              const item=row.equipment[key],cell=element('span',undefined,item?'':'is-empty'),icon=element('i',undefined,'mdi '+GEAR_SLOTS[key][1]);
-              cell.title=label+' · '+(item?.name||'空');icon.setAttribute('aria-hidden','true');cell.append(icon,element('small',label));gear.append(cell);
+              const item=row.equipment[key],cell=native('div',undefined,'preset-equip-cell');
+              cell.title=label+' · '+(item?.name||'空');cell.append(itemArt(item,key));gear.append(cell);
             }
-            const chips=element('div',undefined,'aosp-loadout-chips');
-            for(const [key,label] of Object.entries(SAVED_SKILLS))if(row.skills[key]){const chip=element('span',row.skills[key].name);chip.title=label;chips.append(chip);}
-            for(const [key,label] of Object.entries(SAVED_PRISMS))if(row.spectra[key].length){const chip=element('span',label+' '+row.spectra[key].length);chip.dataset.color=key;chip.title=row.spectra[key].map(item=>item.name).join(' → ');chips.append(chip);}
+            const skills=native('div',undefined,'preset-skills-row'),prism=native('div',undefined,'preset-prism-row');
+            for(const [key,label] of Object.entries(SAVED_SKILLS))skills.append(native('span',label+'：'+(row.skills[key]?.name||'无'),'preset-skill-chip'));
+            for(const key of Object.keys(SAVED_PRISMS))for(const item of row.spectra[key])prism.append(native('span',item.name,'preset-prism-chip preset-prism-chip--'+key));
             details.append(element('summary','查看配装'));
             for(const [key,label] of Object.entries(SAVED_GEAR))details.append(element('p',label+' · '+(row.equipment[key]?.name||'空')));
             for(const [key,label] of Object.entries(SAVED_SKILLS))details.append(element('p',label+' · '+(row.skills[key]?.name||'空')));
             for(const [key,label] of Object.entries(SAVED_PRISMS))details.append(element('p',label+'光谱 · '+(row.spectra[key].map(item=>item.name).join(' → ')||'空')));
-            card.append(gear);if(chips.childElementCount)card.append(chips);card.append(details);
+            card.append(gear,skills);if(prism.childElementCount){prism.prepend(native('span','棱镜','preset-prism-label'));card.append(prism);}card.append(details);
           }
           card.append(actions);list.append(card);
         }
@@ -314,7 +355,7 @@
           const names=new Set(load(who).map(row=>row.name));let index=1;while(names.has('自定义预设 '+index))index++;
           save(who,null,()=>({id:crypto.randomUUID(),name:'自定义预设 '+index,empty:true,updatedAt:Date.now()}));message('已建立空预设，点击「保存」记录当前配装');
         }));
-        add.className='aosp-loadout-add';const plus=element('strong','+');plus.setAttribute('aria-hidden','true');add.append(plus,element('span','添加自定义预设'));list.append(add);
+        add.className='preset-card aosp-loadout-add';scoped(add);const plus=element('strong','+');plus.setAttribute('aria-hidden','true');add.append(plus,element('span','添加自定义预设'));list.append(add);restoreIcons(rows);
       }
       async function run(task){
         if(busy||!character||role()!==character)return;
@@ -330,7 +371,7 @@
         run(who=>{save(who,draft.id,row=>({...row,name,updatedAt:Date.now()}));message('已改名');editor=null;form.hidden=true;});
       });
       draw();
-      return {section,refresh(force=false){const active=role();if(busy)return;if(character!==active){character=active;editor=null;form.hidden=true;message('');draw();}else if(force&&!editor)draw();}};
+      return {section,refresh(force=false){const active=role();if(busy)return;if(character!==active){character=active;editor=null;iconChecked=false;icons=new Map();form.hidden=true;message('');draw();}else if(force&&!editor)draw();}};
     }
     const dialogs=new Map();let queued=false;
     function update(){queued=false;for(const [dialog,view]of dialogs)if(!dialog.isConnected||!view.section.isConnected)dialogs.delete(dialog);
