@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.16.1
+// @version      0.16.2
 // @description  官网多角色桌面、背包筛选与置顶云同步、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -828,140 +828,154 @@
     const controllers=new WeakMap();
     const style=element('style');
     style.textContent=`
-      .aether-role-preferences[hidden],.aether-role-preferences [hidden]{display:none!important}
-      .aether-role-preferences{margin:0 0 .55rem}
-      .aether-role-preferences__toolbar{display:flex;justify-content:flex-end;gap:.42rem}
-      .aether-role-preferences button{font:inherit;padding:.33rem .65rem;border:1px solid #7ccfb44a;border-radius:7px;color:var(--accent,#93dece);background:#72d9b912;cursor:pointer}
-      .aether-role-preferences button:disabled{opacity:.3;cursor:default}
-      .aether-role-preferences :is(button,input):focus-visible{outline:2px solid var(--accent,#93dece);outline-offset:2px}
-      .aether-role-preferences__rows{display:grid;gap:.28rem;max-height:min(46vh,24rem);overflow:auto;margin-bottom:.55rem;padding:.15rem .2rem}
-      .aether-role-preferences__row{display:grid;grid-template-columns:minmax(0,1fr) minmax(4.2rem,1.2fr) auto;align-items:center;gap:.4rem;padding:.35rem 0}
-      .aether-role-preferences__row strong{display:block;font-size:.8rem;overflow-wrap:anywhere}
-      .aether-role-preferences__row small{display:block;font-size:.68rem;opacity:.7;overflow-wrap:anywhere}
-      .aether-role-preferences__row input{width:100%;min-width:0;padding:.37rem .45rem;border:1px solid #80a9d045;border-radius:6px;background:#93c4ef12;color:inherit;font:inherit}
-      .aether-role-preferences__move{display:flex;gap:.22rem}
-      .aether-role-preferences__move button{min-width:1.75rem;padding:.25rem .32rem}
-      .aether-role-preferences__status{margin:.4rem 0 0;color:#ff9d9d;font-size:.75rem}
-      .aether-role-preferences__status:empty{display:none}
-      .character-gateway .character-list.aether-role-list-editing{display:none!important}
-      .character-card .aether-role-note{display:block;color:var(--accent,#93dece);overflow-wrap:anywhere;font-size:.74rem}
+      .character-gateway .character-list.aether-inline-roles{grid-template-columns:minmax(0,1fr)}
+      .aether-inline-roles>:is(.aether-inline-role,.aether-inline-role-tools){grid-area:var(--aether-role-row)/1}
+      .character-list .character-card.aether-inline-role{padding-inline-end:calc(clamp(5rem,23vw,8.5rem) + 2.55rem)}
+      .aether-inline-role .character-card__body{overflow:hidden}
+      .aether-inline-role .character-card__body>small{overflow-wrap:anywhere}
+      .aether-inline-role-tools{
+        display:flex;align-items:center;justify-self:end;align-self:center;gap:.38rem;z-index:1;
+        width:calc(clamp(5rem,23vw,8.5rem) + 1.4rem);margin-inline-end:.65rem;
+      }
+      .aether-inline-role-tools input{
+        min-width:0;width:100%;padding:.28rem .38rem;border:1px solid transparent;border-radius:.35rem;
+        background:transparent;font:inherit;font-size:.77rem;color:var(--accent,#93dece);text-overflow:ellipsis;
+      }
+      .aether-inline-role-tools input::placeholder{color:#a6b0c0;opacity:.7}
+      .aether-inline-role-tools input:is(:hover,:focus){background:#93c4ef12;border-color:#80a9d045;outline:none}
+      .aether-inline-role-tools input:focus-visible,.aether-inline-role-grip:focus-visible{outline:2px solid var(--accent,#93dece);outline-offset:1px}
+      .aether-inline-role-grip{display:grid;place-items:center;width:1.1rem;min-height:1.9rem;flex:none;color:#a6b0c0;cursor:grab;touch-action:none;user-select:none}
+      .aether-inline-role-grip::before{content:'';width:.6rem;height:.85rem;background:radial-gradient(circle,currentColor 1px,transparent 1.4px) 0 0/.3rem .27rem}
+      .aether-inline-roles .character-card.aether-role-drop{border-color:var(--accent,#93dece);background:#61f4de18}
+      @media(max-width:410px){
+        .character-list .character-card.aether-inline-role{gap:.42rem;padding-inline-end:7.35rem}
+        .aether-inline-role-tools{width:5.75rem;margin-inline-end:.5rem;gap:.2rem}
+      }
     `;
     document.head.append(style);
 
     function mount(list){
-      const cardOrder=new WeakMap();
-      let ordinal=0,draft=null;
-      let preferences=readRolePreferences();
-      const panel=element('section',undefined,'aether-role-preferences');
-      panel.setAttribute('aria-label','账号排序与备注');
-      const toolbar=element('div',undefined,'aether-role-preferences__toolbar');
-      const rows=element('div',undefined,'aether-role-preferences__rows');
-      const status=element('p',undefined,'aether-role-preferences__status');
-      status.setAttribute('role','status');
-      const edit=button('排序与备注',()=>{
-        preferences=readRolePreferences();
-        const order=sortRoleRows(cards(),preferences.order).map(row=>row.username);
-        draft={order,initial:[...order],notes:new Map()};status.textContent='';
-        renderEditor();rows.querySelector('input')?.focus();
-      });
-      const save=button('保存',()=>{
-        if(!draft)return;
-        const latest=readRolePreferences();
-        const moved=draft.order.some((username,index)=>username!==draft.initial[index]);
-        const order=moved?[...draft.order,...latest.order.filter(username=>!draft.order.includes(username))]:latest.order;
-        for(const [username,value] of draft.notes){
-          const note=value.trim().slice(0,80);
-          if(note)latest.notes.set(username,note);
-          else latest.notes.delete(username);
-        }
-        try{localStorage.setItem(ROLE_PREFERENCES_KEY,JSON.stringify({order,notes:Object.fromEntries(latest.notes)}));}
-        catch{status.textContent='无法保存，请检查浏览器存储后重试。';return;}
-        finish();
-        window.dispatchEvent(new Event('aether-role-preferences-change'));
-      });
-      const cancel=button('取消',()=>finish());
-      toolbar.append(edit,cancel,save);panel.append(rows,toolbar,status);
-      list.before(panel);
+      const controls=new Map(),nativeOrder=new WeakMap();
+      let sequence=0,drag=null;
+      list.classList.add('aether-inline-roles');
+
       function cards(){
-        const values=[];
+        const entries=[];
         for(const card of list.querySelectorAll(':scope > button.character-card')){
           const body=card.querySelector('.character-card__body');
           const username=body?.querySelector(':scope > small')?.textContent.trim().match(/^(.+)\s+·\s+Lv\./)?.[1].trim();
           if(!username)continue;
-          if(!cardOrder.has(card))cardOrder.set(card,ordinal++);
-          values.push({card,body,username,name:body.querySelector('strong')?.textContent.trim()||username});
+          if(!nativeOrder.has(card))nativeOrder.set(card,sequence++);
+          entries.push({card,username,name:body.querySelector('strong')?.textContent.trim()||username});
         }
-        return values.sort((a,b)=>cardOrder.get(a.card)-cardOrder.get(b.card));
+        return entries.sort((a,b)=>nativeOrder.get(a.card)-nativeOrder.get(b.card));
       }
+
+      function save(preferences,input){
+        try{localStorage.setItem(ROLE_PREFERENCES_KEY,JSON.stringify({order:preferences.order,notes:Object.fromEntries(preferences.notes)}));}
+        catch{if(input){input.setCustomValidity('无法保存备注，请检查浏览器存储。');input.reportValidity();}return false;}
+        window.dispatchEvent(new Event('aether-role-preferences-change'));
+        return true;
+      }
+
+      function reorder(from,to){
+        if(!from||!to||from===to)return;
+        const preferences=readRolePreferences();
+        const usernames=sortRoleRows(cards(),preferences.order).map(row=>row.username);
+        const start=usernames.indexOf(from),end=usernames.indexOf(to);
+        if(start<0||end<0)return;
+        usernames.splice(end,0,...usernames.splice(start,1));
+        preferences.order=[...usernames,...preferences.order.filter(username=>!usernames.includes(username))];
+        if(save(preferences))apply();
+      }
+
+      function trackDrag(event){
+        if(!drag||event.pointerId!==drag.pointer)return;
+        drag.target=null;
+        if(Math.abs(drag.y-event.clientY)>5){
+          drag.target=cards().find(({card})=>{
+            const bounds=card.getBoundingClientRect();
+            return event.clientY>=bounds.top&&event.clientY<=bounds.bottom;
+          });
+        }
+        for(const {card} of cards())card.classList.toggle('aether-role-drop',card===drag.target?.card);
+      }
+
+      function stopDrag(event){
+        if(!drag||event.pointerId!==drag.pointer)return;
+        const {target,username}=drag;drag=null;
+        target?.card.classList.remove('aether-role-drop');
+        if(event.type==='pointerup')reorder(username,target?.username);
+      }
+
+      function createControls({username,name}){
+        const tools=element('div',undefined,'aether-inline-role-tools');
+        const input=element('input');
+        input.type='text';input.placeholder='备注';input.maxLength=80;
+        input.setAttribute('aria-label',name+'的备注');
+        input.addEventListener('input',()=>input.setCustomValidity(''));
+        input.addEventListener('change',()=>{
+          const preferences=readRolePreferences(),value=input.value.trim();
+          if(value)preferences.notes.set(username,value);
+          else preferences.notes.delete(username);
+          if(save(preferences,input))input.value=value;
+        });
+        input.addEventListener('keydown',event=>{
+          if(event.key==='Enter'&&!event.isComposing){event.preventDefault();input.blur();}
+        });
+        const grip=element('span',undefined,'aether-inline-role-grip');
+        grip.tabIndex=0;grip.title='拖动排序，也可按上下方向键';
+        grip.setAttribute('role','slider');grip.setAttribute('aria-orientation','vertical');
+        grip.setAttribute('aria-label',name+'的排序位置');grip.setAttribute('aria-valuemin','1');
+        grip.addEventListener('pointerdown',event=>{
+          if(!event.isPrimary||event.button!==0)return;
+          event.preventDefault();grip.focus();
+          grip.setPointerCapture(event.pointerId);
+          drag={username,pointer:event.pointerId,y:event.clientY,target:null};
+        });
+        grip.addEventListener('pointermove',trackDrag);
+        for(const type of ['pointerup','pointercancel','lostpointercapture'])grip.addEventListener(type,stopDrag);
+        grip.addEventListener('keydown',event=>{
+          const keys=['ArrowUp','ArrowDown','Home','End'];
+          if(!keys.includes(event.key))return;
+          event.preventDefault();
+          const roles=sortRoleRows(cards(),readRolePreferences().order),index=roles.findIndex(row=>row.username===username);
+          const next=event.key==='Home'?0:event.key==='End'?roles.length-1:index+(event.key==='ArrowUp'?-1:1);
+          reorder(username,roles[next]?.username);
+          grip.scrollIntoView({block:'nearest'});
+        });
+        tools.append(input,grip);list.append(tools);
+        return {tools,input,grip};
+      }
+
       function apply(){
-        const values=cards();
-        panel.hidden=!values.length;
-        if(draft)return;
-        preferences=readRolePreferences();
-        const order=sortRoleRows(values,preferences.order);
+        const preferences=readRolePreferences(),entries=sortRoleRows(cards(),preferences.order);
+        const present=new Set(entries.map(row=>row.username));
+        for(const [username,control] of controls)if(!present.has(username)){control.tools.remove();controls.delete(username);}
+        // 保留官网按钮及其事件监听器，备注输入框和拖动控件作为同一视觉行的独立元素。
         let next=list.querySelector(':scope > button.character-card');
-        for(const {card,body,username} of order){
+        entries.forEach((row,index)=>{
+          const {card,username}=row;
           if(card!==next)list.insertBefore(card,next);
           next=card.nextElementSibling;
-          const note=preferences.notes.get(username);
-          const badge=body.querySelector(':scope > .aether-role-note');
-          if(!note)badge?.remove();
-          else if(!badge)body.append(element('small',note,'aether-role-note'));
-          else if(badge.textContent!==note)badge.textContent=note;
-        }
-      }
-      function finish(){
-        draft=null;renderEditor();apply();edit.focus();
-      }
-      function renderEditor(){
-        rows.hidden=save.hidden=cancel.hidden=!draft;edit.hidden=!!draft;
-        list.classList.toggle('aether-role-list-editing',!!draft);
-        rows.replaceChildren();
-        if(!draft){status.textContent='';return;}
-        const values=new Map(cards().map(row=>[row.username,row]));
-        draft.order.forEach((username,index)=>{
-          const row=values.get(username);
-          const label=element('span'),name=row?.name||username;
-          label.append(element('strong',name));
-          if(name!==username)label.append(element('small',username));
-          const input=element('input');input.type='text';input.maxLength=80;input.placeholder='备注';
-          input.setAttribute('aria-label',name+'的备注');
-          input.value=draft.notes.get(username)??preferences.notes.get(username)??'';
-          input.addEventListener('input',()=>draft?.notes.set(username,input.value));
-          const moves=element('div',undefined,'aether-role-preferences__move');
-          for(const [direction,label,glyph] of [[-1,'上移','↑'],[1,'下移','↓']]){
-            const adjacent=index+direction;
-            const move=button(glyph,()=>{
-              [draft.order[index],draft.order[adjacent]]=[draft.order[adjacent],draft.order[index]];
-              renderEditor();
-              const controls=rows.children[adjacent];
-              (controls.querySelector('[data-direction="'+direction+'"]:not(:disabled)')||controls.querySelector('button:not(:disabled)'))?.focus();
-            });
-            move.disabled=adjacent<0||adjacent>=draft.order.length;move.dataset.direction=direction;
-            move.title=label;move.setAttribute('aria-label',label+' '+name);moves.append(move);
-          }
-          const entry=element('div',undefined,'aether-role-preferences__row');entry.append(label,input,moves);rows.append(entry);
+          let control=controls.get(username);
+          if(!control?.tools.isConnected){control=createControls(row);controls.set(username,control);}
+          card.classList.add('aether-inline-role');
+          for(const item of [card,control.tools])item.style.setProperty('--aether-role-row',index+1);
+          control.grip.setAttribute('aria-valuemax',entries.length);
+          control.grip.setAttribute('aria-valuenow',index+1);
+          if(document.activeElement!==control.input)control.input.value=preferences.notes.get(username)||'';
         });
       }
-      panel.addEventListener('keydown',event=>{
-        if(!draft||event.isComposing)return;
-        if(event.key==='Escape'){event.stopPropagation();finish();}
-        if(event.key==='Enter'&&event.target.matches('input')){event.preventDefault();save.click();}
-      });
-      renderEditor();
-      return {panel,apply};
+      return apply;
     }
 
     let scheduled=false;
     function scan(){
       scheduled=false;
-      for(const panel of root.querySelectorAll('.aether-role-preferences')){
-        if(!panel.nextElementSibling?.matches(listSelector))panel.remove();
-      }
       for(const list of root.querySelectorAll(listSelector)){
-        let controller=controllers.get(list);
-        if(!controller?.panel.isConnected){controller=mount(list);controllers.set(list,controller);}
-        controller.apply();
+        if(!controllers.has(list))controllers.set(list,mount(list));
+        controllers.get(list)();
       }
     }
     function schedule(){if(!scheduled){scheduled=true;requestAnimationFrame(scan);}}
