@@ -1,39 +1,16 @@
-const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),{test}=require('node:test');
-const source=fs.readFileSync(path.resolve(__dirname,'../src/aetheros.js'),'utf8'),start=source.indexOf('  const historyRandom='),end=source.indexOf('  function createReinforceBridge(',start),create=Function(source.slice(start,end)+';return createReinforceHistory;')();
-function setup(){const data=new Map(),storage={getItem:key=>data.get(key)||null,setItem:(key,value)=>data.set(key,value)},history=create(storage,()=>123456);return {data,storage,history};}
-const info=(level=7,fails=5)=>({equipment:{reinforce_level:level,name:'测试装备'},next:{fails}}),result=(success,new_level,extra={})=>({code:0,data:{success,new_level,...extra}});
-test('中途读取服务器失败次数，下一次成功计入原有失败',()=>{
- const {history:h}=setup();h.observe('角色','uuid',info());const ctx=h.begin('角色','uuid',info(),'attempt',false);h.finish(ctx,result(true,8));
- const row=h.read('角色','uuid').levels[8];assert.equal(row.attempts,6);assert.equal(row.material,1);assert.equal(row.voucher,0);assert.equal(row.success_at,123456);
- h.observe('角色','uuid',info(8,0));assert.equal(h.read('角色','uuid').levels[8].attempts,6);
-});
-test('失败后重新查询当前计数，材料和券分别累计，不重复记录回调',()=>{
- const {history:h}=setup();let ctx=h.begin('角色','uuid',info(),'attempt',false);h.finish(ctx,result(false,7,{fails:6}));h.finish(ctx,result(false,7,{fails:6}));
- h.observe('角色','uuid',info(7,6));ctx=h.begin('角色','uuid',info(7,6),'attempt',true);h.finish(ctx,result(true,8));
- const row=h.read('角色','uuid').levels[8];assert.equal(row.attempts,7);assert.equal(row.material,1);assert.equal(row.voucher,1);
-});
-test('官网连续强化按响应中的真实尝试次数计数，缺少次数时留空',()=>{
- const {history:h}=setup();let ctx=h.begin('角色','uuid',info(),'attempt_continuous',false);h.finish(ctx,result(true,8,{attempts:3}));
- assert.equal(h.read('角色','uuid').levels[8].attempts,8);assert.equal(h.read('角色','uuid').levels[8].material,3);
- ctx=h.begin('角色','other',info(),'attempt_continuous',false);h.finish(ctx,result(true,8));assert.equal(h.read('角色','other').levels[8].attempts,null);
-});
-test('刷新页面或穿脱后以角色和装备唯一标识继续记录，不按部位或名称合并',()=>{
- const {history:h,storage}=setup();const ctx=h.begin('角色','uuid',info(),'attempt',false);h.finish(ctx,result(false,7));
- const fresh=create(storage);assert.equal(fresh.read('角色','uuid').levels[8].fails,6);assert.deepEqual(fresh.read('角色','different').levels,{});assert.deepEqual(fresh.read('其他角色','uuid').levels,{});
- const next=fresh.begin('角色','uuid',info(7,6),'attempt',true);fresh.finish(next,result(true,8));assert.equal(fresh.read('角色','uuid').levels[8].attempts,7);
-});
-test('网络响应丢失不擅自计次；后续查询核对当前进度',()=>{
- const {history:h}=setup();let ctx=h.begin('角色','uuid',info(),'attempt',true);h.finish(ctx,null,true);assert.equal(h.read('角色','uuid').levels[8].pending,true);
- h.observe('角色','uuid',info(7,6));let row=h.read('角色','uuid').levels[8];assert.equal(row.fails,6);assert.equal(row.pending,false);assert.equal(row.voucher,0);
- ctx=h.begin('角色','uuid',info(7,6),'attempt',true);h.finish(ctx,null,true);h.observe('角色','uuid',info(8,0));row=h.read('角色','uuid').levels[8];assert.equal(row.complete,true);assert.equal(row.attempts,null);
-});
-test('旧装备过去的成功次数不倒推，不把异常响应记作成功',()=>{
- const {history:h}=setup();h.observe('角色','uuid',info(14,20));assert.deepEqual(Object.keys(h.read('角色','uuid').levels),['15']);
- const ctx=h.begin('角色','uuid',info(14,20),'attempt',false);h.finish(ctx,result('true',15));assert.equal(h.read('角色','uuid').levels[15].complete,false);
- h.observe('角色','uuid',{equipment:{reinforce_level:15,name:'测试装备'},maxed:true,next:null});assert.equal(h.read('角色','uuid').levels[15].attempts,null);
-});
-test('损坏的本机记录与存储不可用不影响强化操作',()=>{
- const {history:h,storage}=setup();storage.setItem('aether-reinforce-history-v1:'+JSON.stringify(['角色','uuid']),JSON.stringify({version:1,character:'角色',uuid:'uuid',levels:{8:null}}));assert.doesNotThrow(()=>h.observe('角色','uuid',info()));
- const denied=create({getItem(){throw Error();},setItem(){throw Error();}});assert.doesNotThrow(()=>denied.observe('角色','uuid',info()));assert.match(denied.warning,/无法保存/);
- assert.equal(h.begin('角色','uuid',{equipment:{reinforce_level:7},next:{fails:'5'}},'attempt',false),null);
-});
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),crypto=require('node:crypto').webcrypto;
+const source=fs.readFileSync(path.join(__dirname,'../src/aetheros.js'),'utf8'),start=source.indexOf('  const historyRandom='),end=source.indexOf('  function createReinforceBridge',start);
+assert.ok(start>0&&end>start);const context={crypto};vm.createContext(context);vm.runInContext(source.slice(start,end)+';globalThis.api={createReinforceHistory,mergeReinforceRecord,normalizeReinforceRecord};',context);
+const {createReinforceHistory,mergeReinforceRecord,normalizeReinforceRecord}=context.api,values=new Map(),storage={getItem:key=>values.get(key)||null,setItem:(key,value)=>values.set(key,value)};let time=1000;
+const history=createReinforceHistory(storage,()=>time),info={equipment:{reinforce_level:2,name:'测试剑',rarity:5},next:{fails:4},maxed:false};
+let attempt=history.begin('角色','equip',info,'attempt',false),record=history.read('角色','equip');assert.equal(record.events[attempt.id].started_at,1000);assert.equal(record.events[attempt.id].status,'pending');
+time=2000;history.finish(attempt,{code:0,data:{success:false,new_level:2,fails:5}});record=history.read('角色','equip');assert.equal(record.events[attempt.id].status,'failure');assert.equal(record.events[attempt.id].finished_at,2000);
+history.finish(attempt,{code:0,data:{success:false,new_level:2,fails:6}});assert.equal(Object.keys(history.read('角色','equip').events).length,1);
+time=3000;attempt=history.begin('角色','equip',{...info,next:{fails:5}},'attempt',true);time=4000;history.finish(attempt,{code:0,data:{success:true,new_level:3}});record=history.read('角色','equip');assert.equal(record.events[attempt.id].status,'success');assert.equal(record.events[attempt.id].method,'voucher');assert.equal(record.levels['3'].attempts,6);
+const stale=JSON.parse(JSON.stringify(record));stale.events[attempt.id].status='pending';stale.events[attempt.id].finished_at=null;assert.equal(mergeReinforceRecord(record,stale).events[attempt.id].status,'success');
+const old=JSON.parse(JSON.stringify(record));delete old.events;assert.equal(Object.keys(mergeReinforceRecord(record,old).events).length,2);
+time=5000;attempt=history.begin('角色','equip',{...info,equipment:{...info.equipment,reinforce_level:3},next:{fails:0}},'attempt',false);time=6000;history.finish(attempt,null,true);record=history.read('角色','equip');assert.equal(record.events[attempt.id].status,'unknown');assert.equal(record.events[attempt.id].started_at,5000);
+time=7000;attempt=history.begin('角色','other',info,'attempt_continuous',false);time=8000;history.finish(attempt,{code:0,data:{success:true,new_level:3,attempts:3}});assert.equal(history.read('角色','other').events[attempt.id].count,3);
+const malformed=JSON.parse(JSON.stringify(record));malformed.events[attempt.id]={target:0};assert.equal(normalizeReinforceRecord(malformed),null);
+time=9000;attempt=history.begin('角色','race',info,'attempt',false);history.observe('角色','race',{equipment:{reinforce_level:3},maxed:false,next:{fails:0}});time=10000;history.finish(attempt,{code:0,data:{success:true,new_level:3}});record=history.read('角色','race');assert.equal(record.events[attempt.id].status,'success');assert.equal(record.levels['3'].material,1);
+console.log('逐次起止时间、失败/成功/未知、连续请求次数、幂等与旧客户端兼容检查通过');
