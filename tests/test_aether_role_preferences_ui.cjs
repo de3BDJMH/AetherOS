@@ -10,7 +10,7 @@ const note = '每日小号 <b>材料</b>';
 
 const fixture = `<!doctype html><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>.character-list{display:grid;gap:8px}.character-card{display:flex;min-height:58px;align-items:center;padding:8px;border:1px solid gray;text-align:left}.character-card__body{display:grid}</style>
+<style>dialog{margin:0;inset:0 auto auto 0}.character-list{display:grid;gap:8px}.character-card{display:flex;min-height:58px;align-items:center;padding:8px;border:1px solid gray;text-align:left}.character-card__body{display:grid}</style>
 <main id="app"><button id="switch">切换角色</button><div class="character-gateway"></div></main>
 <script>
 function render() {
@@ -31,13 +31,24 @@ document.querySelector('#switch').onclick=render;
 async function check(browser, width) {
   const context = await browser.newContext({viewport:{width,height:850}});
   const page = await context.newPage();
-  const errors = [];
+  const errors = [],cloudCalls=[];
   page.on('pageerror', error => errors.push(error.message));
   await context.addInitScript({content:script});
   await context.route('**/*', route => {
     const {pathname, origin:host} = new URL(route.request().url());
     if (host === 'https://raw.githubusercontent.com') {
       return route.fulfill({headers:{'access-control-allow-origin':'*'},body:script.split('// ==/UserScript==')[0]});
+    }
+    if (host === 'https://web.example.invalid') {
+      const headers={'access-control-allow-origin':origin,'access-control-allow-methods':'POST','access-control-allow-headers':'authorization,content-type'};
+      if (route.request().method()==='OPTIONS') return route.fulfill({status:204,headers});
+      const payload=route.request().postDataJSON();
+      if (pathname==='/api/aetheros/pins/sync') return route.fulfill({headers,json:{version:1,ack:0,revision:0,characters:{}}});
+      if (pathname==='/api/aetheros/history/sync') return route.fulfill({headers,json:{version:1,cursor:0,accepted:[],records:[],has_more:false}});
+      if (pathname==='/api/aetheros/custom-loadouts/sync') return route.fulfill({headers,json:{version:1,cursor:0,accepted:[],changes:[],has_more:false}});
+      assert.equal(pathname,'/api/aetheros/role-preferences/sync');
+      cloudCalls.push(payload);
+      return route.fulfill({headers,json:{version:1,records:[...payload.changes,{key:'beta',stamp:10,edit_id:'00000000-0000-0000-0000-000000000010',value:'另一台设备的备注'}]}});
     }
     assert.equal(host, origin);
     assert.equal(route.request().method(), 'GET');
@@ -47,7 +58,7 @@ async function check(browser, width) {
   });
   const native = page.locator('.character-gateway');
   const cards = native.locator('.character-card');
-  const roleOrder = () => cards.locator('strong').allTextContents();
+  const roleOrder = () => cards.locator('strong').evaluateAll(nodes=>nodes.map(node=>node.firstChild.textContent));
   const pencil = name => native.getByRole('button',{name:'编辑 '+name+' 的备注'});
   const dialog=page.getByRole('dialog');
   const input=dialog.getByRole('textbox',{name:'备注'});
@@ -61,10 +72,15 @@ async function check(browser, width) {
     await page.evaluate(note=>localStorage.setItem('aether-role-preferences-v1',JSON.stringify({order:['gamma','alpha','beta'],notes:{gamma:note}})),note);
     await open();
     assert.deepEqual(await roleOrder(), ['gamma','alpha','beta']);
-    assert.equal(await cards.first().locator('.aether-inline-role-note').textContent(),note);
+    assert.equal(await cards.first().locator('.aether-inline-role-note').textContent(),'('+note+')');
     assert.equal(await native.getByRole('textbox').count(),0);
     await pencil('alpha').click();
     await dialog.waitFor();
+    const box=await dialog.boundingBox();
+    assert(Math.abs(box.x+box.width/2-width/2)<2);
+    assert(Math.abs(box.y+box.height/2-425)<2);
+    assert.equal(await dialog.evaluate(node=>getComputedStyle(node,'::backdrop').backgroundColor),'rgba(3, 8, 18, 0.72)');
+
     await input.fill(note);
     await dialog.getByRole('button',{name:'保存',exact:true}).click();
     await dialog.waitFor({state:'hidden'});
@@ -88,7 +104,7 @@ async function check(browser, width) {
     assert.deepEqual(beforeDrop,['gamma','alpha','beta']);
     await page.mouse.up();
     assert.deepEqual(await roleOrder(), ['alpha','gamma','beta']);
-    assert.equal(await cards.first().locator('.aether-inline-role-note').textContent(),note);
+    assert.equal(await cards.first().locator('.aether-inline-role-note').textContent(),'('+note+')');
     await cards.first().locator('strong').click();
     assert.equal(await page.evaluate(()=>window.selected),'alpha');
 
@@ -111,6 +127,15 @@ async function check(browser, width) {
     assert.equal(await cards.first().locator('.aether-inline-role-note').count(),0);
     assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('aether-role-preferences-v1')).notes.alpha),undefined);
     assert.equal(await native.evaluate(node=>node.scrollWidth<=node.clientWidth+1),true);
+
+    await page.evaluate(()=>{
+      localStorage.setItem('aether-pin-sync-v1',JSON.stringify({version:1,server:'https://web.example.invalid',token:'t'.repeat(32),client_id:'a'.repeat(32),initial:null,pending:[],revision:0}));
+      window.dispatchEvent(new Event('aether-role-sync-now'));
+    });
+    await native.getByText('(另一台设备的备注)',{exact:true}).waitFor();
+    assert(cloudCalls[0].changes.some(row=>row.key==='gamma'&&row.value===note&&row.stamp===0));
+    assert(cloudCalls[0].changes.some(row=>row.key==='alpha'&&row.value===null));
+    assert(cloudCalls[0].changes.some(row=>row.key===''&&row.value.join(',')==='alpha,beta,gamma'));
 
     await page.locator('#aether-multiview-launch').click();
     const root=page.locator('#aether-multiview');

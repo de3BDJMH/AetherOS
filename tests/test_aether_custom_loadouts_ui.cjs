@@ -26,6 +26,7 @@ async function main(){
         assert.equal(payload.client_id,'a'.repeat(32));
         if(url.pathname==='/api/aetheros/pins/sync')return route.fulfill({headers,json:{version:1,ack:0,revision:0,characters:{}}});
         if(url.pathname==='/api/aetheros/history/sync')return route.fulfill({headers,json:{version:1,cursor:0,accepted:[],records:[],has_more:false}});
+        if(url.pathname==='/api/aetheros/role-preferences/sync')return route.fulfill({headers,json:{version:1,records:[]}});
         assert.equal(url.pathname,'/api/aetheros/custom-loadouts/sync');
         syncCalls.push(payload);
         if(offline)return route.fulfill({status:503,headers,json:{detail:'模拟离线'}});
