@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.16.2
+// @version      0.16.3
 // @description  官网多角色桌面、背包筛选与置顶云同步、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -16,7 +16,7 @@
 (() => {
   'use strict';
   if(location.origin!=='https://game.diving-fish.com'||!location.pathname.startsWith('/aether/'))return;
-  const SCRIPT_VERSION='0.16.2';
+  const SCRIPT_VERSION='0.16.3';
   const ACTIVE='aether_active_character',CONFIG='aether-multiview-layout-v1',PREFIX='aether-multiview:',CHANNEL='aether-multiview-state',ORIGIN=location.origin;
   const ready=fn=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn,{once:true}):fn();
   const element=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node;};
@@ -828,34 +828,54 @@
     const controllers=new WeakMap();
     const style=element('style');
     style.textContent=`
-      .character-gateway .character-list.aether-inline-roles{grid-template-columns:minmax(0,1fr)}
+      .character-gateway .character-list.aether-inline-roles{position:relative;grid-template-columns:minmax(0,1fr)}
       .aether-inline-roles>:is(.aether-inline-role,.aether-inline-role-tools){grid-area:var(--aether-role-row)/1}
-      .character-list .character-card.aether-inline-role{padding-inline-end:calc(clamp(5rem,23vw,8.5rem) + 2.55rem)}
+      .character-list .character-card.aether-inline-role{padding-inline-end:4.8rem}
       .aether-inline-role .character-card__body{overflow:hidden}
       .aether-inline-role .character-card__body>small{overflow-wrap:anywhere}
       .aether-inline-role-tools{
         display:flex;align-items:center;justify-self:end;align-self:center;gap:.38rem;z-index:1;
-        width:calc(clamp(5rem,23vw,8.5rem) + 1.4rem);margin-inline-end:.65rem;
+        margin-inline-end:.65rem;
       }
-      .aether-inline-role-tools input{
-        min-width:0;width:100%;padding:.28rem .38rem;border:1px solid transparent;border-radius:.35rem;
-        background:transparent;font:inherit;font-size:.77rem;color:var(--accent,#93dece);text-overflow:ellipsis;
-      }
-      .aether-inline-role-tools input::placeholder{color:#a6b0c0;opacity:.7}
-      .aether-inline-role-tools input:is(:hover,:focus){background:#93c4ef12;border-color:#80a9d045;outline:none}
-      .aether-inline-role-tools input:focus-visible,.aether-inline-role-grip:focus-visible{outline:2px solid var(--accent,#93dece);outline-offset:1px}
+      .character-card .aether-inline-role-note{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--accent,#93dece)!important;font-size:.73rem}
+      .aether-inline-role-tools button{display:grid;place-items:center;width:1.9rem;height:1.9rem;padding:0;border-radius:.4rem;color:#a6b0c0;cursor:pointer}
+      .aether-inline-role-tools button:is(:hover,[data-has-note=true]){color:var(--accent,#93dece)}
+      .aether-inline-role-tools button:hover{background:#93c4ef12}
+      .aether-inline-role-tools svg{width:1rem;height:1rem;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+      .aether-inline-role-tools button:focus-visible,.aether-inline-role-grip:focus-visible{outline:2px solid var(--accent,#93dece);outline-offset:1px}
       .aether-inline-role-grip{display:grid;place-items:center;width:1.1rem;min-height:1.9rem;flex:none;color:#a6b0c0;cursor:grab;touch-action:none;user-select:none}
       .aether-inline-role-grip::before{content:'';width:.6rem;height:.85rem;background:radial-gradient(circle,currentColor 1px,transparent 1.4px) 0 0/.3rem .27rem}
-      .aether-inline-roles .character-card.aether-role-drop{border-color:var(--accent,#93dece);background:#61f4de18}
-      @media(max-width:410px){
-        .character-list .character-card.aether-inline-role{gap:.42rem;padding-inline-end:7.35rem}
-        .aether-inline-role-tools{width:5.75rem;margin-inline-end:.5rem;gap:.2rem}
-      }
+      .aether-inline-roles .character-card.aether-role-dragging{border-color:var(--accent,#93dece);background:#61f4de18}
+      .aether-inline-role-grip:active{cursor:grabbing}
+      .aether-role-note-dialog{box-sizing:border-box;width:min(365px,calc(100% - 28px));padding:1rem;border:1px solid #65c4c84d;border-radius:.8rem;background:#121c2c;color:#e6ecff;font:14px/1.5 system-ui;color-scheme:dark}
+      .aether-role-note-dialog::backdrop{background:#030812aa}
+      .aether-role-note-dialog h2{margin:0 0 .65rem;font-size:1rem;overflow-wrap:anywhere}
+      .aether-role-note-dialog input{box-sizing:border-box;width:100%;padding:.5rem;border:1px solid #80a9d045;border-radius:.4rem;background:#93c4ef12;color:inherit;font:inherit}
+      .aether-role-note-dialog input:focus-visible,.aether-role-note-dialog button:focus-visible{outline:2px solid #93dece;outline-offset:1px}
+      .aether-role-note-dialog footer{display:flex;justify-content:flex-end;gap:.5rem;margin-top:.8rem}
+      .aether-role-note-dialog button{padding:.35rem .72rem;border:1px solid #7ccfb44a;border-radius:.42rem;color:inherit;background:#72d9b912;font:inherit;cursor:pointer}
+      .aether-role-note-dialog button[type=submit]{color:#9debe0}
+      @media(max-width:410px){.character-list .character-card.aether-inline-role{gap:.42rem;padding-inline-end:4.4rem}.aether-inline-role-tools{margin-inline-end:.45rem;gap:.18rem}}
     `;
     document.head.append(style);
+    const dialog=element('dialog',undefined,'aether-role-note-dialog'),form=element('form'),title=element('h2'),input=element('input'),footer=element('footer');
+    title.id='aether-role-note-title';dialog.setAttribute('aria-labelledby',title.id);
+    input.type='text';input.maxLength=80;input.placeholder='\u8f93\u5165\u5907\u6ce8';input.setAttribute('aria-label','\u5907\u6ce8');
+    const cancel=button('\u53d6\u6d88',()=>dialog.close()),confirm=element('button','\u4fdd\u5b58');confirm.type='submit';
+    footer.append(cancel,confirm);form.append(title,input,footer);dialog.append(form);document.body.append(dialog);
+    let saveNote;
+    input.addEventListener('input',()=>input.setCustomValidity(''));
+    form.addEventListener('submit',event=>{event.preventDefault();if(saveNote?.(input.value.trim()))dialog.close();});
+    dialog.addEventListener('close',()=>{saveNote=null;});
+    function editNote(name,note,save){
+      title.textContent='\u7f16\u8f91\u5907\u6ce8 \u00b7 '+name;input.value=note;input.setCustomValidity('');saveNote=save;
+      dialog.showModal();input.focus();input.select();
+    }
+    dialog.addEventListener('keydown',event=>{if(event.key==='Escape')event.stopPropagation();});
 
     function mount(list){
-      const controls=new Map(),nativeOrder=new WeakMap();
+      const controls=new Map(),nativeOrder=new WeakMap(),animations=new WeakMap();
+      const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
       let sequence=0,drag=null;
       list.classList.add('aether-inline-roles');
 
@@ -866,7 +886,7 @@
           const username=body?.querySelector(':scope > small')?.textContent.trim().match(/^(.+)\s+\u00b7\s+Lv\./)?.[1].trim();
           if(!username)continue;
           if(!nativeOrder.has(card))nativeOrder.set(card,sequence++);
-          entries.push({card,username,name:body.querySelector('strong')?.textContent.trim()||username});
+          entries.push({card,body,username,name:body.querySelector('strong')?.textContent.trim()||username});
         }
         return entries.sort((a,b)=>nativeOrder.get(a.card)-nativeOrder.get(b.card));
       }
@@ -878,51 +898,48 @@
         return true;
       }
 
-      function reorder(from,to){
+      function move(usernames,from,to){
         if(!from||!to||from===to)return;
-        const preferences=readRolePreferences();
-        const usernames=sortRoleRows(cards(),preferences.order).map(row=>row.username);
         const start=usernames.indexOf(from),end=usernames.indexOf(to);
         if(start<0||end<0)return;
         usernames.splice(end,0,...usernames.splice(start,1));
+        return true;
+      }
+      function saveOrder(usernames){
+        const preferences=readRolePreferences();
         preferences.order=[...usernames,...preferences.order.filter(username=>!usernames.includes(username))];
-        if(save(preferences))apply();
+        save(preferences);
       }
 
       function trackDrag(event){
         if(!drag||event.pointerId!==drag.pointer)return;
-        drag.target=null;
-        if(Math.abs(drag.y-event.clientY)>5){
-          drag.target=cards().find(({card})=>{
-            const bounds=card.getBoundingClientRect();
-            return event.clientY>=bounds.top&&event.clientY<=bounds.bottom;
-          });
-        }
-        for(const {card} of cards())card.classList.toggle('aether-role-drop',card===drag.target?.card);
+        if(!drag.moved&&Math.abs(drag.y-event.clientY)<=5)return;
+        const y=event.clientY-list.getBoundingClientRect().top+list.scrollTop;
+        const target=cards().find(({card})=>y>=card.offsetTop&&y<card.offsetTop+card.offsetHeight);
+        if(move(drag.order,drag.username,target?.username)){drag.moved=true;apply(true);}
       }
 
       function stopDrag(event){
         if(!drag||event.pointerId!==drag.pointer)return;
-        const {target,username}=drag;drag=null;
-        target?.card.classList.remove('aether-role-drop');
-        if(event.type==='pointerup')reorder(username,target?.username);
+        const {order,moved}=drag;drag=null;
+        if(event.type==='pointerup'&&moved)saveOrder(order);
+        apply(true);
       }
 
       function createControls({username,name}){
         const tools=element('div',undefined,'aether-inline-role-tools');
-        const input=element('input');
-        input.type='text';input.placeholder='\u5907\u6ce8';input.maxLength=80;
-        input.setAttribute('aria-label',name+'\u7684\u5907\u6ce8');
-        input.addEventListener('input',()=>input.setCustomValidity(''));
-        input.addEventListener('change',()=>{
-          const preferences=readRolePreferences(),value=input.value.trim();
-          if(value)preferences.notes.set(username,value);
-          else preferences.notes.delete(username);
-          if(save(preferences,input))input.value=value;
-        });
-        input.addEventListener('keydown',event=>{
-          if(event.key==='Enter'&&!event.isComposing){event.preventDefault();input.blur();}
-        });
+        const pencil=button('',()=>editNote(name,readRolePreferences().notes.get(username)||'',value=>{
+          const preferences=readRolePreferences();
+          if(value)preferences.notes.set(username,value);else preferences.notes.delete(username);
+          const saved=save(preferences,input);
+          if(saved)apply();
+          return saved;
+        }));
+        pencil.title='\u7f16\u8f91\u5907\u6ce8';pencil.setAttribute('aria-label','\u7f16\u8f91 '+name+' \u7684\u5907\u6ce8');
+        const icon=document.createElementNS('http://www.w3.org/2000/svg','svg'),path=document.createElementNS(icon.namespaceURI,'path');
+        icon.setAttribute('viewBox','0 0 24 24');icon.setAttribute('aria-hidden','true');
+        path.setAttribute('d','M13.5 6.5l4 4M4 20l4.6-1 11-11a1.4 1.4 0 0 0 0-2l-1.6-1.6a1.4 1.4 0 0 0-2 0l-11 11L4 20z');
+        icon.append(path);pencil.append(icon);
         const grip=element('span',undefined,'aether-inline-role-grip');
         grip.tabIndex=0;grip.title='\u62d6\u52a8\u6392\u5e8f\uff0c\u4e5f\u53ef\u6309\u4e0a\u4e0b\u65b9\u5411\u952e';
         grip.setAttribute('role','slider');grip.setAttribute('aria-orientation','vertical');
@@ -931,7 +948,7 @@
           if(!event.isPrimary||event.button!==0)return;
           event.preventDefault();grip.focus();
           grip.setPointerCapture(event.pointerId);
-          drag={username,pointer:event.pointerId,y:event.clientY,target:null};
+          drag={username,pointer:event.pointerId,y:event.clientY,moved:false,order:sortRoleRows(cards(),readRolePreferences().order).map(row=>row.username)};
         });
         grip.addEventListener('pointermove',trackDrag);
         for(const type of ['pointerup','pointercancel','lostpointercapture'])grip.addEventListener(type,stopDrag);
@@ -941,31 +958,51 @@
           event.preventDefault();
           const roles=sortRoleRows(cards(),readRolePreferences().order),index=roles.findIndex(row=>row.username===username);
           const next=event.key==='Home'?0:event.key==='End'?roles.length-1:index+(event.key==='ArrowUp'?-1:1);
-          reorder(username,roles[next]?.username);
+          const order=roles.map(row=>row.username);
+          if(move(order,username,order[next])){saveOrder(order);apply(true);}
           grip.scrollIntoView({block:'nearest'});
         });
-        tools.append(input,grip);list.append(tools);
-        return {tools,input,grip};
+        tools.append(pencil,grip);list.append(tools);
+        return {tools,pencil,grip};
       }
 
-      function apply(){
-        const preferences=readRolePreferences(),entries=sortRoleRows(cards(),preferences.order);
+      function apply(animate=false){
+        const preferences=readRolePreferences(),entries=sortRoleRows(cards(),drag?.order||preferences.order);
+        const positions=new Map();
+        if(animate&&!reducedMotion.matches){
+          for(const {card,username} of entries){
+            for(const node of [card,controls.get(username)?.tools]){
+              if(!node)continue;
+              positions.set(node,node.getBoundingClientRect().top);
+              animations.get(node)?.cancel();
+            }
+          }
+        }
         const present=new Set(entries.map(row=>row.username));
         for(const [username,control] of controls)if(!present.has(username)){control.tools.remove();controls.delete(username);}
         // 保留官网按钮及其事件监听器，备注输入框和拖动控件作为同一视觉行的独立元素。
         let next=list.querySelector(':scope > button.character-card');
         entries.forEach((row,index)=>{
-          const {card,username}=row;
+          const {card,body,username}=row;
           if(card!==next)list.insertBefore(card,next);
           next=card.nextElementSibling;
           let control=controls.get(username);
           if(!control?.tools.isConnected){control=createControls(row);controls.set(username,control);}
           card.classList.add('aether-inline-role');
+          card.classList.toggle('aether-role-dragging',drag?.moved&&drag.username===username);
           for(const item of [card,control.tools])item.style.setProperty('--aether-role-row',index+1);
           control.grip.setAttribute('aria-valuemax',entries.length);
           control.grip.setAttribute('aria-valuenow',index+1);
-          if(document.activeElement!==control.input)control.input.value=preferences.notes.get(username)||'';
+          const note=preferences.notes.get(username),badge=body.querySelector('.aether-inline-role-note');
+          control.pencil.dataset.hasNote=!!note;
+          if(!note)badge?.remove();
+          else if(!badge)body.append(element('small',note,'aether-inline-role-note'));
+          else if(badge.textContent!==note)badge.textContent=note;
         });
+        for(const [node,top] of positions){
+          const delta=top-node.getBoundingClientRect().top;
+          if(Math.abs(delta)>1)animations.set(node,node.animate([{transform:`translateY(${delta}px)`},{transform:'translateY(0)'}],{duration:185,easing:'cubic-bezier(.2,.7,.25,1)'}));
+        }
       }
       return apply;
     }

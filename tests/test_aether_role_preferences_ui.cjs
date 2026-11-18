@@ -48,33 +48,47 @@ async function check(browser, width) {
   const native = page.locator('.character-gateway');
   const cards = native.locator('.character-card');
   const roleOrder = () => cards.locator('strong').allTextContents();
-  const input = name => native.getByRole('textbox',{name:name+'的备注'});
+  const pencil = name => native.getByRole('button',{name:'编辑 '+name+' 的备注'});
+  const dialog=page.getByRole('dialog');
+  const input=dialog.getByRole('textbox',{name:'备注'});
   const grip = name => native.getByRole('slider',{name:name+'的排序位置'});
   const open = async () => {
     await page.getByRole('button',{name:'切换角色',exact:true}).click();
-    await input('alpha').waitFor();
+    await pencil('alpha').waitFor();
   };
   try {
     await page.goto(origin+'/aether/');
     await page.evaluate(note=>localStorage.setItem('aether-role-preferences-v1',JSON.stringify({order:['gamma','alpha','beta'],notes:{gamma:note}})),note);
     await open();
     assert.deepEqual(await roleOrder(), ['gamma','alpha','beta']);
-    assert.equal(await input('gamma').inputValue(),note);
-    assert.equal(await native.getByRole('button').count(),3);
-    const inputBox=await input('alpha').boundingBox(), card=await cards.nth(1).boundingBox();
-    assert(inputBox.x>card.x+card.width/2 && inputBox.x+inputBox.width<=card.x+card.width);
-    assert(Math.abs(inputBox.y+inputBox.height/2-card.y-card.height/2)<2);
-    await input('alpha').fill(note);
-    await input('alpha').press('Enter');
+    assert.equal(await cards.first().locator('.aether-inline-role-note').textContent(),note);
+    assert.equal(await native.getByRole('textbox').count(),0);
+    await pencil('alpha').click();
+    await dialog.waitFor();
+    await input.fill(note);
+    await dialog.getByRole('button',{name:'保存',exact:true}).click();
+    await dialog.waitFor({state:'hidden'});
     assert.equal(await page.evaluate(()=>window.selected),undefined);
 
+    await page.evaluate(()=>{
+      const animate=Element.prototype.animate;
+      window.roleAnimations=0;
+      Element.prototype.animate=function(...args){
+        if(this.classList.contains('character-card'))window.roleAnimations++;
+        return animate.apply(this,args);
+      };
+    });
     const handle=await grip('alpha').boundingBox(),target=await cards.first().boundingBox();
     await page.mouse.move(handle.x+handle.width/2,handle.y+handle.height/2);
     await page.mouse.down();
     await page.mouse.move(handle.x+handle.width/2,target.y+target.height/2,{steps:5});
+    assert.deepEqual(await roleOrder(), ['alpha','gamma','beta']);
+    assert(await page.evaluate(()=>window.roleAnimations)>=2);
+    const beforeDrop=await page.evaluate(()=>JSON.parse(localStorage.getItem('aether-role-preferences-v1')).order);
+    assert.deepEqual(beforeDrop,['gamma','alpha','beta']);
     await page.mouse.up();
     assert.deepEqual(await roleOrder(), ['alpha','gamma','beta']);
-    assert.equal(await input('alpha').inputValue(),note);
+    assert.equal(await cards.first().locator('.aether-inline-role-note').textContent(),note);
     await cards.first().locator('strong').click();
     assert.equal(await page.evaluate(()=>window.selected),'alpha');
 
@@ -83,12 +97,18 @@ async function check(browser, width) {
     assert.deepEqual(await roleOrder(), ['alpha','gamma','beta']);
     await open();
     assert.equal(await native.locator('.aether-inline-role-tools').count(),3);
-    assert.deepEqual(await roleOrder(), ['alpha','gamma','beta']);
     await grip('beta').press('ArrowUp');
     assert.deepEqual(await roleOrder(), ['alpha','beta','gamma']);
-    await input('alpha').fill('');
-    await input('alpha').press('Tab');
-    assert.equal(await input('alpha').inputValue(),'');
+    await pencil('alpha').click();
+    assert.equal(await input.inputValue(),note);
+    await input.fill('取消后的备注');
+    await dialog.getByRole('button',{name:'取消',exact:true}).click();
+    await pencil('alpha').click();
+    assert.equal(await input.inputValue(),note);
+    await input.fill('');
+    await input.press('Enter');
+    await dialog.waitFor({state:'hidden'});
+    assert.equal(await cards.first().locator('.aether-inline-role-note').count(),0);
     assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('aether-role-preferences-v1')).notes.alpha),undefined);
     assert.equal(await native.evaluate(node=>node.scrollWidth<=node.clientWidth+1),true);
 
