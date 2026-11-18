@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.17.0
+// @version      0.18.0
 // @description  官网多角色桌面、背包筛选与置顶云同步、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -16,7 +16,7 @@
 (() => {
   'use strict';
   if(location.origin!=='https://game.diving-fish.com'||!location.pathname.startsWith('/aether/'))return;
-  const SCRIPT_VERSION='0.17.0';
+  const SCRIPT_VERSION='0.18.0';
   const ACTIVE='aether_active_character',CONFIG='aether-multiview-layout-v1',PREFIX='aether-multiview:',CHANNEL='aether-multiview-state',ORIGIN=location.origin;
   const ready=fn=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn,{once:true}):fn();
   const element=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node;};
@@ -1089,7 +1089,7 @@
           let control=controls.get(username);
           if(!control?.tools.isConnected){control=createControls(row);controls.set(username,control);}
           card.classList.add('aether-inline-role');
-          card.classList.toggle('aether-role-dragging',drag?.moved&&drag.username===username);
+          card.classList.toggle('aether-role-dragging',Boolean(drag?.moved&&drag.username===username));
           for(const item of [card,control.tools])item.style.setProperty('--aether-role-row',index+1);
           control.grip.setAttribute('aria-valuemax',entries.length);
           control.grip.setAttribute('aria-valuenow',index+1);
@@ -1126,6 +1126,66 @@
     scan();
   }
 
+  function initOfficialRoleNotes(){
+    const app=document.querySelector('#app');
+    if(!app)return;
+    const surfaces='.op-name,.friend-name,.bpl-list,.tg-member';
+    const badgeClass='aether-official-role-note';
+    const style=element('style');
+    style.textContent=`.aether-official-role-note{margin-inline-start:.35em;color:var(--accent,#93dece);font-size:.73em;font-weight:450;overflow-wrap:anywhere}`;
+    document.head.append(style);
+    function paint(node,username,notes,before=null){
+      if(!node)return;
+      const note=notes.get(username),badge=node.querySelector(':scope > .'+badgeClass);
+      if(!note){badge?.remove();return;}
+      const text='('+note+')';
+      if(!badge)node.insertBefore(element('small',text,badgeClass),before);
+      else if(badge.textContent!==text)badge.textContent=text;
+    }
+    function scan(){
+      const notes=readRolePreferences().notes,active=sessionStorage.getItem(ACTIVE);
+      for(const name of app.querySelectorAll('.status-card--operator .op-name'))paint(name,active,notes);
+      for(const name of app.querySelectorAll('.friend-list .friend-name')){
+        const id=name.querySelector('.friend-username');
+        const user=id?.textContent.trim().match(/(?:^|\s)@([^@]+)$/)?.[1].trim();
+        paint(name.querySelector('.friend-remark')||name,user,notes,name.querySelector('.friend-remark')?null:id);
+      }
+      if(!document.querySelector('.bpl-list,.tg-member'))return;
+      // 选择器的卡片不渲染账号名，从官网 Vue 列表的稳定 key 和账号字段拿身份。
+      function visit(vnode,users){
+        if(!vnode||typeof vnode!=='object')return;
+        const component=vnode.component,kind=component?.type?.__name;
+        if(kind==='BattlerPickList'){
+          users=new Map((component.props.items||[]).map(item=>{
+            const key=item.key,variant=item.cardProps?.badge?.variant;
+            const username=key==='self'?active:variant==='npc'||variant==='preset'||String(key).startsWith('npc:')?null:item.meta?.username;
+            return [key,username];
+          }));
+        }else if(kind==='BattlerPickCard'){
+          paint(vnode.el?.querySelector?.('.bpc-name'),users?.get(vnode.key),notes);
+          return;
+        }else if(vnode.el?.nodeType===1&&vnode.el.classList.contains('tg-member')){
+          const key=String(vnode.key||'');
+          paint(vnode.el.querySelector('.tg-member-name'),key==='self'?active:key.startsWith('friend:')?key.slice(7):null,notes);
+          return;
+        }
+        if(component)visit(component.subTree,users);
+        else if(vnode.suspense)visit(vnode.suspense.activeBranch,users);
+        else if(Array.isArray(vnode.children))for(const child of vnode.children)visit(child,users);
+      }
+      visit(app._vnode);
+    }
+    let scheduled=false;
+    const schedule=()=>{if(!scheduled){scheduled=true;requestAnimationFrame(()=>{scheduled=false;scan();});}};
+    const added=node=>node.nodeType===1&&(node.matches(surfaces)||node.querySelector(surfaces));
+    new MutationObserver(records=>{
+      if(records.some(record=>record.target.parentElement?.closest(surfaces)||record.target.closest?.(surfaces)||[...record.addedNodes].some(added)))schedule();
+    }).observe(document.body,{childList:true,characterData:true,subtree:true});
+    window.addEventListener('storage',event=>{if(event.key===ROLE_PREFERENCES_KEY)schedule();});
+    window.addEventListener('aether-role-preferences-change',schedule);
+    scan();
+  }
+
   function paneContext(){
     if(window.parent===window)return null;
     try{if(window.name.startsWith(PREFIX)){const value=JSON.parse(window.name.slice(PREFIX.length));if(/^[a-z0-9-]{1,80}$/.test(value.id)&&typeof value.character==='string')return value;}}catch{}
@@ -1143,7 +1203,7 @@
       prototype.removeItem=function(name){if(this===storage&&String(name)===ACTIVE){character='';try{set.call(storage,key,'""');}catch{}notify();return;}return remove.call(this,name);};
       const activate=()=>window.parent.postMessage({type:CHANNEL,id:context.id,activate:true},ORIGIN);document.addEventListener('pointerdown',activate,true);document.addEventListener('focusin',activate,true);document.addEventListener('keydown',event=>{if(event.key==='Escape')window.parent.postMessage({type:CHANNEL,id:context.id,dismiss:true},ORIGIN);},true);
       set.call(storage,key,JSON.stringify(character));if(storage.getItem(ACTIVE)!==character)throw new Error('\u89d2\u8272\u9694\u79bb\u672a\u751f\u6548');notify();
-      ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initBackpackFilters);ready(initReinforceFilters);ready(initCustomLoadouts);
+      ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initOfficialRoleNotes);ready(initBackpackFilters);ready(initReinforceFilters);ready(initCustomLoadouts);
     }catch{
       window.stop();window.parent.postMessage({type:CHANNEL,id:context.id,error:true},ORIGIN);
       ready(()=>{const text=element('div','\u89d2\u8272\u9694\u79bb\u672a\u5c31\u7eea\uff0c\u8bf7\u5173\u95ed\u6b64\u533a\u57df\u540e\u91cd\u5f00\u3002');text.style.cssText='position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;padding:24px;background:#111b29;color:#e4edf5;font:14px sans-serif';document.body.append(text);});
@@ -1152,7 +1212,7 @@
   }
   if(window.top!==window)return;
   ready(initBackpackFilters);ready(initReinforceFilters);
-  ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initCustomLoadouts);
+  ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initOfficialRoleNotes);ready(initCustomLoadouts);
   ready(initScriptUpdates);
   ready(initScriptNavigation);
   ready(initPinSync);ready(initLoadoutSync);ready(initReinforceHistorySync);ready(initReinforceBulkRead);

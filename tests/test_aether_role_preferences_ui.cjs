@@ -72,6 +72,7 @@ async function check(browser, width) {
     await page.evaluate(note=>localStorage.setItem('aether-role-preferences-v1',JSON.stringify({order:['gamma','alpha','beta'],notes:{gamma:note}})),note);
     await open();
     assert.deepEqual(await roleOrder(), ['gamma','alpha','beta']);
+    assert.equal(await native.locator('.aether-role-dragging').count(),0);
     assert.equal(await cards.first().locator('.aether-inline-role-note').textContent(),'('+note+')');
     assert.equal(await native.getByRole('textbox').count(),0);
     await pencil('alpha').click();
@@ -103,6 +104,7 @@ async function check(browser, width) {
     const beforeDrop=await page.evaluate(()=>JSON.parse(localStorage.getItem('aether-role-preferences-v1')).order);
     assert.deepEqual(beforeDrop,['gamma','alpha','beta']);
     await page.mouse.up();
+    assert.equal(await native.locator('.aether-role-dragging').count(),0);
     assert.deepEqual(await roleOrder(), ['alpha','gamma','beta']);
     assert.equal(await cards.first().locator('.aether-inline-role-note').textContent(),'('+note+')');
     await cards.first().locator('strong').click();
@@ -136,6 +138,31 @@ async function check(browser, width) {
     assert(cloudCalls[0].changes.some(row=>row.key==='gamma'&&row.value===note&&row.stamp===0));
     assert(cloudCalls[0].changes.some(row=>row.key==='alpha'&&row.value===null));
     assert(cloudCalls[0].changes.some(row=>row.key===''&&row.value.join(',')==='alpha,beta,gamma'));
+
+    await page.evaluate(()=>{
+      sessionStorage.setItem('aether_active_character','gamma');
+      const app=document.querySelector('#app'),fixture=document.createElement('div');
+      fixture.innerHTML='<div class="status-card--operator"><h2 class="op-name">本人</h2></div><div class="friend-list"><div class="friend-name">同名<span class="friend-username">@beta</span></div></div><div class="bpl-list"><button class="bpc"><span class="bpc-name">同名</span></button><button class="bpc"><span class="bpc-name">同名</span></button></div><div class="tg-member"><span class="tg-member-name">训练成员</span></div>';
+      const [friend,npc]=fixture.querySelectorAll('.bpc');
+      app._vnode={component:{subTree:{children:[
+        {component:{type:{__name:'BattlerPickList'},props:{items:[
+          {key:'friend:beta',meta:{username:'beta'}},
+          {key:'npc:beta',meta:{username:'beta'},cardProps:{badge:{variant:'npc'}}},
+        ]},subTree:{children:[
+          {key:'friend:beta',el:friend,component:{type:{__name:'BattlerPickCard'}}},
+          {key:'npc:beta',el:npc,component:{type:{__name:'BattlerPickCard'}}},
+        ]}}},
+        {key:'friend:beta',el:fixture.querySelector('.tg-member')},
+      ]}}};
+      app.append(fixture);
+    });
+    await page.locator('.op-name .aether-official-role-note').waitFor();
+    assert.equal(await page.locator('.op-name .aether-official-role-note').textContent(),'('+note+')');
+    for(const selector of ['.friend-name','.bpc-name','.tg-member-name']){
+      const notes=page.locator(selector+' .aether-official-role-note');
+      assert.equal(await notes.count(),1);
+      assert.equal(await notes.textContent(),'(另一台设备的备注)');
+    }
 
     await page.locator('#aether-multiview-launch').click();
     const root=page.locator('#aether-multiview');
