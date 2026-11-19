@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.21.0
+// @version      0.21.1
 // @description  官网多角色桌面、背包筛选与置顶云同步、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -38,14 +38,14 @@
   function initSpectrumLevelTooltips(){
     const guard=Symbol.for('aether.spectrum.level.tooltips');if(window[guard])return;window[guard]=true;
     const catalog=__AETHEROS_SPECTRUM_LEVELS__;
-    const supported='.prism-socket-tt,.item-chip-tooltip,.formula-tooltip-surface';
+    const supported='.prism-socket-tt,.item-chip-tooltip,.formula-tooltip-surface,.equip-tooltip-surface,.item-sheet';
     const normalize=value=>String(value||'').trim().replace(/^(?:纯净)?光谱[·・\s]*/,'');
     const aliases=new Map();for(const [id,row]of Object.entries(catalog)){const name=normalize(row.name);aliases.set(name,aliases.has(name)?null:id);}
     const style=document.createElement('style');style.id='aether-spectrum-level-style';style.textContent=`
       .amv-spectrum-levels{border-top:1px solid #879ab24a;margin-top:9px;padding-top:8px;font-size:12px;line-height:1.55;font-family:inherit;white-space:normal;text-align:left;color:inherit}
       .amv-spectrum-levels__title{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;font-weight:650;margin-bottom:6px}.amv-spectrum-levels__title small{font-size:10px;font-weight:400;opacity:.7}
       .amv-spectrum-levels table{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}.amv-spectrum-levels th,.amv-spectrum-levels td{padding:4px 5px;border-bottom:1px solid #879ab22a;text-align:right;vertical-align:middle;white-space:nowrap}.amv-spectrum-levels th:first-child{width:46%;text-align:left;white-space:normal;min-width:75px;font-weight:400}.amv-spectrum-levels thead th{font-weight:500;opacity:.75}.amv-spectrum-levels [data-current]{color:#6eeedc!important;background:#6eeedc14;font-weight:700;opacity:1!important}.amv-spectrum-levels__note{font-size:11px;line-height:1.5;opacity:.7;margin-top:6px}
-      .amv-spectrum-tip{white-space:normal!important;max-width:min(380px,calc(100vw - 20px))!important}.item-chip-tooltip.amv-spectrum-tip{width:min(360px,calc(100vw - 20px))!important;max-height:calc(100vh - 20px);overflow:auto;box-sizing:border-box}.prism-socket-tt.amv-spectrum-tip{padding:10px 12px!important}.amv-spectrum-tip .prism-tt-inner{display:block}
+      .amv-spectrum-tip:not(.item-sheet){white-space:normal!important;max-width:min(380px,calc(100vw - 20px))!important}.item-chip-tooltip.amv-spectrum-tip{width:min(360px,calc(100vw - 20px))!important;max-height:calc(100vh - 20px);overflow:auto;box-sizing:border-box}.prism-socket-tt.amv-spectrum-tip{padding:10px 12px!important}.amv-spectrum-tip .prism-tt-inner{display:block}.equip-tooltip-surface.amv-spectrum-tip{width:min(360px,calc(100vw - 20px))!important;box-sizing:border-box}.equip-tooltip-surface.amv-spectrum-tip>.equip-tooltip{width:auto!important;max-width:none!important}
       @media(max-width:400px){.amv-spectrum-levels th,.amv-spectrum-levels td{padding:4px 3px}.amv-spectrum-levels table{font-size:11px}}
     `;document.head.append(style);
     const make=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
@@ -64,19 +64,22 @@
       }
       const app=document.getElementById('app')?.__vue_app__,seen=new Set();let found=null;
       // 仅在提示出现时查看已挂载的 VNode；不改官网组件、不读取额外游戏接口。
-      function visit(node,context){
+      function visit(node,context,inventory){
         if(!node||typeof node!=='object'||seen.has(node))return;seen.add(node);
-        if(Array.isArray(node)){for(const child of node)visit(child,context);return;}
+        if(Array.isArray(node)){for(const child of node)visit(child,context,inventory);return;}
+        const props=node.component?.props;
+        if(Array.isArray(props?.backpackConsumables))inventory=new Map(props.backpackConsumables.map(item=>[item.uuid,item]));
+        if(inventory?.has(node.key))context=fromValue(inventory.get(node.key));
         context=fromProps(node.component?.props)||context;
         if(node.el===tip&&context)found=context;
-        if(node.component)visit(node.component.subTree,context);
-        else if(node.suspense)visit(node.suspense.activeBranch,context);
-        else if(Array.isArray(node.children))visit(node.children,context);
+        if(node.component)visit(node.component.subTree,context,inventory);
+        else if(node.suspense)visit(node.suspense.activeBranch,context,inventory);
+        else if(Array.isArray(node.children))visit(node.children,context,inventory);
       }
       visit(app?._container?._vnode||app?._instance?.subTree||app?._vnode,null);return found;
     }
     function byTitle(tip){
-      const nameNode=tip.querySelector('.prism-tt-inner,.tooltip-name');if(!nameNode)return null;
+      const nameNode=tip.querySelector('.prism-tt-inner,.tooltip-name,.equip-tooltip>strong,.item-sheet__title');if(!nameNode)return null;
       const match=nameNode.textContent.trim().match(/^(.*?)(?:\s*[·・]?\s*Lv\s*(\d+))?$/i),id=aliases.get(normalize(match?.[1]));
       if(!id)return null;
       if(tip.matches('.item-chip-tooltip')&&!/^(?:纯净)?光谱[·・\s]/.test(nameNode.textContent.trim()))return null;
@@ -99,13 +102,15 @@
     }
     const states=new WeakMap();
     function sync(tip){
+      const host=tip.matches('.item-sheet')?tip.querySelector('.item-sheet__info'):tip.matches('.equip-tooltip-surface')?tip.querySelector('.equip-tooltip'):tip;
+      if(!host)return;
       const value=owner(tip)||byTitle(tip),previous=states.get(tip),signature=value?value.id+':'+value.level:'';
       if(previous?.signature===signature&&(!value||tip.querySelector('[data-amv-spectrum-levels]')))return;
-      tip.querySelector(':scope > [data-amv-spectrum-levels]')?.remove();
+      host.querySelector(':scope > [data-amv-spectrum-levels]')?.remove();
       if(!value){if(previous){tip.classList.remove('amv-spectrum-tip');if(tip.matches('.item-chip-tooltip'))tip.setAttribute('style',previous.style);}states.delete(tip);return;}
       const originalStyle=previous?.style??tip.getAttribute('style')??'';
       if(previous&&tip.matches('.item-chip-tooltip'))tip.setAttribute('style',originalStyle);
-      tip.append(levelTable(value));tip.classList.add('amv-spectrum-tip');states.set(tip,{signature,style:originalStyle});
+      host.append(levelTable(value));tip.classList.add('amv-spectrum-tip');states.set(tip,{signature,style:originalStyle});
       if(tip.matches('.item-chip-tooltip')){
         const rect=tip.getBoundingClientRect();tip.style.bottom='auto';tip.style.top=Math.max(10,Math.min(rect.top,innerHeight-rect.height-10))+'px';tip.style.left=Math.max(10,Math.min(rect.left,innerWidth-rect.width-10))+'px';tip.style.transform='none';
       }
