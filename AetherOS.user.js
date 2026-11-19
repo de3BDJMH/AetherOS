@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.21.1
+// @version      0.21.2
 // @description  官网多角色桌面、背包筛选与置顶云同步、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -16,7 +16,7 @@
 (() => {
   'use strict';
   if(location.origin!=='https://game.diving-fish.com'||!location.pathname.startsWith('/aether/'))return;
-  const SCRIPT_VERSION='0.21.1';
+  const SCRIPT_VERSION='0.21.2';
   const ACTIVE='aether_active_character',CONFIG='aether-multiview-layout-v1',PREFIX='aether-multiview:',CHANNEL='aether-multiview-state',ORIGIN=location.origin;
   const ready=fn=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn,{once:true}):fn();
   const element=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node;};
@@ -46,6 +46,9 @@
       .amv-spectrum-levels__title{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;font-weight:650;margin-bottom:6px}.amv-spectrum-levels__title small{font-size:10px;font-weight:400;opacity:.7}
       .amv-spectrum-levels table{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}.amv-spectrum-levels th,.amv-spectrum-levels td{padding:4px 5px;border-bottom:1px solid #879ab22a;text-align:right;vertical-align:middle;white-space:nowrap}.amv-spectrum-levels th:first-child{width:46%;text-align:left;white-space:normal;min-width:75px;font-weight:400}.amv-spectrum-levels thead th{font-weight:500;opacity:.75}.amv-spectrum-levels [data-current]{color:#6eeedc!important;background:#6eeedc14;font-weight:700;opacity:1!important}.amv-spectrum-levels__note{font-size:11px;line-height:1.5;opacity:.7;margin-top:6px}
       .amv-spectrum-tip:not(.item-sheet){white-space:normal!important;max-width:min(380px,calc(100vw - 20px))!important}.item-chip-tooltip.amv-spectrum-tip{width:min(360px,calc(100vw - 20px))!important;max-height:calc(100vh - 20px);overflow:auto;box-sizing:border-box}.prism-socket-tt.amv-spectrum-tip{padding:10px 12px!important}.amv-spectrum-tip .prism-tt-inner{display:block}.equip-tooltip-surface.amv-spectrum-tip{width:min(360px,calc(100vw - 20px))!important;box-sizing:border-box}.equip-tooltip-surface.amv-spectrum-tip>.equip-tooltip{width:auto!important;max-width:none!important}
+      .prism-socket-tt.v-overlay__content.amv-spectrum-tip{background:#101c30!important;color:#e6edf9!important;width:min(360px,calc(100vw - 20px))!important;box-sizing:border-box;padding:12px 14px!important;border:1px solid #526780!important;border-radius:10px!important;box-shadow:0 10px 30px #02061799!important;font-size:13px;line-height:1.6}
+      .prism-socket-tt.amv-spectrum-tip .prism-tt-inner{display:block;white-space:normal;background:transparent;border:0;box-shadow:none;padding:0;color:#e6edf9;font-size:13px;line-height:1.6}
+      .prism-socket-tt.amv-spectrum-tip .amv-spectrum-levels{color:#e6edf9}.prism-socket-tt.amv-spectrum-tip .amv-spectrum-levels__title small,.prism-socket-tt.amv-spectrum-tip .amv-spectrum-levels__note{opacity:1;color:#b1bfd2}
       @media(max-width:400px){.amv-spectrum-levels th,.amv-spectrum-levels td{padding:4px 3px}.amv-spectrum-levels table{font-size:11px}}
     `;document.head.append(style);
     const make=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
