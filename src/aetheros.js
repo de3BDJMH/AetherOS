@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.21.2
+// @version      0.22.0
 // @description  官网多角色桌面、背包筛选与置顶云同步、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -35,6 +35,132 @@
     }
     return {records,skipped};
   }
+  function initEquipmentUsage(){
+    const guard=Symbol.for('aether.equipment.usage');if(window[guard])return;
+    const KEY='aether-equipment-usage-v1:',TTL=300000,states=new Map(),xhr=new WeakMap(),nativeFetch=window.fetch;
+    let clock=0,queued=false,active='',index=new Map(),signature='',picked=null,popover=null;
+    const role=()=>{try{return sessionStorage.getItem(ACTIVE)?.trim()||'';}catch{return '';}};
+    const cellItems=new WeakMap();
+    const own=node=>{node.dataset.amvUsageOwned='';return node;};
+    const text=(node,value)=>{if(node.textContent!==value)node.textContent=value;};
+    const validId=value=>typeof value==='string'&&value.length>0&&value.length<=200;
+    function state(who){
+      if(!states.has(who)){
+        let cached=null;try{const value=JSON.parse(localStorage.getItem(KEY+who)||'null');if(value?.version===1&&value.character===who&&Number.isSafeInteger(value.updatedAt)&&Array.isArray(value.presets)&&value.presets.length<=100&&value.presets.every(row=>validId(row.id)&&typeof row.name==='string'&&Array.isArray(row.uuids)&&row.uuids.length<=6&&row.uuids.every(validId)))cached=value;}catch{}
+        states.set(who,{cached,pending:null,error:'',attempted:0});
+      }return states.get(who);
+    }
+    function describe(input,options={}){
+      try{const request=input instanceof Request?input:null,url=new URL(request?.url||String(input),ORIGIN),method=String(options.method||request?.method||'GET').toUpperCase();
+        if(url.origin!==ORIGIN||!/^\/api\/aether\/status\/presets(?:\/(?:save|rename|delete|offline))?$/.test(url.pathname)||!['GET','POST'].includes(method))return null;
+        const headers=new Headers(options.headers||request?.headers),who=url.searchParams.get('_aether_character')||headers.get('X-Aether-Character')||role();
+        return who?{who,startedAt:clock=Math.max(Date.now(),clock+1)}:null;
+      }catch{return null;}
+    }
+    function accept(request,payload){
+      if(!request||payload?.code!==0||!Array.isArray(payload.data?.presets))return false;
+      const presets=[];
+      for(const row of payload.data.presets){
+        if(row?.empty===true)continue;
+        if(!Number.isInteger(row?.index)||row.index<0||row.index>99||typeof row.name!=='string'||!row.equipment||typeof row.equipment!=='object'||Array.isArray(row.equipment))return false;
+        const uuids=[];for(const [slot,item]of Object.entries(row.equipment)){if(!Object.hasOwn(GEAR_SLOTS,slot)||slot==='none')return false;if(item!==null&&!validId(item?.uuid))return false;if(item)uuids.push(item.uuid);}
+        presets.push({id:String(row.index),name:row.name.slice(0,100)||'预设 '+(row.index+1),uuids:[...new Set(uuids)]});
+      }
+      const current=state(request.who);if((current.cached?.startedAt||0)>request.startedAt)return true;
+      current.cached={version:1,character:request.who,startedAt:request.startedAt,updatedAt:Date.now(),presets};current.error='';
+      try{localStorage.setItem(KEY+request.who,JSON.stringify(current.cached));}catch{current.error='预设占用缓存未能保存在本机';}
+      signature='';close();schedule();return true;
+    }
+    // 只观察官方预设的返回，不改写请求、响应或游戏操作。
+    window.fetch=function(input,options){const request=describe(input,options);const promise=Reflect.apply(nativeFetch,this,arguments);if(request)promise.then(response=>{if(response.ok)response.clone().json().then(data=>accept(request,data)).catch(()=>{});},()=>{});return promise;};
+    const open=XMLHttpRequest.prototype.open,send=XMLHttpRequest.prototype.send,setHeader=XMLHttpRequest.prototype.setRequestHeader;
+    XMLHttpRequest.prototype.open=function(method,url,...args){xhr.set(this,{method,url,headers:{}});return Reflect.apply(open,this,[method,url,...args]);};
+    XMLHttpRequest.prototype.setRequestHeader=function(name,value){const request=xhr.get(this);if(request&&String(name).toLowerCase()==='x-aether-character')request.headers[name]=value;return Reflect.apply(setHeader,this,arguments);};
+    XMLHttpRequest.prototype.send=function(){const metadata=xhr.get(this),request=metadata&&describe(metadata.url,metadata);if(request)this.addEventListener('load',()=>{try{if(this.status>=200&&this.status<300)accept(request,typeof this.response==='string'?JSON.parse(this.response):this.response);}catch{}},{once:true});return Reflect.apply(send,this,arguments);};
+    async function refresh(who,force=false){
+      if(!who)return;const current=state(who);if(current.pending)return current.pending;
+      if(!force&&(current.cached&&Date.now()-current.cached.updatedAt<TTL||Date.now()-current.attempted<30000))return;
+      current.attempted=Date.now();current.error='';
+      current.pending=(async()=>{const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);try{
+        const url=new URL('/api/aether/status/presets',ORIGIN);url.searchParams.set('_aether_character',who);const request=describe(url);
+        const response=await Reflect.apply(nativeFetch,window,[url,{credentials:'same-origin',cache:'no-store',headers:{'X-Aether-Character':who},signal:controller.signal}]);
+        const data=await response.json();if(!response.ok||!accept(request,data))throw Error('官方预设读取失败，标记可能不完整');
+      }catch{current.error='官方预设读取失败，标记可能不完整';}finally{clearTimeout(timer);current.pending=null;schedule();}})();schedule();return current.pending;
+    }
+    function rebuild(who){
+      let raw='',custom=[],error='';try{raw=localStorage.getItem(CLOUD_LOADOUTS+who)??localStorage.getItem(LEGACY_LOADOUTS+who)??'';custom=orderedLoadouts(loadoutDocument(who));}catch{error='自建预设读取失败，标记可能不完整';}
+      const current=state(who),next=JSON.stringify([who,current.cached,raw,error]);if(next===signature)return error;
+      signature=next;index=new Map();
+      const add=(uuid,source,id,name)=>{if(!validId(uuid))return;const rows=index.get(uuid)||[];if(!rows.some(row=>row.source===source&&row.id===id))rows.push({source,id,name});index.set(uuid,rows);};
+      for(const row of current.cached?.presets||[])for(const uuid of row.uuids)add(uuid,'官方',row.id,row.name);
+      for(const row of custom)if(!row.preset.empty)for(const item of Object.values(row.preset.equipment||{}))if(item)add(item.uuid,'自建',row.id,row.preset.name);
+      return error;
+    }
+    const refs=uuid=>index.get(uuid)||[];
+    const labels=rows=>rows.map(row=>row.source+' · '+row.name).join('；');
+    function close(){popover?.remove();popover=null;}
+    function show(anchor,uuid){
+      close();const rows=refs(uuid);if(!rows.length)return;popover=own(element('section',undefined,'amv-usage-popover'));popover.setAttribute('role','dialog');popover.setAttribute('aria-label','装备占用预设');
+      const head=element('header'),dismiss=button('×',event=>{event.stopPropagation();close();anchor.focus();});dismiss.setAttribute('aria-label','关闭占用详情');head.append(element('strong','占用此装备的预设'),dismiss);popover.append(head);
+      for(const row of rows){const line=element('div');line.append(element('small',row.source),element('span',row.name));popover.append(line);}document.body.append(popover);
+      const rect=anchor.getBoundingClientRect(),box=popover.getBoundingClientRect();popover.style.left=Math.max(10,Math.min(rect.left,innerWidth-box.width-10))+'px';popover.style.top=Math.max(10,Math.min(rect.bottom+8,innerHeight-box.height-10))+'px';
+    }
+    function badge(cell,item){
+      cellItems.set(cell,item);const rows=refs(item.uuid);let mark=cell.querySelector(':scope > [data-amv-usage-badge]');if(!rows.length){mark?.remove();return;}
+      if(!mark){mark=own(button('',event=>{event.preventDefault();event.stopImmediatePropagation();show(mark,mark.dataset.uuid);}));mark.className='amv-usage-badge';mark.dataset.amvUsageBadge='';for(const type of ['pointerdown','mousedown','touchstart','touchend','dblclick','contextmenu'])mark.addEventListener(type,event=>event.stopPropagation());cell.append(mark);}
+      mark.dataset.uuid=item.uuid;text(mark,'▤ '+rows.length);mark.title=labels(rows);mark.setAttribute('aria-label',(item.name||'装备')+'：占用 '+rows.length+' 套预设，点击查看');
+    }
+    function info(host,item){
+      const rows=refs(item.uuid);let box=host.querySelector(':scope > [data-amv-usage-info]');if(!rows.length){box?.remove();return;}
+      if(!box){box=own(element('section',undefined,'amv-usage-info'));box.dataset.amvUsageInfo='';host.append(box);}text(box,'占用 '+rows.length+' 套预设：'+labels(rows));
+    }
+    function status(panel,who,error){
+      let bar=panel.querySelector(':scope > [data-amv-usage-status]');if(!bar){bar=own(element('div',undefined,'amv-usage-status'));bar.dataset.amvUsageStatus='';const copy=element('span'),reload=button('刷新预设',()=>refresh(role(),true));bar.append(copy,reload);const title=panel.querySelector(':scope > .bag-tabs,:scope > .section-title');title?title.after(bar):panel.prepend(bar);}
+      const current=state(who);text(bar.firstElementChild,error||current.error||(current.pending?'正在读取官方预设占用…':current.cached?'预设占用：官方与自建记录':'官方预设尚未读取'));bar.lastElementChild.disabled=!!current.pending;
+    }
+    function warning(host,selected){
+      const used=[...selected].filter(uuid=>refs(uuid).length);let box=host.querySelector(':scope > [data-amv-usage-warning]');if(!used.length){box?.remove();return;}
+      if(!box){box=own(element('p',undefined,'amv-usage-warning'));box.dataset.amvUsageWarning='';host.append(box);}text(box,'已选 '+used.length+' 件装备被预设使用：'+[...new Set(used.flatMap(uuid=>refs(uuid).map(row=>row.source+' · '+row.name)))].join('；'));
+    }
+    const style=element('style');style.id='aether-equipment-usage-style';style.textContent=`
+      .amv-usage-badge{position:absolute;top:-7px;left:50%;transform:translateX(-50%);z-index:9;min-width:23px;height:16px;padding:0 4px!important;margin:0!important;border:1px solid #b6a174!important;border-radius:4px!important;background:#263043!important;color:#ffe0a2!important;font:600 10px/14px system-ui!important;cursor:pointer;white-space:nowrap}.amv-usage-badge:focus-visible{outline:2px solid #9de9df;outline-offset:2px}.amv-usage-status{display:flex;align-items:center;gap:10px;justify-content:space-between;margin:8px 0;color:#aabbd2;font-size:11px}.amv-usage-status button{padding:3px 7px;border:1px solid #64799166;border-radius:5px;background:#1a2a3c;color:#cbdaf0;font:inherit;cursor:pointer}.amv-usage-info,.amv-usage-warning{border-top:1px solid #7790b044;padding-top:8px;margin:8px 0 0;color:#f3d39b;font-size:12px;line-height:1.65;white-space:normal;overflow-wrap:anywhere}.amv-usage-popover{position:fixed;z-index:2147483646;width:min(310px,calc(100vw - 20px));max-height:calc(100vh - 20px);overflow:auto;padding:12px;border:1px solid #71839d;border-radius:10px;background:#101c30;color:#e6edf9;box-shadow:0 8px 28px #02061799;font:13px/1.6 system-ui;box-sizing:border-box}.amv-usage-popover header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.amv-usage-popover button{border:0;background:none;color:#c9d7ec;font:20px system-ui;cursor:pointer}.amv-usage-popover>div{display:flex;align-items:start;gap:8px;padding-top:5px;overflow-wrap:anywhere}.amv-usage-popover small{flex:none;font-size:10px;padding:1px 5px;border:1px solid #7285a644;border-radius:4px;color:#b2d5eb}
+    `;document.head.append(style);
+    function scan(){
+      queued=false;const who=role();if(who!==active){active=who;picked=null;close();signature='';}if(!who)return;
+      const error=rebuild(who),app=document.getElementById('app')?.__vue_app__,seen=new Set(),panels=new Set(),decomposeSelected=new Set(),sellSelected=new Set(),confirmations=new Set(),sheets=new Set();let found=false;
+      function visit(node,inventory,item,mode){
+        if(!node||typeof node!=='object'||seen.has(node))return;seen.add(node);if(Array.isArray(node)){for(const child of node)visit(child,inventory,item,mode);return;}
+        const component=node.component,name=component?.type?.__name||component?.type?.name,props=component?.props;
+        if(name==='BackpackPanel'){inventory=new Map((props.backpackEquipment||[]).filter(value=>validId(value?.uuid)).map(value=>[value.uuid,value]));const root=component.subTree?.el;if(root?.nodeType===1)panels.add(root);mode='bag';}
+        if(name==='DecomposerPanel'){mode='decompose';const root=component.subTree?.el;if(root?.nodeType===1)panels.add(root);}
+        if(inventory?.has(node.key))item=inventory.get(node.key);if(validId(props?.item?.uuid))item=props.item;
+        if(mode==='decompose'&&props?.selected&&item)decomposeSelected.add(item.uuid);
+        const el=node.el;if(el?.nodeType===1&&!el.hasAttribute('data-amv-usage-owned')){
+          if(item&&el.matches('.bag-grid-item,.item-chip')){el.dataset.amvUsageUuid=item.uuid;badge(el,item);found=true;if(el.matches('.bag-grid-item--selected'))sellSelected.add(item.uuid);}
+          if(item&&el.matches('.item-chip-tooltip'))info(el,item);
+          if(item&&el.matches('.equip-tooltip-surface')){const host=el.querySelector('.equip-tooltip');if(host)info(host,item);}
+          if(mode==='bag'&&el.matches('.item-sheet__info'))sheets.add(el);
+          if(mode==='decompose'&&el.matches('.confirm-card'))confirmations.add(el.querySelector('.v-card-text')||el);
+          if(item&&el.parentElement?.matches('.sell-list'))sellSelected.add(item.uuid);
+        }
+        if(component)visit(component.subTree,inventory,item,mode);else if(node.suspense)visit(node.suspense.activeBranch,inventory,item,mode);else if(Array.isArray(node.children))visit(node.children,inventory,item,mode);
+      }
+      visit(app?._container?._vnode||app?._instance?.subTree||app?._vnode,null,null,'');
+      if(picked?.who===who)for(const sheet of sheets){const title=sheet.closest('.item-sheet')?.querySelector('.item-sheet__title')?.textContent||'';if(title.includes(picked.item.name))info(sheet,picked.item);}
+      for(const panel of panels){if(panel.getClientRects().length){status(panel,who,error);refresh(who);}if(panel.querySelector('.decompose-footer'))warning(panel.querySelector('.decompose-footer'),decomposeSelected);}
+      for(const host of confirmations)warning(host,decomposeSelected);
+      for(const list of document.querySelectorAll('.sell-list'))warning(list.parentElement,sellSelected);
+      if(popover&&!found)close();
+    }
+    function schedule(){if(!queued){queued=true;requestAnimationFrame(scan);}}
+    new MutationObserver(records=>{if(records.some(record=>!record.target.closest?.('[data-amv-usage-owned]')&&(record.type==='attributes'||![...record.addedNodes,...record.removedNodes].every(node=>node.nodeType===1&&node.hasAttribute('data-amv-usage-owned')))))schedule();}).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+    document.addEventListener('click',event=>{const cell=event.target.closest?.('[data-amv-usage-uuid]');if(cell&&!event.target.closest('[data-amv-usage-owned]')){const uuid=cell.dataset.amvUsageUuid;picked={who:role(),item:cellItems.get(cell)||{uuid,name:cell.textContent}};}if(event.target.closest?.('.bag-card,.feature-panel'))schedule();},true);
+    document.addEventListener('pointerdown',event=>{if(popover&&!event.target.closest('[data-amv-usage-owned]'))close();},true);document.addEventListener('keydown',event=>{if(event.key==='Escape')close();});window.addEventListener('resize',close);
+    window.addEventListener('storage',event=>{if(event.key===null||event.key===KEY+role()||event.key===CLOUD_LOADOUTS+role()||event.key===LEGACY_LOADOUTS+role()){if(event.key===null||event.key===KEY+role())states.delete(role());signature='';close();schedule();}});
+    window.addEventListener('aether-loadout-change',()=>{signature='';close();schedule();});document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule();});
+    window[guard]={refresh:()=>refresh(role(),true)};schedule();
+  }
+
   function initSpectrumLevelTooltips(){
     const guard=Symbol.for('aether.spectrum.level.tooltips');if(window[guard])return;window[guard]=true;
     const catalog=__AETHEROS_SPECTRUM_LEVELS__;
@@ -1512,7 +1638,7 @@
       prototype.removeItem=function(name){if(this===storage&&String(name)===ACTIVE){character='';try{set.call(storage,key,'""');}catch{}notify();return;}return remove.call(this,name);};
       const activate=()=>window.parent.postMessage({type:CHANNEL,id:context.id,activate:true},ORIGIN);document.addEventListener('pointerdown',activate,true);document.addEventListener('focusin',activate,true);document.addEventListener('keydown',event=>{if(event.key==='Escape')window.parent.postMessage({type:CHANNEL,id:context.id,dismiss:true},ORIGIN);},true);
       set.call(storage,key,JSON.stringify(character));if(storage.getItem(ACTIVE)!==character)throw new Error('角色隔离未生效');notify();
-      ready(initSpectrumLevelTooltips);ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initOfficialRoleNotes);ready(initSupportPicker);ready(initBackpackFilters);ready(initReinforceFilters);ready(initCustomLoadouts);
+      ready(initEquipmentUsage);ready(initSpectrumLevelTooltips);ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initOfficialRoleNotes);ready(initSupportPicker);ready(initBackpackFilters);ready(initReinforceFilters);ready(initCustomLoadouts);
     }catch{
       window.stop();window.parent.postMessage({type:CHANNEL,id:context.id,error:true},ORIGIN);
       ready(()=>{const text=element('div','角色隔离未就绪，请关闭此区域后重开。');text.style.cssText='position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;padding:24px;background:#111b29;color:#e4edf5;font:14px sans-serif';document.body.append(text);});
@@ -1521,7 +1647,7 @@
   }
   if(window.top!==window)return;
   ready(initBackpackFilters);ready(initReinforceFilters);
-  ready(initSpectrumLevelTooltips);ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initOfficialRoleNotes);ready(initSupportPicker);ready(initCustomLoadouts);
+  ready(initEquipmentUsage);ready(initSpectrumLevelTooltips);ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initOfficialRoleNotes);ready(initSupportPicker);ready(initCustomLoadouts);
   ready(initScriptUpdates);
   ready(initScriptNavigation);
   ready(initPinSync);ready(initLoadoutSync);ready(initReinforceHistorySync);ready(initReinforceBulkRead);
