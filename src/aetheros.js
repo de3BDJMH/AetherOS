@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.20.0
+// @version      0.21.0
 // @description  官网多角色桌面、背包筛选与置顶云同步、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -35,6 +35,87 @@
     }
     return {records,skipped};
   }
+  function initSpectrumLevelTooltips(){
+    const guard=Symbol.for('aether.spectrum.level.tooltips');if(window[guard])return;window[guard]=true;
+    const catalog=__AETHEROS_SPECTRUM_LEVELS__;
+    const supported='.prism-socket-tt,.item-chip-tooltip,.formula-tooltip-surface';
+    const normalize=value=>String(value||'').trim().replace(/^(?:纯净)?光谱[·・\s]*/,'');
+    const aliases=new Map();for(const [id,row]of Object.entries(catalog)){const name=normalize(row.name);aliases.set(name,aliases.has(name)?null:id);}
+    const style=document.createElement('style');style.id='aether-spectrum-level-style';style.textContent=`
+      .amv-spectrum-levels{border-top:1px solid #879ab24a;margin-top:9px;padding-top:8px;font-size:12px;line-height:1.55;font-family:inherit;white-space:normal;text-align:left;color:inherit}
+      .amv-spectrum-levels__title{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;font-weight:650;margin-bottom:6px}.amv-spectrum-levels__title small{font-size:10px;font-weight:400;opacity:.7}
+      .amv-spectrum-levels table{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}.amv-spectrum-levels th,.amv-spectrum-levels td{padding:4px 5px;border-bottom:1px solid #879ab22a;text-align:right;vertical-align:middle;white-space:nowrap}.amv-spectrum-levels th:first-child{width:46%;text-align:left;white-space:normal;min-width:75px;font-weight:400}.amv-spectrum-levels thead th{font-weight:500;opacity:.75}.amv-spectrum-levels [data-current]{color:#6eeedc!important;background:#6eeedc14;font-weight:700;opacity:1!important}.amv-spectrum-levels__note{font-size:11px;line-height:1.5;opacity:.7;margin-top:6px}
+      .amv-spectrum-tip{white-space:normal!important;max-width:min(380px,calc(100vw - 20px))!important}.item-chip-tooltip.amv-spectrum-tip{width:min(360px,calc(100vw - 20px))!important;max-height:calc(100vh - 20px);overflow:auto;box-sizing:border-box}.prism-socket-tt.amv-spectrum-tip{padding:10px 12px!important}.amv-spectrum-tip .prism-tt-inner{display:block}
+      @media(max-width:400px){.amv-spectrum-levels th,.amv-spectrum-levels td{padding:4px 3px}.amv-spectrum-levels table{font-size:11px}}
+    `;document.head.append(style);
+    const make=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
+    function fromValue(value,next=false){
+      if(!value||typeof value!=='object')return null;
+      const id=value.talent_id||value.item_id||value.id;
+      if(!Object.hasOwn(catalog,id))return null;
+      const raw=value.level??value.talent_level,level=Number.isInteger(raw)&&raw>=1?Math.min(catalog[id].max_level,raw+(next?1:0)):null;
+      return {id,level};
+    }
+    function fromProps(props){return fromValue(props?.talent,props?.next===true)||fromValue(props?.item);}
+    function owner(tip){
+      for(let node=tip;node;node=node.parentElement){
+        let instance=node.__vueParentComponent;
+        while(instance){const value=fromProps(instance.props);if(value)return value;instance=instance.parent;}
+      }
+      const app=document.getElementById('app')?.__vue_app__,seen=new Set();let found=null;
+      // 仅在提示出现时查看已挂载的 VNode；不改官网组件、不读取额外游戏接口。
+      function visit(node,context){
+        if(!node||typeof node!=='object'||seen.has(node))return;seen.add(node);
+        if(Array.isArray(node)){for(const child of node)visit(child,context);return;}
+        context=fromProps(node.component?.props)||context;
+        if(node.el===tip&&context)found=context;
+        if(node.component)visit(node.component.subTree,context);
+        else if(node.suspense)visit(node.suspense.activeBranch,context);
+        else if(Array.isArray(node.children))visit(node.children,context);
+      }
+      visit(app?._container?._vnode||app?._instance?.subTree||app?._vnode,null);return found;
+    }
+    function byTitle(tip){
+      const nameNode=tip.querySelector('.prism-tt-inner,.tooltip-name');if(!nameNode)return null;
+      const match=nameNode.textContent.trim().match(/^(.*?)(?:\s*[·・]?\s*Lv\s*(\d+))?$/i),id=aliases.get(normalize(match?.[1]));
+      if(!id)return null;
+      if(tip.matches('.item-chip-tooltip')&&!/^(?:纯净)?光谱[·・\s]/.test(nameNode.textContent.trim()))return null;
+      return {id,level:match?.[2]?Math.min(catalog[id].max_level,Number(match[2])):null};
+    }
+    function levelTable(value){
+      const entry=catalog[value.id],section=make('section');section.className='amv-spectrum-levels';section.dataset.amvSpectrumLevels=value.id;
+      const title=make('div','各级效果');title.className='amv-spectrum-levels__title';title.append(make('small',value.level?'当前 Lv'+value.level:'等级参数'));section.append(title);
+      if(entry.max_level===1){if(entry.description)section.append(make('div',entry.description));const note=make('div','仅 Lv1，不可升级');note.className='amv-spectrum-levels__note';section.append(note);return section;}
+      const table=make('table'),head=make('thead'),header=make('tr'),body=make('tbody');table.setAttribute('aria-label',normalize(entry.name)+'各级效果');header.append(make('th','效果'));
+      function cell(tag,text,level){const node=make(tag,text);if(level===value.level)node.dataset.current='';return node;}
+      for(let level=1;level<=entry.max_level;level++){const node=cell('th','Lv'+level,level);node.scope='col';header.append(node);}head.append(header);
+      for(const field of entry.fields){
+        if(!Number.isFinite(field.base)||!Number.isFinite(field.increment))continue;
+        const row=make('tr'),label=make('th',field.label);label.scope='row';row.append(label);
+        for(let level=1;level<=entry.max_level;level++){const number=Number((field.base+field.increment*(level-1)).toFixed(6));row.append(cell('td',number+(field.unit||''),level));}body.append(row);
+      }
+      table.append(head,body);section.append(table);
+      const note=make('div','列出等级参数；亲和与面板加成按公式换算，触发条件沿用原说明。');note.className='amv-spectrum-levels__note';section.append(note);return section;
+    }
+    const states=new WeakMap();
+    function sync(tip){
+      const value=owner(tip)||byTitle(tip),previous=states.get(tip),signature=value?value.id+':'+value.level:'';
+      if(previous?.signature===signature&&(!value||tip.querySelector('[data-amv-spectrum-levels]')))return;
+      tip.querySelector(':scope > [data-amv-spectrum-levels]')?.remove();
+      if(!value){if(previous){tip.classList.remove('amv-spectrum-tip');if(tip.matches('.item-chip-tooltip'))tip.setAttribute('style',previous.style);}states.delete(tip);return;}
+      const originalStyle=previous?.style??tip.getAttribute('style')??'';
+      if(previous&&tip.matches('.item-chip-tooltip'))tip.setAttribute('style',originalStyle);
+      tip.append(levelTable(value));tip.classList.add('amv-spectrum-tip');states.set(tip,{signature,style:originalStyle});
+      if(tip.matches('.item-chip-tooltip')){
+        const rect=tip.getBoundingClientRect();tip.style.bottom='auto';tip.style.top=Math.max(10,Math.min(rect.top,innerHeight-rect.height-10))+'px';tip.style.left=Math.max(10,Math.min(rect.left,innerWidth-rect.width-10))+'px';tip.style.transform='none';
+      }
+    }
+    const pending=new Set();let scheduled=false;
+    function schedule(node){if(!node||node.nodeType!==1)return;const parent=node.closest(supported);if(parent)pending.add(parent);if(node.matches(supported))pending.add(node);node.querySelectorAll(supported).forEach(tip=>pending.add(tip));if(pending.size&&!scheduled){scheduled=true;requestAnimationFrame(()=>{scheduled=false;for(const tip of pending)if(tip.isConnected)sync(tip);pending.clear();});}}
+    new MutationObserver(records=>{for(const record of records){schedule(record.target.nodeType===1?record.target:record.target.parentElement);for(const node of record.addedNodes)schedule(node);}}).observe(document.body,{childList:true,characterData:true,attributes:true,attributeFilter:['class'],subtree:true});
+    schedule(document.body);
+  }
+
   function initReinforceBulkRead(){
     if(window.top!==window||window[Symbol.for('aether.history.bulk')])return;const card=document.querySelector('[data-amv-pin-dialog] .amv-pin-card');if(!card)return;window[Symbol.for('aether.history.bulk')]=true;
     const section=element('section',undefined,'amv-history-bulk'),title=element('strong','批量读取强化进度'),intro=element('p','每个角色只读取一次状态，导入已强化装备及当前失败次数。已有历史保留，不会执行强化。'),actions=element('div',undefined,'amv-pin-actions'),current=button('读取当前角色',()=>begin(false)),all=button('读取全部角色',()=>begin(true)),stop=button('停止读取',()=>{if(run){run.stopped=true;stop.disabled=true;feedback.textContent='已请求停止，当前读取完成后不再继续';}}),feedback=element('p');let run=null,character='';
@@ -1423,7 +1504,7 @@
       prototype.removeItem=function(name){if(this===storage&&String(name)===ACTIVE){character='';try{set.call(storage,key,'""');}catch{}notify();return;}return remove.call(this,name);};
       const activate=()=>window.parent.postMessage({type:CHANNEL,id:context.id,activate:true},ORIGIN);document.addEventListener('pointerdown',activate,true);document.addEventListener('focusin',activate,true);document.addEventListener('keydown',event=>{if(event.key==='Escape')window.parent.postMessage({type:CHANNEL,id:context.id,dismiss:true},ORIGIN);},true);
       set.call(storage,key,JSON.stringify(character));if(storage.getItem(ACTIVE)!==character)throw new Error('角色隔离未生效');notify();
-      ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initOfficialRoleNotes);ready(initSupportPicker);ready(initBackpackFilters);ready(initReinforceFilters);ready(initCustomLoadouts);
+      ready(initSpectrumLevelTooltips);ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initOfficialRoleNotes);ready(initSupportPicker);ready(initBackpackFilters);ready(initReinforceFilters);ready(initCustomLoadouts);
     }catch{
       window.stop();window.parent.postMessage({type:CHANNEL,id:context.id,error:true},ORIGIN);
       ready(()=>{const text=element('div','角色隔离未就绪，请关闭此区域后重开。');text.style.cssText='position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;padding:24px;background:#111b29;color:#e4edf5;font:14px sans-serif';document.body.append(text);});
@@ -1432,7 +1513,7 @@
   }
   if(window.top!==window)return;
   ready(initBackpackFilters);ready(initReinforceFilters);
-  ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initOfficialRoleNotes);ready(initSupportPicker);ready(initCustomLoadouts);
+  ready(initSpectrumLevelTooltips);ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initOfficialRoleNotes);ready(initSupportPicker);ready(initCustomLoadouts);
   ready(initScriptUpdates);
   ready(initScriptNavigation);
   ready(initPinSync);ready(initLoadoutSync);ready(initReinforceHistorySync);ready(initReinforceBulkRead);

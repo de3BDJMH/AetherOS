@@ -1,0 +1,972 @@
+{
+  "prism_core_fire": {
+    "name": "光谱·火之法则",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "per_affinity.factors.amplify_fire",
+        "label": "每点亲和：火元素强化",
+        "unit": "%",
+        "base": 0.5,
+        "increment": 0.05
+      },
+      {
+        "key": "per_affinity.factors.crit_rate",
+        "label": "每点亲和：暴击率",
+        "unit": "%",
+        "base": 0.5,
+        "increment": 0.05
+      }
+    ]
+  },
+  "prism_core_water": {
+    "name": "光谱·水之法则",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "per_affinity.factors.amplify_water",
+        "label": "每点亲和：水元素强化",
+        "unit": "%",
+        "base": 0.5,
+        "increment": 0.05
+      },
+      {
+        "key": "per_affinity.factors.hp_pct",
+        "label": "每点亲和：最大生命",
+        "unit": "%",
+        "base": 0.5,
+        "increment": 0.05
+      }
+    ]
+  },
+  "prism_core_earth": {
+    "name": "光谱·地之法则",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "per_affinity.factors.amplify_earth",
+        "label": "每点亲和：地元素强化",
+        "unit": "%",
+        "base": 0.5,
+        "increment": 0.05
+      },
+      {
+        "key": "per_affinity.factors.armor",
+        "label": "每点亲和：护甲",
+        "unit": "",
+        "base": 10,
+        "increment": 0.5
+      }
+    ]
+  },
+  "prism_core_wind": {
+    "name": "光谱·风之法则",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "per_affinity.factors.amplify_wind",
+        "label": "每点亲和：风元素强化",
+        "unit": "%",
+        "base": 0.5,
+        "increment": 0.05
+      },
+      {
+        "key": "per_affinity.factors.spe",
+        "label": "每点亲和：速度",
+        "unit": "",
+        "base": 0.5,
+        "increment": 0.05
+      }
+    ]
+  },
+  "prism_core_lightning": {
+    "name": "光谱·电之法则",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "per_affinity.factors.amplify_lightning",
+        "label": "每点亲和：雷元素强化",
+        "unit": "%",
+        "base": 0.5,
+        "increment": 0.05
+      },
+      {
+        "key": "per_affinity.factors.ap_gain_rate",
+        "label": "每点亲和：AP 获取率",
+        "unit": "%",
+        "base": 0.5,
+        "increment": 0.05
+      }
+    ]
+  },
+  "prism_core_light": {
+    "name": "光谱·光之法则",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "per_affinity.factors.amplify_light",
+        "label": "每点亲和：光元素强化",
+        "unit": "%",
+        "base": 0.5,
+        "increment": 0.05
+      },
+      {
+        "key": "per_affinity.factors.luck",
+        "label": "每点亲和：幸运",
+        "unit": "",
+        "base": 1,
+        "increment": 0.1
+      }
+    ]
+  },
+  "prism_core_dark": {
+    "name": "光谱·暗之法则",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "per_affinity.factors.amplify_dark",
+        "label": "每点亲和：暗元素强化",
+        "unit": "%",
+        "base": 0.5,
+        "increment": 0.05
+      },
+      {
+        "key": "per_affinity.factors.crit_dmg",
+        "label": "每点亲和：暴击伤害",
+        "unit": "%",
+        "base": 1,
+        "increment": 0.1
+      }
+    ]
+  },
+  "prism_red_atk": {
+    "name": "光谱·勇猛",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "atk_pct",
+        "label": "攻击力",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_red_crit": {
+    "name": "光谱·精准",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "stat_add.crit_rate",
+        "label": "暴击率",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_red_critdmg": {
+    "name": "光谱·锋锐",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "stat_add.crit_dmg",
+        "label": "暴击伤害",
+        "unit": "%",
+        "base": 20,
+        "increment": 2
+      }
+    ]
+  },
+  "prism_red_amp_fire": {
+    "name": "光谱·火元素精通",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "stat_add.amplify_fire",
+        "label": "火元素强化",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_red_amp_water": {
+    "name": "光谱·水元素精通",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "stat_add.amplify_water",
+        "label": "水元素强化",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_red_amp_lightning": {
+    "name": "光谱·雷元素精通",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "stat_add.amplify_lightning",
+        "label": "雷元素强化",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_red_amp_earth": {
+    "name": "光谱·地元素精通",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "stat_add.amplify_earth",
+        "label": "地元素强化",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_red_amp_wind": {
+    "name": "光谱·风元素精通",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "stat_add.amplify_wind",
+        "label": "风元素强化",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_red_amp_light": {
+    "name": "光谱·光元素精通",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "stat_add.amplify_light",
+        "label": "光元素强化",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_red_amp_dark": {
+    "name": "光谱·暗元素精通",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "stat_add.amplify_dark",
+        "label": "暗元素强化",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_blue_hp": {
+    "name": "光谱·丰盈",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "hp_pct",
+        "label": "最大生命",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_blue_dr": {
+    "name": "光谱·坚韧",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "armor_pct",
+        "label": "护甲",
+        "unit": "%",
+        "base": 15,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_blue_heal": {
+    "name": "光谱·慈爱",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "stat_add.heal_bonus",
+        "label": "治疗加成",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_green_spe": {
+    "name": "光谱·迅捷",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "stat_add.spe",
+        "label": "速度",
+        "unit": "",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_green_ap": {
+    "name": "光谱·流转",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "stat_add.ap_gain_rate",
+        "label": "AP 获取率",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_red_fire_burn": {
+    "name": "光谱·烈焰触媒",
+    "max_level": 1,
+    "fields": [],
+    "description": "红色光谱。普通攻击后，对目标施加 2 层【燃烧】。需要 20 点火元素亲和力方可装填。"
+  },
+  "prism_blue_water_overcap": {
+    "name": "光谱·回澜",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "已损失生命回复比例",
+        "unit": "%",
+        "base": 4,
+        "increment": 0.5
+      },
+      {
+        "key": "combat.interval",
+        "label": "触发间隔",
+        "unit": "",
+        "base": 20,
+        "increment": 0
+      }
+    ]
+  },
+  "prism_green_earth_ap": {
+    "name": "光谱·吸收",
+    "max_level": 1,
+    "fields": [],
+    "description": "绿色光谱。受到伤害后，恢复 5 AP，不受 AP 恢复率影响。需要 20 点地元素亲和力方可装填。"
+  },
+  "prism_green_wind_precharge": {
+    "name": "光谱·先发制人",
+    "max_level": 1,
+    "fields": [],
+    "description": "绿色光谱。战斗开始时，以太爆发以外的所有技能立即就绪。需要 20 点风元素亲和力方可装填。"
+  },
+  "prism_green_lightning_reset": {
+    "name": "光谱·连绵不绝",
+    "max_level": 1,
+    "fields": [],
+    "description": "绿色光谱。释放以太爆发后，自身普通攻击立即就绪。触发后 30 行动值内不会再次触发。需要 20 点雷元素亲和力方可装填。"
+  },
+  "prism_blue_light_cleanse": {
+    "name": "光谱·自净",
+    "max_level": 1,
+    "fields": [],
+    "description": "蓝色光谱。释放以太爆发后，移除自身所有可驱散的减益。需要 20 点光元素亲和力方可装填。"
+  },
+  "prism_red_dark_crit": {
+    "name": "光谱·幕刃",
+    "max_level": 1,
+    "fields": [],
+    "description": "红色光谱。自身的普通技能可暴击。需要 20 点暗元素亲和力方可装填。"
+  },
+  "prism_red_fire_burndmg": {
+    "name": "光谱·烈焰裁决",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.per_stack",
+        "label": "每层灼烧增伤",
+        "unit": "%",
+        "base": 3,
+        "increment": 0.3
+      }
+    ]
+  },
+  "prism_red_water_hpdmg": {
+    "name": "光谱·潮汐",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "附加伤害占最大生命",
+        "unit": "%",
+        "base": 5,
+        "increment": 0.5
+      }
+    ]
+  },
+  "prism_blue_earth_shield": {
+    "name": "光谱·磐石",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.block",
+        "label": "每次受击抵扣",
+        "unit": "",
+        "base": 100,
+        "increment": 20
+      }
+    ]
+  },
+  "prism_green_wind_extend": {
+    "name": "光谱·延绵",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.extend",
+        "label": "风持续伤害延长",
+        "unit": "%",
+        "base": 10,
+        "increment": 5
+      }
+    ]
+  },
+  "prism_green_lightning_spestack": {
+    "name": "光谱·步步生雷",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.per_stack",
+        "label": "每层速度提升",
+        "unit": "%",
+        "base": 5,
+        "increment": 0.5
+      }
+    ]
+  },
+  "prism_red_light_conv": {
+    "name": "光谱·同调",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "每点幸运：伤害提升",
+        "unit": "%",
+        "base": 0.25,
+        "increment": 0.025
+      }
+    ]
+  },
+  "prism_green_dark_kill": {
+    "name": "光谱·吞噬",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ap",
+        "label": "击杀回复 AP",
+        "unit": "",
+        "base": 50,
+        "increment": 5
+      },
+      {
+        "key": "combat.hp_ratio",
+        "label": "击杀回复生命",
+        "unit": "%",
+        "base": 50,
+        "increment": 5
+      }
+    ]
+  },
+  "prism_red_azure_wave_plus": {
+    "name": "光谱·碧波·强化",
+    "max_level": 1,
+    "fields": [],
+    "description": "红色光谱。装填后，自身的【碧波】强化为【碧波+】：对敌方全体造成施术者最大生命值 10% + 0.75 倍攻击力的水属性伤害，随后使其水属性抗性降低 20%，持续 100 行动值（重复施加时刷新持续时间）；只命中 1 名敌人时，伤害与抗性降低幅度均提高 50%。之后使生命值比例最低的友方（优先未满生命值者）回复等同于造成总伤害的生命值。需要 30 点水元素亲和力方可装填。"
+  },
+  "prism_blue_iron_defense_plus": {
+    "name": "光谱·铁壁·强化",
+    "max_level": 1,
+    "fields": [],
+    "description": "蓝色光谱。装填后，自身的【铁壁】强化为【铁壁+】：自身减伤率提升 30%，持续 5 回合；并每回合回复自身 8% 最大生命值，持续 3 回合（施放时立即回复一次，共 4 次）。需要 30 点地元素亲和力方可装填。"
+  },
+  "prism_blue_holy_light_plus": {
+    "name": "光谱·圣光·强化",
+    "max_level": 1,
+    "fields": [],
+    "description": "蓝色光谱。装填后，自身的【圣光】强化为【圣光+】：使未满生命值的友方中生命值比例最低者（全员满生命值时为生命值比例最低者）回复等同于施术者 20% 最大生命值 + 100% 攻击力的生命值；随后使其他友方获得等同于施术者基础攻击力 (20 + 幸运 × 0.2)% 的固定攻击力加成，持续 100 行动值（重复施加时刷新持续时间）。需要 30 点光元素亲和力方可装填。"
+  },
+  "prism_red_shadow_sneak_plus": {
+    "name": "光谱·影子偷袭·强化",
+    "max_level": 1,
+    "fields": [],
+    "description": "红色光谱。装填后，自身的【影子偷袭】强化为【影子偷袭+】：消耗自身当前生命值的 (30 - 0.5 × 暗元素亲和)%，对当前生命值最低的敌人造成 2.0 倍攻击力的暗属性伤害，并使其减伤率降低 10%，持续 100 行动值（重复施加时刷新持续时间）。需要 30 点暗元素亲和力方可装填。"
+  },
+  "prism_blue_frost_resist": {
+    "name": "光谱·凝霜",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "stat_add.debuff_resist",
+        "label": "弱化耐性",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_blue_frost_lowhp": {
+    "name": "光谱·雪障",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.dr",
+        "label": "低血量额外减伤",
+        "unit": "%",
+        "base": 12,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_red_frost_debuffed": {
+    "name": "光谱·冰锥",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "弱化敌人增伤",
+        "unit": "%",
+        "base": 8,
+        "increment": 0.8
+      }
+    ]
+  },
+  "prism_green_frost_ap": {
+    "name": "光谱·凛冽",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ap",
+        "label": "每次附加弱化回复 AP",
+        "unit": "",
+        "base": 6,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_core_resonance": {
+    "name": "纯净光谱·全能共鸣",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "all_affinity_attack",
+        "label": "每点全元素亲和：攻击力",
+        "unit": "",
+        "base": 5,
+        "increment": 0.5
+      }
+    ]
+  },
+  "prism_core_purity": {
+    "name": "纯净光谱·恒净之躯",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "stat_add.debuff_resist",
+        "label": "弱化耐性",
+        "unit": "%",
+        "base": 40,
+        "increment": 4
+      }
+    ]
+  },
+  "prism_core_attunement": {
+    "name": "纯净光谱·元素契合",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "all_affinity_add",
+        "label": "每种元素亲和增加",
+        "unit": "",
+        "base": 2,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_core_endless_fire": {
+    "name": "纯净光谱·无尽之火",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.burn_stack_limit_bonus",
+        "label": "燃烧层数上限增加",
+        "unit": "",
+        "base": 1,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_core_overflow": {
+    "name": "纯净光谱·溢流",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.cap",
+        "label": "生命容纳上限",
+        "unit": "%",
+        "base": 200,
+        "increment": 10
+      }
+    ]
+  },
+  "prism_core_static": {
+    "name": "纯净光谱·静电",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.slow_per_stack",
+        "label": "每层静电：速度降低",
+        "unit": "%",
+        "base": 2,
+        "increment": 0.1
+      },
+      {
+        "key": "combat.ap_per_stack",
+        "label": "每层静电回收：恢复 AP",
+        "unit": "",
+        "base": 5,
+        "increment": 0
+      }
+    ]
+  },
+  "prism_core_unbalance": {
+    "name": "纯净光谱·强力失衡",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.slow",
+        "label": "速度降低",
+        "unit": "%",
+        "base": 20,
+        "increment": 0
+      },
+      {
+        "key": "combat.dr_reduction_per_affinity",
+        "label": "每点地亲和：减伤率降低系数",
+        "unit": "%",
+        "base": 0.4,
+        "increment": 0.02
+      }
+    ]
+  },
+  "prism_core_wind_veil": {
+    "name": "纯净光谱·风之面纱",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.evasion_base",
+        "label": "基础回避率",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      },
+      {
+        "key": "combat.evasion_per_25_speed",
+        "label": "每25点速度：回避率增加",
+        "unit": "%",
+        "base": 1,
+        "increment": 0
+      }
+    ]
+  },
+  "prism_core_lucky": {
+    "name": "纯净光谱·超幸运",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.replay_chance_per_luck",
+        "label": "每点幸运：爆发重放概率",
+        "unit": "%",
+        "base": 0.1,
+        "increment": 0.01
+      }
+    ]
+  },
+  "prism_core_venom": {
+    "name": "纯净光谱·噬身之毒",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.damage_ratio",
+        "label": "实际伤害转为蛇毒：基础比例",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      },
+      {
+        "key": "combat.dark_affinity_ratio",
+        "label": "每点暗亲和：蛇毒比例增加",
+        "unit": "%",
+        "base": 0.1,
+        "increment": 0.01
+      }
+    ]
+  },
+  "prism_red_fire_flow": {
+    "name": "光谱·灼流",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "燃烧伤害提升",
+        "unit": "%",
+        "base": 12,
+        "increment": 2
+      }
+    ]
+  },
+  "prism_blue_fire_heart": {
+    "name": "光谱·炽心",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "受到的非火伤害降低",
+        "unit": "%",
+        "base": 6,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_blue_water_tide": {
+    "name": "光谱·蓄潮",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "超额生命减伤",
+        "unit": "%",
+        "base": 8,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_green_lightning_flow": {
+    "name": "光谱·续流",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ap",
+        "label": "恢复 AP",
+        "unit": "",
+        "base": 3,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_red_lightning_conduct": {
+    "name": "光谱·导电",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "以太爆发雷属性伤害提升",
+        "unit": "%",
+        "base": 12,
+        "increment": 2
+      }
+    ]
+  },
+  "prism_blue_earth_front": {
+    "name": "光谱·承锋",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "前排普通攻击减伤",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_red_earth_break": {
+    "name": "光谱·破阵",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "伤害提升",
+        "unit": "%",
+        "base": 12,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_blue_wind_dodge": {
+    "name": "光谱·避锋",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "下次受到的敌方伤害降低",
+        "unit": "%",
+        "base": 12,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_green_wind_echo": {
+    "name": "光谱·余音",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "其他队友下次普攻伤害提升",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_red_light_replay": {
+    "name": "光谱·返照",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "重放伤害与生命回复提升",
+        "unit": "%",
+        "base": 40,
+        "increment": 4
+      }
+    ]
+  },
+  "prism_red_dark_marrow": {
+    "name": "光谱·蚀髓",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "蛇毒触发后：剩余层数保留比例",
+        "unit": "%",
+        "base": 55,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_blue_dark_pact": {
+    "name": "光谱·逆契",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "受到的敌方伤害降低",
+        "unit": "%",
+        "base": 8,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_red_neutral_blade": {
+    "name": "光谱·素刃",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "无属性直接伤害提升",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_blue_neutral_shield": {
+    "name": "光谱·初屏",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "开场护盾比例",
+        "unit": "%",
+        "base": 12,
+        "increment": 2
+      }
+    ]
+  },
+  "prism_green_fire_momentum": {
+    "name": "光谱·燃势",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "速度提升",
+        "unit": "%",
+        "base": 10,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_green_water_source": {
+    "name": "光谱·回源",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ap",
+        "label": "恢复 AP",
+        "unit": "",
+        "base": 3,
+        "increment": 1
+      }
+    ]
+  },
+  "prism_green_earth_charge": {
+    "name": "光谱·蓄势",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "速度提升",
+        "unit": "%",
+        "base": 12,
+        "increment": 2
+      }
+    ]
+  },
+  "prism_green_neutral_ready": {
+    "name": "光谱·整备",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.ratio",
+        "label": "普通技能初始冷却缩减",
+        "unit": "%",
+        "base": 20,
+        "increment": 5
+      }
+    ]
+  },
+  "prism_blue_light_radiance": {
+    "name": "光谱·净辉",
+    "max_level": 4,
+    "fields": [
+      {
+        "key": "combat.interval",
+        "label": "每名目标触发间隔",
+        "unit": "",
+        "base": 80,
+        "increment": -5
+      }
+    ]
+  }
+}

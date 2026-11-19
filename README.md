@@ -27,6 +27,10 @@ Aether 官网的用户脚本：把同一水鱼账号下的多个角色放进一�
 
 强化优化作用于官网返回的渲染列表，首次进入页面仍可能有原始列表的挂载开销。父组件构建完整列表和官网状态请求也继续存在。详见[排查与验证记录](docs/reinforcement-performance.md)。
 
+## 光谱等级提示
+
+官网光谱槽位、背包光谱和光谱描述中的公式悬浮提示会附上各级效果表，已知当前等级会高亮。数值复用人工维护的 73 种光谱资料，动态效果显示亲和／面板对应的系数，原公式和触发说明保留。不可升级的光谱仅展示 Lv1；未收录的新光谱继续显示官网原提示。数据内置于脚本，不增加游戏请求，更新资料随脚本版本发布。
+
 ## 置顶云同步
 
 1. 更新 Mugen-Web 后，通过手机也能访问的 HTTPS 地址打开后台，在 Aether 控制台进入“运行设置 → 设备与同步 → 装备置顶”。
@@ -79,6 +83,7 @@ node --check AetherOS.user.js
 ```sh
 npm install --no-save --package-lock=false playwright
 npx playwright install chromium
+node tests/test_aether_spectrum_tooltips_ui.cjs
 node tests/test_aether_userscript_updates.cjs
 node tests/test_aether_multiview_ui.cjs
 node tests/test_aether_backpack_ui.cjs
