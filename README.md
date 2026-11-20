@@ -27,14 +27,6 @@ Aether 官网的用户脚本：把同一水鱼账号下的多个角色放进一�
 
 强化优化作用于官网返回的渲染列表，首次进入页面仍可能有原始列表的挂载开销。父组件构建完整列表和官网状态请求也继续存在。详见[排查与验证记录](docs/reinforcement-performance.md)。
 
-## 分解页面
-
-保留官网整页铺开的星级分组、全选、取消选择、收益预览和确认清单。选中标记改为卡片角落的浮动勾选，不改变卡片宽度，减少长列表重新排版。普通装备提示明确标注“装备”时，光谱等级逻辑直接跳过组件树查找；其他光谱提示继续沿用原识别。
-
-星级分组继续使用官网已有的计算缓存。官网全量挂载和选择时逐项计算的开销仍然存在，本版不替换分解数据或选择逻辑，不增加 DOM 观察器、轮询或游戏请求。
-
-隔离验证复用当前官网编译的 `DecomposerPanel`、`ItemChip`、Vue 3.5.26，以及模拟装备和收益预览；Vuetify 容器使用测试替身。2000 件测试装备保持全部显示，普通装备提示的光谱后备遍历由 30245 个节点降至 0；使用官网相关样式和图标字体，示例单次勾选的位置变化由 333 张降至 0。这些是模拟场景的工作量和布局计数，不代表真实设备的耗时。
-
 ## 装备比较
 
 背包装备的鼠标悬浮提示、手机点击后的物品详情均增加四列差值：双方 +0、双方按身上装备强化等级、双方按背包装备强化等级，以及各自当前等级。以身上同部位装备为基准，高绿低红，百分比使用 `%`，属性图标与颜色沿用官网。亲和差值相同的元素并排合为一组图标，例外独立显示。没有穿戴时以空槽为基准；已穿戴的同一件装备不重复比较。只列出装备属性和亲和本身的数值，不替代整套角色配装计算。
@@ -117,7 +109,6 @@ node --check AetherOS.user.js
 ```sh
 npm install --no-save --package-lock=false playwright
 npx playwright install chromium
-node tests/test_aether_decompose_layout_ui.cjs
 node --test tests/test_aether_equipment_compare.cjs
 node tests/test_aether_equipment_compare_ui.cjs
 node tests/test_aether_equipment_compare_integration.cjs
