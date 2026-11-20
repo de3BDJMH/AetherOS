@@ -27,16 +27,6 @@ Aether 官网的用户脚本：把同一水鱼账号下的多个角色放进一�
 
 强化优化作用于官网返回的渲染列表，首次进入页面仍可能有原始列表的挂载开销。父组件构建完整列表和官网状态请求也继续存在。详见[排查与验证记录](docs/reinforcement-performance.md)。
 
-## 装备占用标记
-
-背包与分解页的装备悬浮提示，以及手机装备详情，会列出使用它的官方预设与自建预设，名称一行一个；装备图标本身不添加标记。按装备 UUID 区分同名装备。出售、分解的选中清单继续提示占用情况。
-
-打开背包或分解页时按当前角色读取官方预设，缓存 5 分钟；不会重新请求背包，也不会一次查询其他角色。可点击“刷新预设”立即重读。官网保存、改名、删除预设的成功响应会更新标记，自建预设与云同步变化也会重新核对。读取失败时保留已有记录并提示标记可能不完整，不把失败视为“没有占用”。
-
-官方预设占用缓存仅含角色、预设名及装备 UUID，保存在当前浏览器；官方预设本身仍保存在游戏官网，自建预设沿用原云同步。
-
-分解列表按星级分页，每组每页显示 60 件。星级数量与“全选”沿用全部库存，换页保留选择，确认清单包含全部已选装备。分页只调整渲染列表，分解仍由官网原操作执行。
-
 ## 光谱等级提示
 
 官网光谱槽位、背包光谱和光谱描述中的公式悬浮提示会附上各级效果表，已知当前等级会高亮。数值复用人工维护的 73 种光谱资料，动态效果显示亲和／面板对应的系数，原公式和触发说明保留。不可升级的光谱仅展示 Lv1；未收录的新光谱继续显示官网原提示。数据内置于脚本，不增加游戏请求，更新资料随脚本版本发布。
@@ -93,8 +83,6 @@ node --check AetherOS.user.js
 ```sh
 npm install --no-save --package-lock=false playwright
 npx playwright install chromium
-node tests/test_aether_decompose_pages_ui.cjs
-node tests/test_aether_equipment_usage_ui.cjs
 node tests/test_aether_spectrum_tooltips_ui.cjs
 node tests/test_aether_userscript_updates.cjs
 node tests/test_aether_multiview_ui.cjs
