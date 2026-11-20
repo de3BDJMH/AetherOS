@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.28.0
+// @version      0.29.0
 // @description  官网多角色桌面、背包筛选与数据云同步、跨角色物品查找、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -177,6 +177,14 @@
     app.addEventListener('pointerover',start,{passive:true});app.addEventListener('pointerout',leave,{passive:true});app.addEventListener('focusin',start);app.addEventListener('focusout',leave);app.addEventListener('pointerdown',rememberSheet,{capture:true,passive:true});app.addEventListener('click',rememberSheet,{capture:true,passive:true});window.addEventListener('blur',stop);document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();else{const tip=document.querySelector('.item-sheet');if(tip)syncSheet(tip);}});window.addEventListener('storage',event=>{if(sheetView&&(event.key===null||event.key==='aether-bag-pins-v1:'+sheetView.role))refreshSheetPin(sheetView);});
   }
 
+  function initDecomposeLayout(){
+    const KEY=Symbol.for('aether.decompose.layout');if(window[KEY])return;window[KEY]=true;
+    const style=element('style');style.id='aether-decompose-layout-style';style.textContent=`
+      .rarity-panels .rarity-panel-content .item-grid>.item-chip{transition:background-color .15s,border-color .15s}
+      .rarity-panels .rarity-panel-content .item-grid>.item-chip>.item-chip-check{position:absolute;top:-.3rem;right:-.3rem;z-index:1;font-size:.85rem;line-height:1;border-radius:50%;background:#0d1935;box-shadow:0 0 0 2px #0d1935;pointer-events:none}
+    `;document.head.append(style);
+  }
+
   function initSpectrumLevelTooltips(){
     const guard=Symbol.for('aether.spectrum.level.tooltips');if(window[guard])return;window[guard]=true;
     const catalog=__AETHEROS_SPECTRUM_LEVELS__;
@@ -250,7 +258,10 @@
       if(tip.matches('.item-sheet'))window[Symbol.for('aether.equipment.hover.compare')]?.sheet(tip);
       const host=tip.matches('.item-sheet')?tip.querySelector('.item-sheet__info'):tip.matches('.equip-tooltip-surface')?tip.querySelector('.equip-tooltip'):tip;
       if(!host)return;
-      const value=window[Symbol.for('aether.equipment.hover.compare')]?.owns(tip)?null:owner(tip)||byTitle(tip),previous=states.get(tip),signature=value?value.id+':'+value.level:'';
+      // ItemChip explicitly labels ordinary equipment. It cannot be a prism;
+      // skip the production Vue fallback tree walk even when no instance links exist.
+      const equipment=tip.matches('.item-chip-tooltip')&&tip.querySelector(':scope > .tooltip-meta > .tooltip-kind')?.textContent.trim()==='装备';
+      const value=equipment||window[Symbol.for('aether.equipment.hover.compare')]?.owns(tip)?null:owner(tip)||byTitle(tip),previous=states.get(tip),signature=value?value.id+':'+value.level:'';
       if(previous?.signature===signature&&(!value||tip.querySelector('[data-amv-spectrum-levels]')))return;
       host.querySelector(':scope > [data-amv-spectrum-levels]')?.remove();
       if(!value){if(previous){tip.classList.remove('amv-spectrum-tip');if(tip.matches('.item-chip-tooltip'))tip.setAttribute('style',previous.style);}states.delete(tip);return;}
@@ -1691,7 +1702,7 @@
       prototype.removeItem=function(name){if(this===storage&&String(name)===ACTIVE){character='';try{set.call(storage,key,'""');}catch{}notify();return;}return remove.call(this,name);};
       const activate=()=>window.parent.postMessage({type:CHANNEL,id:context.id,activate:true},ORIGIN);document.addEventListener('pointerdown',activate,true);document.addEventListener('focusin',activate,true);document.addEventListener('keydown',event=>{if(event.key==='Escape')window.parent.postMessage({type:CHANNEL,id:context.id,dismiss:true},ORIGIN);},true);
       set.call(storage,key,JSON.stringify(character));if(storage.getItem(ACTIVE)!==character)throw new Error('角色隔离未生效');notify();
-      ready(initEquipmentHoverCompare);ready(initSpectrumLevelTooltips);ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initOfficialRoleNotes);ready(initSupportPicker);ready(initBackpackFilters);ready(initReinforceFilters);ready(initCustomLoadouts);
+      ready(initEquipmentHoverCompare);ready(initDecomposeLayout);ready(initSpectrumLevelTooltips);ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initOfficialRoleNotes);ready(initSupportPicker);ready(initBackpackFilters);ready(initReinforceFilters);ready(initCustomLoadouts);
     }catch{
       window.stop();window.parent.postMessage({type:CHANNEL,id:context.id,error:true},ORIGIN);
       ready(()=>{const text=element('div','角色隔离未就绪，请关闭此区域后重开。');text.style.cssText='position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;padding:24px;background:#111b29;color:#e4edf5;font:14px sans-serif';document.body.append(text);});
@@ -1700,7 +1711,7 @@
   }
   if(window.top!==window)return;
   ready(initEquipmentHoverCompare);ready(initBackpackFilters);ready(initReinforceFilters);
-  ready(initSpectrumLevelTooltips);ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initOfficialRoleNotes);ready(initSupportPicker);ready(initCustomLoadouts);
+  ready(initDecomposeLayout);ready(initSpectrumLevelTooltips);ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initOfficialRoleNotes);ready(initSupportPicker);ready(initCustomLoadouts);
   ready(initScriptUpdates);
   ready(initScriptNavigation);
   ready(initInventorySearch);ready(initPinSync);ready(initLoadoutSync);ready(initReinforceHistorySync);ready(initReinforceBulkRead);
