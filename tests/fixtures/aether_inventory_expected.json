@@ -1,79 +1,96 @@
 {
-  "version": 1,
+  "version": 2,
   "character": "role-a",
   "name": "主号",
   "captured_at": 1000,
   "read_id": "00000001-0000-4000-8000-000000000000",
   "items": [
     {
-      "key": "[\"equipment\",\"coat\",\"霜鳞胸甲\",5,\"top\"]",
+      "key": "[\"equipment\",\"coat\",\"霜鳞胸甲\",5,\"top\",[\"water\"]]",
       "item_id": "coat",
       "name": "霜鳞胸甲",
       "kind": "equipment",
       "rarity": 5,
       "slot": "top",
       "count": 1,
-      "equipped": 1
+      "equipped": 1,
+      "elements": [
+        "water"
+      ]
     },
     {
-      "key": "[\"equipment\",\"other-sword\",\"水纹长剑\",5,\"weapon\"]",
+      "key": "[\"equipment\",\"other-sword\",\"水纹长剑\",5,\"weapon\",[\"water\"]]",
       "item_id": "other-sword",
       "name": "水纹长剑",
       "kind": "equipment",
       "rarity": 5,
       "slot": "weapon",
       "count": 1,
-      "equipped": 0
+      "equipped": 0,
+      "elements": [
+        "water"
+      ]
     },
     {
-      "key": "[\"equipment\",\"sword\",\"水纹长剑\",5,\"weapon\"]",
+      "key": "[\"equipment\",\"sword\",\"水纹长剑\",5,\"weapon\",[\"water\"]]",
       "item_id": "sword",
       "name": "水纹长剑",
       "kind": "equipment",
       "rarity": 5,
       "slot": "weapon",
       "count": 2,
-      "equipped": 1
+      "equipped": 1,
+      "elements": [
+        "water"
+      ]
     },
     {
-      "key": "[\"material\",\"thunder_gem\",\"雷渊晶石\",2,\"\"]",
+      "key": "[\"material\",\"thunder_gem\",\"雷渊晶石\",2,\"\",[]]",
       "item_id": "thunder_gem",
       "name": "雷渊晶石",
       "kind": "material",
       "rarity": 2,
       "slot": "",
       "count": 999,
-      "equipped": 0
+      "equipped": 0,
+      "elements": []
     },
     {
-      "key": "[\"other\",\"mirror\",\"重生之镜<script>bad()</script>\",5,\"\"]",
+      "key": "[\"other\",\"mirror\",\"重生之镜<script>bad()</script>\",5,\"\",[]]",
       "item_id": "mirror",
       "name": "重生之镜<script>bad()</script>",
       "kind": "other",
       "rarity": 5,
       "slot": "",
       "count": 3,
-      "equipped": 0
+      "equipped": 0,
+      "elements": []
     },
     {
-      "key": "[\"prism\",\"prism_core_water\",\"光谱·水之法则\",5,\"\"]",
+      "key": "[\"prism\",\"prism_core_water\",\"光谱·水之法则\",5,\"\",[\"water\"]]",
       "item_id": "prism_core_water",
       "name": "光谱·水之法则",
       "kind": "prism",
       "rarity": 5,
       "slot": "",
       "count": 7,
-      "equipped": 0
+      "equipped": 0,
+      "elements": [
+        "water"
+      ]
     },
     {
-      "key": "[\"skill\",\"book_wave\",\"碧波技能书\",4,\"\"]",
+      "key": "[\"skill\",\"book_wave\",\"碧波技能书\",4,\"\",[\"water\"]]",
       "item_id": "book_wave",
       "name": "碧波技能书",
       "kind": "skill",
       "rarity": 4,
       "slot": "",
       "count": 7,
-      "equipped": 0
+      "equipped": 0,
+      "elements": [
+        "water"
+      ]
     }
   ]
 }
