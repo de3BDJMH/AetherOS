@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.22.0
+// @version      0.22.1
 // @description  官网多角色桌面、背包筛选与置顶云同步、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -38,7 +38,7 @@
   function initEquipmentUsage(){
     const guard=Symbol.for('aether.equipment.usage');if(window[guard])return;
     const KEY='aether-equipment-usage-v1:',TTL=300000,states=new Map(),xhr=new WeakMap(),nativeFetch=window.fetch;
-    let clock=0,queued=false,active='',index=new Map(),signature='',picked=null,popover=null;
+    let clock=0,queued=false,active='',index=new Map(),signature='',picked=null;
     const role=()=>{try{return sessionStorage.getItem(ACTIVE)?.trim()||'';}catch{return '';}};
     const cellItems=new WeakMap();
     const own=node=>{node.dataset.amvUsageOwned='';return node;};
@@ -69,7 +69,7 @@
       const current=state(request.who);if((current.cached?.startedAt||0)>request.startedAt)return true;
       current.cached={version:1,character:request.who,startedAt:request.startedAt,updatedAt:Date.now(),presets};current.error='';
       try{localStorage.setItem(KEY+request.who,JSON.stringify(current.cached));}catch{current.error='预设占用缓存未能保存在本机';}
-      signature='';close();schedule();return true;
+      signature='';schedule();return true;
     }
     // 只观察官方预设的返回，不改写请求、响应或游戏操作。
     window.fetch=function(input,options){const request=describe(input,options);const promise=Reflect.apply(nativeFetch,this,arguments);if(request)promise.then(response=>{if(response.ok)response.clone().json().then(data=>accept(request,data)).catch(()=>{});},()=>{});return promise;};
@@ -97,22 +97,12 @@
       return error;
     }
     const refs=uuid=>index.get(uuid)||[];
-    const labels=rows=>rows.map(row=>row.source+' · '+row.name).join('；');
-    function close(){popover?.remove();popover=null;}
-    function show(anchor,uuid){
-      close();const rows=refs(uuid);if(!rows.length)return;popover=own(element('section',undefined,'amv-usage-popover'));popover.setAttribute('role','dialog');popover.setAttribute('aria-label','装备占用预设');
-      const head=element('header'),dismiss=button('×',event=>{event.stopPropagation();close();anchor.focus();});dismiss.setAttribute('aria-label','关闭占用详情');head.append(element('strong','占用此装备的预设'),dismiss);popover.append(head);
-      for(const row of rows){const line=element('div');line.append(element('small',row.source),element('span',row.name));popover.append(line);}document.body.append(popover);
-      const rect=anchor.getBoundingClientRect(),box=popover.getBoundingClientRect();popover.style.left=Math.max(10,Math.min(rect.left,innerWidth-box.width-10))+'px';popover.style.top=Math.max(10,Math.min(rect.bottom+8,innerHeight-box.height-10))+'px';
-    }
-    function badge(cell,item){
-      cellItems.set(cell,item);const rows=refs(item.uuid);let mark=cell.querySelector(':scope > [data-amv-usage-badge]');if(!rows.length){mark?.remove();return;}
-      if(!mark){mark=own(button('',event=>{event.preventDefault();event.stopImmediatePropagation();show(mark,mark.dataset.uuid);}));mark.className='amv-usage-badge';mark.dataset.amvUsageBadge='';for(const type of ['pointerdown','mousedown','touchstart','touchend','dblclick','contextmenu'])mark.addEventListener(type,event=>event.stopPropagation());cell.append(mark);}
-      mark.dataset.uuid=item.uuid;text(mark,'▤ '+rows.length);mark.title=labels(rows);mark.setAttribute('aria-label',(item.name||'装备')+'：占用 '+rows.length+' 套预设，点击查看');
-    }
     function info(host,item){
       const rows=refs(item.uuid);let box=host.querySelector(':scope > [data-amv-usage-info]');if(!rows.length){box?.remove();return;}
-      if(!box){box=own(element('section',undefined,'amv-usage-info'));box.dataset.amvUsageInfo='';host.append(box);}text(box,'占用 '+rows.length+' 套预设：'+labels(rows));
+      const stamp=JSON.stringify(rows);if(box?.dataset.signature===stamp)return;
+      if(!box){box=own(element('section',undefined,'amv-usage-info'));box.dataset.amvUsageInfo='';host.append(box);}box.dataset.signature=stamp;
+      const title=element('strong','占用 '+rows.length+' 套预设'),list=element('ul');
+      for(const row of rows){const line=element('li');line.append(element('small',row.source),element('span',row.name));list.append(line);}box.replaceChildren(title,list);
     }
     function status(panel,who,error){
       let bar=panel.querySelector(':scope > [data-amv-usage-status]');if(!bar){bar=own(element('div',undefined,'amv-usage-status'));bar.dataset.amvUsageStatus='';const copy=element('span'),reload=button('刷新预设',()=>refresh(role(),true));bar.append(copy,reload);const title=panel.querySelector(':scope > .bag-tabs,:scope > .section-title');title?title.after(bar):panel.prepend(bar);}
@@ -123,41 +113,86 @@
       if(!box){box=own(element('p',undefined,'amv-usage-warning'));box.dataset.amvUsageWarning='';host.append(box);}text(box,'已选 '+used.length+' 件装备被预设使用：'+[...new Set(used.flatMap(uuid=>refs(uuid).map(row=>row.source+' · '+row.name)))].join('；'));
     }
     const style=element('style');style.id='aether-equipment-usage-style';style.textContent=`
-      .amv-usage-badge{position:absolute;top:-7px;left:50%;transform:translateX(-50%);z-index:9;min-width:23px;height:16px;padding:0 4px!important;margin:0!important;border:1px solid #b6a174!important;border-radius:4px!important;background:#263043!important;color:#ffe0a2!important;font:600 10px/14px system-ui!important;cursor:pointer;white-space:nowrap}.amv-usage-badge:focus-visible{outline:2px solid #9de9df;outline-offset:2px}.amv-usage-status{display:flex;align-items:center;gap:10px;justify-content:space-between;margin:8px 0;color:#aabbd2;font-size:11px}.amv-usage-status button{padding:3px 7px;border:1px solid #64799166;border-radius:5px;background:#1a2a3c;color:#cbdaf0;font:inherit;cursor:pointer}.amv-usage-info,.amv-usage-warning{border-top:1px solid #7790b044;padding-top:8px;margin:8px 0 0;color:#f3d39b;font-size:12px;line-height:1.65;white-space:normal;overflow-wrap:anywhere}.amv-usage-popover{position:fixed;z-index:2147483646;width:min(310px,calc(100vw - 20px));max-height:calc(100vh - 20px);overflow:auto;padding:12px;border:1px solid #71839d;border-radius:10px;background:#101c30;color:#e6edf9;box-shadow:0 8px 28px #02061799;font:13px/1.6 system-ui;box-sizing:border-box}.amv-usage-popover header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.amv-usage-popover button{border:0;background:none;color:#c9d7ec;font:20px system-ui;cursor:pointer}.amv-usage-popover>div{display:flex;align-items:start;gap:8px;padding-top:5px;overflow-wrap:anywhere}.amv-usage-popover small{flex:none;font-size:10px;padding:1px 5px;border:1px solid #7285a644;border-radius:4px;color:#b2d5eb}
+      .amv-usage-status{display:flex;align-items:center;gap:10px;justify-content:space-between;margin:8px 0;color:#aabbd2;font-size:11px}.amv-usage-status button,.amv-decompose-pages button{padding:3px 7px;border:1px solid #64799166;border-radius:5px;background:#1a2a3c;color:#cbdaf0;font:inherit;cursor:pointer}.amv-usage-info,.amv-usage-warning{border-top:1px solid #7790b044;padding-top:8px;margin:8px 0 0;color:#f3d39b;font-size:12px;line-height:1.65;white-space:normal;overflow-wrap:anywhere}.amv-usage-info>strong{font-size:12px!important;font-weight:600}.amv-usage-info ul{display:grid;gap:5px;list-style:none;margin:6px 0 0;padding:0}.amv-usage-info li{display:flex;align-items:baseline;gap:8px}.amv-usage-info li small{flex:none;color:#afc5de;font-size:10px;white-space:nowrap}.amv-decompose-pages{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 0;color:#becde1;font-size:12px}.amv-decompose-pages small{color:#99acc5;font-size:11px}.amv-decompose-pages button:disabled{opacity:.4;cursor:default}
     `;document.head.append(style);
+    const decomposers=new Map();
+    function attachDecomposer(instance,panel){
+      if(decomposers.has(instance))return decomposers.get(instance);
+      if(typeof instance.render!=='function')return null;
+      const original=instance.render,pages=new Map(),groups=new Map(),slots=new WeakMap(),bars=new Map();
+      const controller={instance,panel,groups,ready:false,selected:new Set(),sync(){
+        if(instance.isUnmounted){decomposers.delete(instance);return;}if(!panel.isConnected)return;
+        for(const [key,group]of groups){const grid=group.node.el;if(!grid?.isConnected)continue;let bar=bars.get(key);
+          if(group.total<=60){bar?.remove();bars.delete(key);continue;}
+          if(!bar){bar=own(element('nav',undefined,'amv-decompose-pages'));bar.dataset.amvDecomposePages=key;bar.setAttribute('aria-label','分解装备分页');
+            const previous=button('上一页',()=>change(key,-1)),label=element('span'),next=button('下一页',()=>change(key,1));bar.append(previous,label,next,element('small','全选包含本星级所有页'));bars.set(key,bar);}
+          if(bar.parentElement!==grid.parentElement||bar.previousElementSibling!==grid)grid.after(bar);
+          const page=pages.get(key)||0;text(bar.children[1],(page*60+1)+'–'+Math.min(group.total,(page+1)*60)+' / '+group.total+' 件');bar.children[0].disabled=page===0;bar.children[2].disabled=(page+1)*60>=group.total;
+        }
+        for(const [key,bar]of bars)if(!groups.has(key)){bar.remove();bars.delete(key);}
+      }};
+      function change(key,delta){const group=groups.get(key);if(!group)return;pages.set(key,Math.max(0,Math.min(Math.ceil(group.total/60)-1,(pages.get(key)||0)+delta)));instance.proxy?.$forceUpdate();}
+      function transform(node,seen=new Set()){
+        if(!node||typeof node!=='object'||seen.has(node))return node;seen.add(node);
+        if(Array.isArray(node)){for(const child of node)transform(child,seen);return node;}
+        if(String(node.props?.class||'').split(/\s+/).includes('item-grid')){
+          const fragment=node.children?.find?.(child=>Array.isArray(child?.children)&&child.children.every(row=>(row?.type?.__name||row?.type?.name)==='ItemChip'&&validId(row.props?.item?.uuid)));
+          if(fragment&&!fragment.dynamicChildren?.length&&fragment.children.length){
+            const rows=fragment.children,key=String(rows[0].props.item.rarity??'none');
+            const page=Math.max(0,Math.min(Math.ceil(rows.length/60)-1,pages.get(key)||0));pages.set(key,page);
+            groups.set(key,{node,total:rows.length});for(const row of rows)if(row.props.selected)controller.selected.add(row.props.item.uuid);
+            fragment.children=rows.slice(page*60,(page+1)*60);controller.ready=true;return node;
+          }
+        }
+        if(Array.isArray(node.children))for(const child of node.children)transform(child,seen);
+        else if(node.children&&typeof node.children==='object'){
+          for(const key of Object.keys(node.children)){const slot=node.children[key];if(typeof slot!=='function')continue;
+            if(!slots.has(slot)){const wrapped=function(...args){const value=slot.apply(this,args);transform(value);queueSync();return value;};for(const flag of ['_c','_d','_n'])if(flag in slot)Object.defineProperty(wrapped,flag,{get:()=>slot[flag],set:value=>{slot[flag]=value;},configurable:true});slots.set(slot,wrapped);}
+            node.children[key]=slots.get(slot);
+          }
+        }return node;
+      }
+      let syncQueued=false;function queueSync(){if(!syncQueued){syncQueued=true;requestAnimationFrame(()=>{syncQueued=false;controller.sync();schedule();});}}
+      instance.render=function(...args){groups.clear();controller.selected=new Set();controller.ready=false;const vnode=original.apply(this,args);try{transform(vnode);}catch{/* 结构无法识别时沿用官网列表。 */}queueSync();return vnode;};
+      decomposers.set(instance,controller);instance.proxy?.$forceUpdate();return controller;
+    }
     function scan(){
-      queued=false;const who=role();if(who!==active){active=who;picked=null;close();signature='';}if(!who)return;
-      const error=rebuild(who),app=document.getElementById('app')?.__vue_app__,seen=new Set(),panels=new Set(),decomposeSelected=new Set(),sellSelected=new Set(),confirmations=new Set(),sheets=new Set();let found=false;
+      queued=false;const who=role();if(who!==active){active=who;picked=null;signature='';}if(!who)return;
+      const error=rebuild(who),app=document.getElementById('app')?.__vue_app__,seen=new Set(),panels=new Set(),decomposeSelected=new Set(),sellSelected=new Set(),confirmations=new Set(),sheets=new Set();const wantsTooltip=!!document.querySelector('.item-chip-tooltip,.equip-tooltip-surface,.item-sheet__info');
       function visit(node,inventory,item,mode){
         if(!node||typeof node!=='object'||seen.has(node))return;seen.add(node);if(Array.isArray(node)){for(const child of node)visit(child,inventory,item,mode);return;}
         const component=node.component,name=component?.type?.__name||component?.type?.name,props=component?.props;
         if(name==='BackpackPanel'){inventory=new Map((props.backpackEquipment||[]).filter(value=>validId(value?.uuid)).map(value=>[value.uuid,value]));const root=component.subTree?.el;if(root?.nodeType===1)panels.add(root);mode='bag';}
-        if(name==='DecomposerPanel'){mode='decompose';const root=component.subTree?.el;if(root?.nodeType===1)panels.add(root);}
+        if(name==='DecomposerPanel'){mode='decompose';const root=component.subTree?.el;if(root?.nodeType===1){panels.add(root);const controller=attachDecomposer(component,root);if(controller?.ready)for(const uuid of controller.selected)decomposeSelected.add(uuid);}}
         if(inventory?.has(node.key))item=inventory.get(node.key);if(validId(props?.item?.uuid))item=props.item;
         if(mode==='decompose'&&props?.selected&&item)decomposeSelected.add(item.uuid);
         const el=node.el;if(el?.nodeType===1&&!el.hasAttribute('data-amv-usage-owned')){
-          if(item&&el.matches('.bag-grid-item,.item-chip')){el.dataset.amvUsageUuid=item.uuid;badge(el,item);found=true;if(el.matches('.bag-grid-item--selected'))sellSelected.add(item.uuid);}
+          if(item&&el.matches('.bag-grid-item')){if(el.dataset.amvUsageUuid!==item.uuid)el.dataset.amvUsageUuid=item.uuid;cellItems.set(el,item);if(el.matches('.bag-grid-item--selected'))sellSelected.add(item.uuid);}
           if(item&&el.matches('.item-chip-tooltip'))info(el,item);
           if(item&&el.matches('.equip-tooltip-surface')){const host=el.querySelector('.equip-tooltip');if(host)info(host,item);}
           if(mode==='bag'&&el.matches('.item-sheet__info'))sheets.add(el);
           if(mode==='decompose'&&el.matches('.confirm-card'))confirmations.add(el.querySelector('.v-card-text')||el);
           if(item&&el.parentElement?.matches('.sell-list'))sellSelected.add(item.uuid);
         }
-        if(component)visit(component.subTree,inventory,item,mode);else if(node.suspense)visit(node.suspense.activeBranch,inventory,item,mode);else if(Array.isArray(node.children))visit(node.children,inventory,item,mode);
+        if(component){if(name!=='ItemChip'||wantsTooltip)visit(component.subTree,inventory,item,mode);}else if(node.suspense)visit(node.suspense.activeBranch,inventory,item,mode);else if(Array.isArray(node.children))visit(node.children,inventory,item,mode);
       }
       visit(app?._container?._vnode||app?._instance?.subTree||app?._vnode,null,null,'');
       if(picked?.who===who)for(const sheet of sheets){const title=sheet.closest('.item-sheet')?.querySelector('.item-sheet__title')?.textContent||'';if(title.includes(picked.item.name))info(sheet,picked.item);}
       for(const panel of panels){if(panel.getClientRects().length){status(panel,who,error);refresh(who);}if(panel.querySelector('.decompose-footer'))warning(panel.querySelector('.decompose-footer'),decomposeSelected);}
       for(const host of confirmations)warning(host,decomposeSelected);
       for(const list of document.querySelectorAll('.sell-list'))warning(list.parentElement,sellSelected);
-      if(popover&&!found)close();
+      for(const controller of decomposers.values())controller.sync();
     }
     function schedule(){if(!queued){queued=true;requestAnimationFrame(scan);}}
-    new MutationObserver(records=>{if(records.some(record=>!record.target.closest?.('[data-amv-usage-owned]')&&(record.type==='attributes'||![...record.addedNodes,...record.removedNodes].every(node=>node.nodeType===1&&node.hasAttribute('data-amv-usage-owned')))))schedule();}).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+    const surfaces='.bag-card,.item-grid,.decompose-footer,.confirm-card,.sell-list,.item-chip-tooltip,.equip-tooltip-surface,.item-sheet';
+    new MutationObserver(records=>{if(records.some(record=>{
+      if(record.target.closest?.('[data-amv-usage-owned]'))return false;
+      const changed=[...record.addedNodes,...record.removedNodes];if(changed.length&&changed.every(node=>node.nodeType===1&&node.hasAttribute('data-amv-usage-owned')))return false;
+      return record.target.closest?.(surfaces)||changed.some(node=>node.nodeType===1&&(node.matches(surfaces)||node.querySelector(surfaces)));
+    }))schedule();}).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
     document.addEventListener('click',event=>{const cell=event.target.closest?.('[data-amv-usage-uuid]');if(cell&&!event.target.closest('[data-amv-usage-owned]')){const uuid=cell.dataset.amvUsageUuid;picked={who:role(),item:cellItems.get(cell)||{uuid,name:cell.textContent}};}if(event.target.closest?.('.bag-card,.feature-panel'))schedule();},true);
-    document.addEventListener('pointerdown',event=>{if(popover&&!event.target.closest('[data-amv-usage-owned]'))close();},true);document.addEventListener('keydown',event=>{if(event.key==='Escape')close();});window.addEventListener('resize',close);
-    window.addEventListener('storage',event=>{if(event.key===null||event.key===KEY+role()||event.key===CLOUD_LOADOUTS+role()||event.key===LEGACY_LOADOUTS+role()){if(event.key===null||event.key===KEY+role())states.delete(role());signature='';close();schedule();}});
-    window.addEventListener('aether-loadout-change',()=>{signature='';close();schedule();});document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule();});
+    window.addEventListener('storage',event=>{if(event.key===null||event.key===KEY+role()||event.key===CLOUD_LOADOUTS+role()||event.key===LEGACY_LOADOUTS+role()){if(event.key===null||event.key===KEY+role())states.delete(role());signature='';schedule();}});
+    window.addEventListener('aether-loadout-change',()=>{signature='';schedule();});document.addEventListener('visibilitychange',()=>{if(!document.hidden)schedule();});
     window[guard]={refresh:()=>refresh(role(),true)};schedule();
   }
 

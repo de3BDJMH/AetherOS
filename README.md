@@ -29,11 +29,13 @@ Aether 官网的用户脚本：把同一水鱼账号下的多个角色放进一�
 
 ## 装备占用标记
 
-背包和分解页中的装备会显示占用套数，点击标记可查看使用它的官方预设与自建预设；悬浮装备和手机装备详情也会列出预设名。按装备 UUID 区分同名装备，不会改变穿戴、出售或分解操作。选中了被占用的装备时，出售清单、分解页与分解确认中会提示对应预设。
+背包与分解页的装备悬浮提示，以及手机装备详情，会列出使用它的官方预设与自建预设，名称一行一个；装备图标本身不添加标记。按装备 UUID 区分同名装备。出售、分解的选中清单继续提示占用情况。
 
 打开背包或分解页时按当前角色读取官方预设，缓存 5 分钟；不会重新请求背包，也不会一次查询其他角色。可点击“刷新预设”立即重读。官网保存、改名、删除预设的成功响应会更新标记，自建预设与云同步变化也会重新核对。读取失败时保留已有记录并提示标记可能不完整，不把失败视为“没有占用”。
 
 官方预设占用缓存仅含角色、预设名及装备 UUID，保存在当前浏览器；官方预设本身仍保存在游戏官网，自建预设沿用原云同步。
+
+分解列表按星级分页，每组每页显示 60 件。星级数量与“全选”沿用全部库存，换页保留选择，确认清单包含全部已选装备。分页只调整渲染列表，分解仍由官网原操作执行。
 
 ## 光谱等级提示
 
@@ -91,6 +93,7 @@ node --check AetherOS.user.js
 ```sh
 npm install --no-save --package-lock=false playwright
 npx playwright install chromium
+node tests/test_aether_decompose_pages_ui.cjs
 node tests/test_aether_equipment_usage_ui.cjs
 node tests/test_aether_spectrum_tooltips_ui.cjs
 node tests/test_aether_userscript_updates.cjs
