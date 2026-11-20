@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.29.1
+// @version      0.29.2
 // @description  官网多角色桌面、背包筛选与数据云同步、跨角色物品查找、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -263,7 +263,14 @@
     }
     const pending=new Set();let scheduled=false;
     function schedule(node){if(!node||node.nodeType!==1)return;const parent=node.closest(supported);if(parent)pending.add(parent);if(node.matches(supported))pending.add(node);node.querySelectorAll(supported).forEach(tip=>pending.add(tip));if(pending.size&&!scheduled){scheduled=true;requestAnimationFrame(()=>{scheduled=false;for(const tip of pending)if(tip.isConnected)sync(tip);pending.clear();});}}
-    new MutationObserver(records=>{window[Symbol.for('aether.equipment.hover.compare')]?.pruneSheet();for(const record of records){schedule(record.target.nodeType===1?record.target:record.target.parentElement);for(const node of record.addedNodes)schedule(node);}}).observe(document.body,{childList:true,characterData:true,attributes:true,attributeFilter:['class'],subtree:true});
+    new MutationObserver(records=>{
+      window[Symbol.for('aether.equipment.hover.compare')]?.pruneSheet();
+      // ItemChip teleports append several comments per item directly to body.
+      // Scan each mutation root once; a body scan already includes added subtrees.
+      const roots=new Set();
+      for(const record of records){const target=record.target.nodeType===1?record.target:record.target.parentElement;if(target)roots.add(target);for(const node of record.addedNodes)if(node.nodeType===1)roots.add(node);}
+      if(roots.has(document.body))schedule(document.body);else for(const node of roots)schedule(node);
+    }).observe(document.body,{childList:true,characterData:true,attributes:true,attributeFilter:['class'],subtree:true});
     schedule(document.body);
   }
 

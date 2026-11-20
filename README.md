@@ -27,6 +27,14 @@ Aether 官网的用户脚本：把同一水鱼账号下的多个角色放进一�
 
 强化优化作用于官网返回的渲染列表，首次进入页面仍可能有原始列表的挂载开销。父组件构建完整列表和官网状态请求也继续存在。详见[排查与验证记录](docs/reinforcement-performance.md)。
 
+## 分解页进入性能
+
+分解页继续显示全部装备，保留官网星级分组、全选、收益预览与确认流程。0.29.2 仅合并光谱提示监听对同一批 DOM 变化的扫描，不恢复已撤回的勾选样式和装备识别改动。
+
+官网每个装备卡片都会通过 Teleport 向页面根部插入注释节点。旧监听逐条处理这些变化，每处理一条就重新查询整个页面，2000 件装备会触发约 6000 次重复查询。现在先按变化根节点去重；有页面根部变化时，统一查询一次，其他情况只处理去重后的局部根节点。
+
+隔离回归使用官网实际 Vue、Pinia、Vuetify 折叠列表、动画、样式和装备组件，按官网模块加载时序启用监听；账号数据、状态读取和收益预览为模拟，实际分解接口阻断。Edge 的 2000 件装备测试中，进入阶段全页查询由 6005 次降至 6 次；4 倍 CPU 降速对照中，最长主线程任务由约 21 秒降至约 1.5 秒。结果反映该测试场景，真实设备耗时仍取决于装备数据、硬件和浏览器。
+
 ## 装备比较
 
 背包装备的鼠标悬浮提示、手机点击后的物品详情均增加四列差值：双方 +0、双方按身上装备强化等级、双方按背包装备强化等级，以及各自当前等级。以身上同部位装备为基准，高绿低红，百分比使用 `%`，属性图标与颜色沿用官网。亲和差值相同的元素并排合为一组图标，例外独立显示。没有穿戴时以空槽为基准；已穿戴的同一件装备不重复比较。只列出装备属性和亲和本身的数值，不替代整套角色配装计算。
@@ -114,6 +122,7 @@ node tests/test_aether_equipment_compare_ui.cjs
 node tests/test_aether_equipment_compare_integration.cjs
 node tests/test_aether_equipment_compare_mobile_ui.cjs
 node tests/test_aether_spectrum_tooltips_ui.cjs
+node tests/test_aether_decompose_native_ui.cjs
 node tests/test_aether_userscript_updates.cjs
 node tests/test_aether_multiview_ui.cjs
 node tests/test_aether_backpack_ui.cjs
@@ -131,3 +140,5 @@ node tests/test_aether_sync_panel_ui.cjs
 ```
 
 默认使用 Chromium；设置 `AETHER_TEST_BROWSER=msedge` 可使用本机 Edge。背包与强化测试只下载公开 Vue 3.5.26 测试运行库，也可用 `AETHER_TEST_VUE_PATH` 指定已有文件。测试拦截全部游戏请求，使用模拟角色和背包，不接触真实游戏数据。
+
+真实分解组件回归会匿名下载并缓存官网公开的固定版本模块与字体，缓存位于 `.tmp/decompose-native-assets`；可通过 `AETHER_TEST_NATIVE_CACHE` 指定已有缓存，`AETHER_TEST_CPU_RATE=4` 可模拟 CPU 降速。该测试仅允许模拟收益预览，实际分解请求会使测试失败。
