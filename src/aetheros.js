@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.30.0
+// @version      0.30.1
 // @description  官网多角色桌面、背包筛选与数据云同步、跨角色物品查找、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -1026,36 +1026,44 @@
       .amv-dg-toggle:hover{background:#ffffff06}.amv-dg-toggle:focus-visible{outline:2px solid #68ddd1;outline-offset:-2px}
       .amv-dg-name{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
       .amv-dg-count{font-size:12px;color:#9aabc2;white-space:nowrap}.amv-dg-count[data-selected]{color:#66dfd1}
-      .amv-dg-kind>.item-grid{padding:0 10px 10px}.amv-dg-kind>.item-grid>.item-chip{min-width:0}
+      .amv-dg-kind>.item-grid{padding:0 10px 10px}.amv-dg-kind>.item-grid>.item-chip{min-width:0;padding-right:1.85rem;transition:background-color .15s,border-color .15s,color .15s}
+      .amv-dg-kind>.item-grid>.item-chip>.item-chip-check{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);pointer-events:none}
       .amv-dg-selected{box-shadow:inset 3px 0 #5ad9ca}
       @media(max-width:600px){.amv-dg-toggle{padding:10px;gap:7px}}
     `;document.head.append(style);
     function type(node){return node?.type?.name||node?.type?.__name||'';}
     function hasClass(node,name){const value=node?.props?.class;return typeof value==='string'?value.split(/\s+/).includes(name):Array.isArray(value)?value.some(value=>typeof value==='string'&&value.split(/\s+/).includes(name)):false;}
     function dom(tag,props,children,scopeId,key=null){return {__v_isVNode:true,__v_skip:true,type:tag,props,key,ref:null,scopeId,slotScopeIds:null,children,component:null,suspense:null,ssContent:null,ssFallback:null,dirs:null,transition:null,el:null,anchor:null,target:null,targetStart:null,targetAnchor:null,staticCount:0,shapeFlag:1|(Array.isArray(children)?16:typeof children==='string'?8:0),patchFlag:0,dynamicProps:null,dynamicChildren:null,appContext:null,ctx:null};}
-    function groupFor(view,key){let group=view.groups.get(key);if(!group){group={open:new Set(),items:[],kinds:[],vnode:null};view.groups.set(key,group);}return group;}
-    function grouped(result,view,group,key){
-      let grid=null;function find(node){if(!node||grid)return;if(Array.isArray(node)){node.forEach(find);return;}if(hasClass(node,'item-grid')){grid=node;return;}if(Array.isArray(node.children))node.children.forEach(find);}find(result);
-      const fragment=grid?.children?.find(node=>Array.isArray(node?.children)&&node.patchFlag===128),all=fragment?.children;
-      if(!Array.isArray(all)||all.some(node=>type(node)!=='ItemChip'||typeof node.props?.item?.uuid!=='string'))return result;
-      const items=all.map(node=>node.props.item);
-      if(items.length!==group.items.length||items.some((item,index)=>item!==group.items[index])){
-        const kinds=new Map();for(let index=0;index<items.length;index++){const item=items[index],id=typeof item.item_id==='string'&&item.item_id?item.item_id:JSON.stringify([item.slot||'',item.name||'',item.rarity]);let kind=kinds.get(id);if(!kind){kind={id,item,indices:[]};kinds.set(id,kind);}kind.indices.push(index);}
-        group.items=items;group.kinds=[...kinds.values()];for(const id of group.open)if(!kinds.has(id))group.open.delete(id);
+    function groupFor(view,key){let group=view.groups.get(key);if(!group){group={open:new Set(),selected:new Set(),cache:null,actions:new Map(),vnode:null};view.groups.set(key,group);}return group;}
+    function seed(result,group){
+      const grid=Array.isArray(result)&&result.length===1?result[0]:null,fragment=hasClass(grid,'item-grid')&&grid.children?.find(node=>Array.isArray(node?.children)&&node.patchFlag===128),all=fragment?.children;
+      if(!Array.isArray(all)||all.some(node=>type(node)!=='ItemChip'||typeof node.props?.item?.uuid!=='string'||typeof node.props?.onClick!=='function'))return false;
+      const kinds=new Map(),selected=new Set();
+      for(const vnode of all){const props=vnode.props,item=props.item,id=typeof item.item_id==='string'&&item.item_id?item.item_id:JSON.stringify([item.slot||'',item.name||'',item.rarity]);let kind=kinds.get(id);
+        if(!kind){kind={id,name:item.name||item.item_id||'未命名装备',slot:item.slot,rarity:item.rarity,cards:[]};kinds.set(id,kind);}if(props.selected)selected.add(item.uuid);
+        const card={vnode,uuid:item.uuid,disabled:!!props.disabled};card.click=event=>{if(card.disabled)return;const was=group.selected.has(card.uuid);if(was)group.selected.delete(card.uuid);else group.selected.add(card.uuid);try{return props.onClick?.(event);}catch(error){if(was)group.selected.add(card.uuid);else group.selected.delete(card.uuid);throw error;}};kind.cards.push(card);
       }
-      const scope=grid.scopeId,children=[];
-      for(const kind of group.kinds){
-        const selected=kind.indices.reduce((sum,index)=>sum+Number(!!all[index].props.selected),0),expanded=group.open.has(kind.id),item=kind.item,color=({0:'#9eb4ff',1:'#d4d4d4',2:'#6fcf97',3:'#56ccf2',4:'#bb6bd9',5:'#f2994a'})[item.rarity]||'#9eb4ff';
+      group.cache={scope:grid.scopeId,kinds:[...kinds.values()],eligible:[...kinds.values()].flatMap(kind=>kind.cards.filter(card=>!card.disabled).map(card=>card.uuid))};group.selected=selected;for(const id of group.open)if(!kinds.has(id))group.open.delete(id);return true;
+    }
+    function grouped(view,group,key){
+      const {scope,kinds}=group.cache,children=[];
+      for(const kind of kinds){
+        const selected=kind.cards.reduce((sum,card)=>sum+Number(group.selected.has(card.uuid)),0),expanded=group.open.has(kind.id),color=({0:'#9eb4ff',1:'#d4d4d4',2:'#6fcf97',3:'#56ccf2',4:'#bb6bd9',5:'#f2994a'})[kind.rarity]||'#9eb4ff';
         const header=dom('button',{type:'button',class:'amv-dg-toggle','aria-expanded':String(expanded),'data-amv-decompose-kind':kind.id,onClick:()=>{if(group.open.has(kind.id))group.open.delete(kind.id);else group.open.add(kind.id);group.vnode?.component?.proxy?.$forceUpdate();}},[
-          dom('i',{class:'mdi '+(GEAR_SLOTS[item.slot]?.[1]||'mdi-sword'),style:{color},'aria-hidden':'true'},null,scope),
-          dom('span',{class:'amv-dg-name',style:{color}},item.name||item.item_id||'未命名装备',scope),
-          dom('span',{class:'amv-dg-count',...(selected?{'data-selected':''}:{})},(selected?'已选 '+selected+' / ':'')+kind.indices.length+' 件',scope),
+          dom('i',{class:'mdi '+(GEAR_SLOTS[kind.slot]?.[1]||'mdi-sword'),style:{color},'aria-hidden':'true'},null,scope),
+          dom('span',{class:'amv-dg-name',style:{color}},kind.name,scope),
+          dom('span',{class:'amv-dg-count',...(selected?{'data-selected':''}:{})},(selected?'已选 '+selected+' / ':'')+kind.cards.length+' 件',scope),
           dom('i',{class:'mdi '+(expanded?'mdi-chevron-up':'mdi-chevron-down'),'aria-hidden':'true'},null,scope)
         ],scope);
-        const content=[header];if(expanded)content.push(dom('div',{class:'item-grid','data-amv-decompose-items':kind.id},kind.indices.map(index=>({...all[index],props:{...all[index].props,'data-amv-decompose-uuid':all[index].props.item.uuid}})),scope));
+        const content=[header];if(expanded)content.push(dom('div',{class:'item-grid','data-amv-decompose-items':kind.id},kind.cards.map(card=>({...card.vnode,props:{...card.vnode.props,selected:group.selected.has(card.uuid),onClick:card.click,'data-amv-decompose-uuid':card.uuid}})),scope));
         children.push(dom('section',{class:'amv-dg-kind'+(selected?' amv-dg-selected':''),'data-amv-decompose-kind-card':kind.id},content,scope,kind.id));
       }
-      grid.props={...grid.props,class:'amv-dg-list','data-amv-decompose-rarity':key};grid.children=children;grid.dynamicChildren=null;return result;
+      return [dom('div',{class:'amv-dg-list','data-amv-decompose-rarity':key},children,scope)];
+    }
+    function actions(original,group,args){
+      const expanded=!!args[0]?.expanded;if(!group.actions.has(expanded))group.actions.set(expanded,original(...args));
+      const all=group.cache.eligible.length>0&&group.cache.eligible.every(id=>group.selected.has(id));
+      return group.actions.get(expanded).map(node=>{if(!hasClass(node,'select-all-btn'))return node;return {...node,props:{...node.props,color:all?'error':'primary',onClick:event=>{const previous=group.selected,next=new Set(previous);for(const id of group.cache.eligible)if(all)next.delete(id);else next.add(id);group.selected=next;try{return node.props.onClick(event);}catch(error){group.selected=previous;throw error;}}},children:{...node.children,default:()=>[dom('span',null,all?'取消全选':'全选',node.scopeId)]},dynamicChildren:null};});
     }
     function enhance(node,view,key='root'){
       if(!node||typeof node!=='object')return node;if(Array.isArray(node))return node.map(value=>enhance(value,view,key));
@@ -1063,8 +1071,14 @@
       if(['VExpansionPanels','VExpansionPanel','VExpansionPanelText'].includes(name)&&children&&typeof children==='object'&&!Array.isArray(children)&&typeof children.default==='function'){
         const original=children.default;let next,props=node.props;
         if(name==='VExpansionPanels')props={...props,modelValue:view.stars,'onUpdate:modelValue':value=>{view.stars=Array.isArray(value)?value.map(String):[];view.instance.proxy?.$forceUpdate();}};
+        if(name==='VExpansionPanel'){
+          next=function(...args){const result=enhance(original.apply(this,args),view,groupKey),group=groupFor(view,groupKey);if(!Array.isArray(result)||!group.cache)return result;
+            return result.map(child=>{if(type(child)!=='VExpansionPanelTitle'||typeof child.children?.actions!=='function')return child;const action=child.children.actions;return {...child,children:{...child.children,actions:function(...values){return actions(action,group,values);}},dynamicChildren:null};});
+          };Object.assign(next,original);return {...node,props,children:{...children,default:next},dynamicChildren:null};
+        }
         if(name==='VExpansionPanelText'){
-          const group=groupFor(view,groupKey);next=function(...args){if(!view.stars.includes(groupKey))return [];const result=original.apply(this,args);try{return grouped(result,view,group,groupKey);}catch{return result;}};
+          const group=groupFor(view,groupKey);if(!group.cache){try{seed(original(),group);}catch{}}
+          next=function(...args){if(!view.stars.includes(groupKey))return [];if(group.cache)return grouped(view,group,groupKey);return original.apply(this,args);};
           Object.assign(next,original);const copy={...node,children:{...children,default:next},dynamicChildren:null};group.vnode=copy;return copy;
         }
         next=function(...args){return enhance(original.apply(this,args),view,groupKey);};Object.assign(next,original);return {...node,props,children:{...children,default:next},dynamicChildren:null};
@@ -1073,7 +1087,7 @@
     }
     function attach(instance){
       if(instance[MARK]||typeof instance.render!=='function')return;const original=instance.render,view={instance,panel:instance.subTree?.el,stars:[],groups:new Map()};instance[MARK]=view;views.add(view);
-      instance.render=function(...args){const result=original.apply(this,args);try{return enhance(result,view);}catch{return result;}};instance.proxy?.$forceUpdate();
+      instance.render=function(...args){const result=original.apply(this,args);try{const loading=Array.isArray(result.children)&&result.children.some(child=>hasClass(child,'loading-state'));if(loading&&!view.loading)for(const group of view.groups.values()){group.cache=null;group.actions.clear();}view.loading=loading;return enhance(result,view);}catch{return result;}};instance.proxy?.$forceUpdate();
     }
     function discover(){
       for(const view of views)if(view.instance.isUnmounted)views.delete(view);
