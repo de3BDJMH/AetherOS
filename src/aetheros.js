@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.31.0
+// @version      0.31.1
 // @description  官网多角色桌面、背包筛选与数据云同步、跨角色物品查找、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -129,15 +129,15 @@
     let showing=enabled();function visibility(){showing=enabled();document.documentElement.classList.toggle('amv-quality-hidden',!showing);}
     const style=element('style');style.id='aether-equipment-quality-style';style.textContent=`
       [data-amv-quality-tier=gray]{--amv-quality-color:#909bac}[data-amv-quality-tier=blue]{--amv-quality-color:#61bfff}[data-amv-quality-tier=purple]{--amv-quality-color:#bd91ff}[data-amv-quality-tier=gold]{--amv-quality-color:#ffd272}[data-amv-quality-tier=prism]{--amv-quality-color:#8ce5e5}
-      html:not(.amv-quality-hidden) :is(.bag-grid-item,.item-chip)[data-amv-quality-tier]{isolation:isolate;border-color:var(--amv-quality-color)!important;box-shadow:0 0 0 1px color-mix(in srgb,var(--amv-quality-color) 14%,transparent)}
-      html:not(.amv-quality-hidden) :is(.bag-grid-item,.item-chip)[data-amv-quality-tier=prism]:before{content:'';position:absolute;inset:-1px;padding:1px;border-radius:inherit;background:linear-gradient(135deg,#74e0e8,#bb96ff 48%,#ffcf83);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:4}
+      html:not(.amv-quality-hidden) :is(.bag-grid-item,.item-chip)[data-amv-quality-tier]{outline:1px solid var(--amv-quality-color);outline-offset:2px}
+      html:not(.amv-quality-hidden) :is(.bag-grid-item,.item-chip)[data-amv-quality-tier=prism]:before{content:'';position:absolute;inset:-3px;padding:1px;border-radius:inherit;background:linear-gradient(135deg,#74e0e8,#bb96ff 48%,#ffcf83);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:4}
+      html:not(.amv-quality-hidden) .decompose-footer{z-index:10}
       .amv-quality-badge,html:not(.amv-quality-hidden) .item-chip[data-amv-quality-score]:after{position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);padding:1px 4px;border-radius:4px;background:#102032;color:var(--amv-quality-color);font:600 10px/1.2 system-ui;font-variant-numeric:tabular-nums;white-space:nowrap;pointer-events:none;z-index:6}
       html:not(.amv-quality-hidden) .item-chip[data-amv-quality-score]:after{content:attr(data-amv-quality-score)}
       .amv-quality-hidden .amv-quality-badge,.amv-quality-hidden .amv-quality-detail{display:none!important}
       html:not(.amv-quality-hidden) .item-chip-tooltip:has(>.amv-quality-detail){width:min(340px,calc(100vw - 20px))!important;max-height:calc(100dvh - 20px);overflow:auto;box-sizing:border-box}
       .amv-quality-detail{margin-top:9px;padding-top:8px;border-top:1px solid #8fa4c53b;color:#c5d3e5;font:11px/1.6 system-ui;white-space:normal}
       .amv-quality-detail>strong{display:flex!important;align-items:baseline;justify-content:space-between;gap:15px;color:var(--amv-quality-color)!important;font-size:12px!important}
-      .amv-quality-detail>strong>small{font-size:10px;font-weight:400;color:#93a8bf}.amv-quality-detail dl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;margin:5px 0 0}.amv-quality-detail dt,.amv-quality-detail dd{margin:0}.amv-quality-detail dd{text-align:right;font-variant-numeric:tabular-nums;color:#e1eaf5}
     `;document.head.append(style);
     function get(item){if(!item||typeof item!=='object')return null;const template=typeof item.item_id==='string'&&Object.hasOwn(EQUIPMENT_QUALITY.items,item.item_id)?EQUIPMENT_QUALITY.items[item.item_id]:null,actual=item.override_stats&&typeof item.override_stats==='object'&&!Array.isArray(item.override_stats)?item.override_stats:item.base_stats,signature=JSON.stringify([item.item_id,item.slot,item.kind,template?.stats.map(([key])=>actual?.[key])]),old=cache.get(item);if(old?.signature===signature)return old.result;const result=equipmentQuality(item);cache.set(item,{signature,result});return result;}
     function bind(node,item){if(node?.nodeType!==1)return;const result=get(item);bindings.set(node,{item,result});if(!result){for(const name of ['amvQualityScore','amvQualityTier'])if(name in node.dataset)delete node.dataset[name];node.querySelector(':scope > .amv-quality-badge')?.remove();return;}
@@ -148,9 +148,7 @@
     function vnode(node,item){let pair=hooks.get(item);if(!pair){pair={mounted:value=>bind(value.el,item),updated:value=>bind(value.el,item)};hooks.set(item,pair);}const merge=(old,next)=>!old?next:old===next||Array.isArray(old)&&old.includes(next)?old:[...(Array.isArray(old)?old:[old]),next];node.props={...node.props,onVnodeMounted:merge(node.props?.onVnodeMounted,pair.mounted),onVnodeUpdated:merge(node.props?.onVnodeUpdated,pair.updated)};return node;}
 
     function details(host,item){const result=get(item),old=host.querySelector(':scope > .amv-quality-detail'),signature=result?JSON.stringify([item.item_id,item.uuid,result]):'';if(old?.dataset.amvQualitySignature===signature)return false;if(!result){old?.remove();return false;}
-      const section=element('section',undefined,'amv-quality-detail'),heading=element('strong','词条评分 '+result.display),note=element('small','同名装备 · '+result.stats.length+' 项随机属性'),list=element('dl');section.dataset.amvQualitySignature=signature;section.dataset.amvQualityTier=result.tier;heading.append(note);section.append(heading);
-      const format=(key,value)=>{const percent=EQUIPMENT_QUALITY.labels[key]?.percent;return Number((value*(percent?100:1)).toFixed(4))+(percent?'%':'');};
-      for(const stat of result.stats){list.append(element('dt',EQUIPMENT_QUALITY.labels[stat.key]?.label||stat.key),element('dd',format(stat.key,stat.value)+'（'+format(stat.key,stat.min)+'～'+format(stat.key,stat.max)+'） · '+Number(stat.score.toFixed(1))+' 分'));}section.append(list);if(old)old.replaceWith(section);else host.append(section);return true;
+      const section=element('section',undefined,'amv-quality-detail');section.dataset.amvQualitySignature=signature;section.dataset.amvQualityTier=result.tier;section.append(element('strong','词条评分 '+result.display));if(old)old.replaceWith(section);else host.append(section);return true;
     }
     function tooltip(tip){if(!tip.matches('.item-chip-tooltip')||!active?.node.isConnected||tip.querySelector('.tooltip-kind')?.textContent.trim()!=='装备')return false;const title=tip.querySelector('.tooltip-name')?.textContent.trim().replace(/^\+\d+\s*/,'');if(title!==String(active.item.name||active.item.item_id||''))return false;if(details(tip,active.item)){const rect=tip.getBoundingClientRect();tip.style.top=Math.max(10,Math.min(rect.top,innerHeight-rect.height-10))+'px';tip.style.left=Math.max(10,Math.min(rect.left,innerWidth-rect.width-10))+'px';}return true;}
     const app=document.getElementById('app');function focus(event){const node=event.target.closest?.('.bag-grid-item,.item-chip'),entry=node&&bindings.get(node);active=entry?.result?{...entry,node}:null;}app?.addEventListener('mouseover',focus,{passive:true});app?.addEventListener('pointerdown',focus,{passive:true});
