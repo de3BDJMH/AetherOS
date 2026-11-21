@@ -13,6 +13,7 @@ async function main(){const browser=await chromium.launch({headless:true,channel
  });
  await page.goto(origin+'/aether/');const selector=kind==='backpack'?'.bag-content[data-kind=equipment] .bag-grid-item':'.item-list .item-chip';await page.waitForFunction(s=>document.querySelectorAll(s+'[data-amv-quality-score]').length===6,selector);
  const cards=page.locator(selector);assert.equal(await cards.count(),8);assert.deepEqual(await cards.evaluateAll(nodes=>nodes.map(node=>node.dataset.amvQualityScore||null)),['0','50','75','90','97.5','100',null,null]);assert.deepEqual(await cards.evaluateAll(nodes=>nodes.map(node=>node.dataset.amvQualityTier||null)),['gray','blue','purple','gold','prism','prism',null,null]);
+ assert.equal(await page.locator('.amv-quality-badge,.amv-quality-detail').count(),0);assert.equal(await cards.first().evaluate(node=>getComputedStyle(node,':after').content),'none');
  const before=await cards.evaluateAll(nodes=>nodes.map(el=>{const r=el.getBoundingClientRect();return [r.width,r.height];}));
  await page.evaluate(()=>window[Symbol.for('aether.equipment.quality')].setEnabled(false));assert.equal(await page.locator('html').evaluate(node=>node.classList.contains('amv-quality-hidden')),true);assert.deepEqual(await cards.evaluateAll(nodes=>nodes.map(el=>{const r=el.getBoundingClientRect();return [r.width,r.height];})),before);
  await page.evaluate(()=>window[Symbol.for('aether.equipment.quality')].setEnabled(true));
