@@ -1,0 +1,6089 @@
+[
+  {
+    "item": {
+      "item_id": "old_driver",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 50
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "old_driver",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 50
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "old_driver",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 50
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "starter_fire_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 55
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "starter_fire_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 58.7
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "starter_fire_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 65
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "starter_water_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 40
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "starter_water_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 43.7
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "starter_water_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 50
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "starter_lightning_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 45,
+        "spe": 4
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "starter_lightning_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 48.7,
+        "spe": 5.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "starter_lightning_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 55,
+        "spe": 8
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "starter_earth_hammer",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 75
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "starter_earth_hammer",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 78.7
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "starter_earth_hammer",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 85
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "starter_wind_bow",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 25,
+        "spe": 10
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "starter_wind_bow",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 28.7,
+        "spe": 13.7
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "starter_wind_bow",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 35,
+        "spe": 20
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "starter_light_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 35
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "starter_light_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 38.7
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "starter_light_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 45
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "starter_dark_dagger",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 55,
+        "max_hp": -100
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "starter_dark_dagger",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 58.7,
+        "max_hp": -100
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "starter_dark_dagger",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 65,
+        "max_hp": -100
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "old_pants",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 190,
+        "max_hp": 31
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "old_pants",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 212.2,
+        "max_hp": 33.96
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "old_pants",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 250,
+        "max_hp": 39
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "old_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 137,
+        "max_hp": 17
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "old_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 146.62,
+        "max_hp": 19.22
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "old_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 163,
+        "max_hp": 23
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "old_boots",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "max_hp": 8,
+        "spe": 8
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "old_boots",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "max_hp": 9.48,
+        "spe": 9.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "old_boots",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "max_hp": 12,
+        "spe": 12
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "old_suit",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 250,
+        "max_hp": 45
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "old_suit",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 287.0,
+        "max_hp": 48.7
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "old_suit",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 350,
+        "max_hp": 55
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "gm_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 10000,
+        "spe": 150
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "gm_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 10000,
+        "spe": 150
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "gm_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 10000,
+        "spe": 150
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "spider_claw",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 70,
+        "crit_rate": 0.08,
+        "max_hp": -100
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "spider_claw",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 70,
+        "crit_rate": 0.08,
+        "max_hp": -100
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "spider_claw",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 70,
+        "crit_rate": 0.08,
+        "max_hp": -100
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "element_hoop",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 85
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "element_hoop",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 88.7
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "element_hoop",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 95
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "ancient_magic_arm",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 166,
+        "max_hp": 90
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "ancient_magic_arm",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 176.36,
+        "max_hp": 97.4
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "ancient_magic_arm",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 194,
+        "max_hp": 110
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "dragon_knight_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 160,
+        "atk": 90
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "dragon_knight_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 182.2,
+        "atk": 97.4
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "dragon_knight_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 220,
+        "atk": 110
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "scavenger_badge",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 85,
+        "crit_rate": 0.0,
+        "spe": 0
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "scavenger_badge",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 133.1,
+        "crit_rate": 0.037,
+        "spe": 3.7
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "scavenger_badge",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 215,
+        "crit_rate": 0.1,
+        "spe": 10
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "heavy_sf_bone",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 70
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "heavy_sf_bone",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 92.2
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "heavy_sf_bone",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 130
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "wolf_tooth",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "crit_rate": 0.08
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "wolf_tooth",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "crit_rate": 0.0948
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "wolf_tooth",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "crit_rate": 0.12
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "straw_rain_cape",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 295,
+        "max_hp": 170
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "straw_rain_cape",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 320.9,
+        "max_hp": 199.6
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "straw_rain_cape",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 365,
+        "max_hp": 250
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "dragon_knight_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 166,
+        "max_hp": 90,
+        "spe": 7
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "dragon_knight_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 176.36,
+        "max_hp": 97.4,
+        "spe": 7.74
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "dragon_knight_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 194,
+        "max_hp": 110,
+        "spe": 9
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "abyss_pants",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 265,
+        "max_hp": 380,
+        "spe": -22
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "abyss_pants",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 290.9,
+        "max_hp": 394.8,
+        "spe": -20.52
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "abyss_pants",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 335,
+        "max_hp": 420,
+        "spe": -18
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "old_sliver_pendant",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "crit_rate": 0.05,
+        "luck": 10
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "old_sliver_pendant",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "crit_rate": 0.05,
+        "luck": 10
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "old_sliver_pendant",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "crit_rate": 0.05,
+        "luck": 10
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "mamba_glove",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 170,
+        "atk": 6,
+        "crit_rate": 0.066,
+        "max_hp": 6,
+        "spe": 6
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "mamba_glove",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 170,
+        "atk": 6,
+        "crit_rate": 0.066,
+        "max_hp": 6,
+        "spe": 6
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "mamba_glove",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 170,
+        "atk": 6,
+        "crit_rate": 0.066,
+        "max_hp": 6,
+        "spe": 6
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "dedication_ring",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {},
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "dedication_ring",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {},
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "dedication_ring",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {},
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "fixed_driver",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 80,
+        "spe": 5
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "fixed_driver",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 80,
+        "spe": 5
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "fixed_driver",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 80,
+        "spe": 5
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "heavy_iron_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 390,
+        "max_hp": 430,
+        "spe": -7
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "heavy_iron_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 419.6,
+        "max_hp": 444.8,
+        "spe": -6.26
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "heavy_iron_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 470,
+        "max_hp": 470,
+        "spe": -5
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "heavy_iron_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 285,
+        "max_hp": 335,
+        "spe": -6
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "heavy_iron_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 310.9,
+        "max_hp": 346.1,
+        "spe": -5.26
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "heavy_iron_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 355,
+        "max_hp": 365,
+        "spe": -4
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "heavy_iron_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 205,
+        "max_hp": 240,
+        "spe": -3
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "heavy_iron_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 216.1,
+        "max_hp": 247.4,
+        "spe": -2.26
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "heavy_iron_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 235,
+        "max_hp": 260,
+        "spe": -1
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "heavy_iron_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 166,
+        "max_hp": 140,
+        "spe": 2
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "heavy_iron_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 176.36,
+        "max_hp": 147.4,
+        "spe": 2.74
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "heavy_iron_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 194,
+        "max_hp": 160,
+        "spe": 4
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "shadow_light_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 330,
+        "max_hp": 285
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "shadow_light_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 359.6,
+        "max_hp": 296.1
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "shadow_light_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 410,
+        "max_hp": 315
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "shadow_light_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 264,
+        "max_hp": 238
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "shadow_light_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 275.84,
+        "max_hp": 246.88
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "shadow_light_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 296,
+        "max_hp": 262
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "shadow_light_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 176,
+        "max_hp": 152
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "shadow_light_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 186.36,
+        "max_hp": 157.92
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "shadow_light_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 204,
+        "max_hp": 168
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "shadow_light_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 146,
+        "max_hp": 85,
+        "spe": 8
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "shadow_light_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 156.36,
+        "max_hp": 88.7,
+        "spe": 9.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "shadow_light_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 174,
+        "max_hp": 95,
+        "spe": 12
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "leather_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 264,
+        "max_hp": 150,
+        "spe": 4
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "leather_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 275.84,
+        "max_hp": 157.4,
+        "spe": 4.74
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "leather_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 296,
+        "max_hp": 170,
+        "spe": 6
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "leather_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 205,
+        "max_hp": 122,
+        "spe": 4
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "leather_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 216.1,
+        "max_hp": 127.92,
+        "spe": 4.74
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "leather_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 235,
+        "max_hp": 138,
+        "spe": 6
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "leather_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 146,
+        "max_hp": 70,
+        "spe": 4
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "leather_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 156.36,
+        "max_hp": 73.7,
+        "spe": 4.74
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "leather_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 174,
+        "max_hp": 80,
+        "spe": 6
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "leather_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 127,
+        "max_hp": 30,
+        "spe": 14
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "leather_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 136.62,
+        "max_hp": 33.7,
+        "spe": 14.74
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "leather_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 153,
+        "max_hp": 40,
+        "spe": 16
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "eroded_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 100,
+        "spe": 7
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "eroded_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 107.4,
+        "spe": 7.74
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "eroded_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 120,
+        "spe": 9
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "stonecrusher_mace",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 140,
+        "spe": -9
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "stonecrusher_mace",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 154.8,
+        "spe": -8.26
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "stonecrusher_mace",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 180,
+        "spe": -7
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "corrupted_staff",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 120
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "corrupted_staff",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 123.7
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "corrupted_staff",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 130
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "galewind_bow",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 100,
+        "spe": 20
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "galewind_bow",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 103.7,
+        "spe": 21.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "galewind_bow",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 110,
+        "spe": 24
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "sanctum_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 147,
+        "spe": 7
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "sanctum_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 152.92,
+        "spe": 7.74
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "sanctum_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 163,
+        "spe": 9
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "eroded_plate",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 475,
+        "max_hp": 495,
+        "spe": -11
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "eroded_plate",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 508.3,
+        "max_hp": 513.5,
+        "spe": -10.26
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "eroded_plate",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 565,
+        "max_hp": 545,
+        "spe": -9
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "eroded_greaves",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 315,
+        "max_hp": 360,
+        "spe": -7
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "eroded_greaves",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 340.9,
+        "max_hp": 374.8,
+        "spe": -6.26
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "eroded_greaves",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 385,
+        "max_hp": 400,
+        "spe": -5
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "eroded_gauntlets",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 205,
+        "atk": 22,
+        "max_hp": 265
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "eroded_gauntlets",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 216.1,
+        "atk": 24.22,
+        "max_hp": 276.1
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "eroded_gauntlets",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 235,
+        "atk": 28,
+        "max_hp": 295
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "darkwalker_boots",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "evasion_rate": 0.07,
+        "max_hp": 50,
+        "spe": 16
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "darkwalker_boots",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "evasion_rate": 0.07740000000000001,
+        "max_hp": 57.4,
+        "spe": 17.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "darkwalker_boots",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "evasion_rate": 0.09000000000000001,
+        "max_hp": 70,
+        "spe": 20
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "abyssal_weave",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 315,
+        "max_hp": 275,
+        "spe": 5
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "abyssal_weave",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 340.9,
+        "max_hp": 293.5,
+        "spe": 5
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "abyssal_weave",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 385,
+        "max_hp": 325,
+        "spe": 5
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "erosion_crystal",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 13,
+        "crit_rate": 0.07
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "erosion_crystal",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 14.48,
+        "crit_rate": 0.07740000000000001
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "erosion_crystal",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 17,
+        "crit_rate": 0.09000000000000001
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "heart_of_corruption",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 27,
+        "crit_rate": 0.11
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "heart_of_corruption",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 29.22,
+        "crit_rate": 0.1174
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "heart_of_corruption",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 33,
+        "crit_rate": 0.13
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_eroded_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 510,
+        "max_hp": 620,
+        "spe": -1
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_eroded_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 547.0,
+        "max_hp": 642.2,
+        "spe": -0.26
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_eroded_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 610,
+        "max_hp": 680,
+        "spe": 1
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_eroded_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 350,
+        "max_hp": 455,
+        "spe": -1
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_eroded_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 379.6,
+        "max_hp": 473.5,
+        "spe": -0.26
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_eroded_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 430,
+        "max_hp": 505,
+        "spe": 1
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_eroded_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 234,
+        "atk": 28,
+        "max_hp": 332
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_eroded_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 245.84,
+        "atk": 30.96,
+        "max_hp": 345.32
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_eroded_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 266,
+        "atk": 36,
+        "max_hp": 368
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_eroded_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "max_hp": 66,
+        "spe": 20
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_eroded_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "max_hp": 74.88,
+        "spe": 21.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_eroded_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "max_hp": 90,
+        "spe": 24
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_fire",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 150,
+        "spe": 6
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_fire",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 157.4,
+        "spe": 7.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_fire",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 170,
+        "spe": 10
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_water",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 150,
+        "spe": 6
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_water",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 157.4,
+        "spe": 7.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_water",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 170,
+        "spe": 10
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_lightning",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 150,
+        "spe": 6
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_lightning",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 157.4,
+        "spe": 7.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_lightning",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 170,
+        "spe": 10
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_earth",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 150,
+        "spe": 6
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_earth",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 157.4,
+        "spe": 7.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_earth",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 170,
+        "spe": 10
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_wind",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 150,
+        "spe": 6
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_wind",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 157.4,
+        "spe": 7.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_wind",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 170,
+        "spe": 10
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_light",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 150,
+        "spe": 6
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_light",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 157.4,
+        "spe": 7.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_light",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 170,
+        "spe": 10
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_dark",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 150,
+        "spe": 6
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_dark",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 157.4,
+        "spe": 7.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "crystal_driver_dark",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 170,
+        "spe": 10
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "church_water_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 135,
+        "heal_bonus": 0.15,
+        "max_hp": 450
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "church_water_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 146.1,
+        "heal_bonus": 0.15,
+        "max_hp": 487.0
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "church_water_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 165,
+        "heal_bonus": 0.15,
+        "max_hp": 550
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "swinging_bow",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 110,
+        "spe": 21
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "swinging_bow",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 117.4,
+        "spe": 23.22
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "swinging_bow",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 130,
+        "spe": 27
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "withered_bark_armor",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 390,
+        "max_hp": 355
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "withered_bark_armor",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 419.6,
+        "max_hp": 373.5
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "withered_bark_armor",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 470,
+        "max_hp": 405
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "withered_bark_greaves",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 303,
+        "max_hp": 290
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "withered_bark_greaves",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 315.58,
+        "max_hp": 304.8
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "withered_bark_greaves",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 337,
+        "max_hp": 330
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "withered_bark_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 185,
+        "atk": 19,
+        "max_hp": 200
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "withered_bark_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 196.1,
+        "atk": 21.22,
+        "max_hp": 200
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "withered_bark_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 215,
+        "atk": 25,
+        "max_hp": 200
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "withered_bark_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "max_hp": 90,
+        "spe": 11
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "withered_bark_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "max_hp": 97.4,
+        "spe": 12.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "withered_bark_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "max_hp": 110,
+        "spe": 15
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "ember_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 112
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "ember_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 117.92
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "ember_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 128
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "thunder_vine_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 104,
+        "spe": 12
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "thunder_vine_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 109.92,
+        "spe": 12
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "thunder_vine_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 120,
+        "spe": 12
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "forest_amulet",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 17,
+        "max_hp": 145
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "forest_amulet",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 19.22,
+        "max_hp": 156.1
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "forest_amulet",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 23,
+        "max_hp": 175
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "bark_plate_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 470,
+        "max_hp": 700
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "bark_plate_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 470,
+        "max_hp": 737.0
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "bark_plate_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 470,
+        "max_hp": 800
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "bark_plate_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 350,
+        "max_hp": 510
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "bark_plate_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 350,
+        "max_hp": 539.6
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "bark_plate_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 350,
+        "max_hp": 590
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "bark_plate_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 220,
+        "atk": 30,
+        "max_hp": 400
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "bark_plate_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 220,
+        "atk": 33.7,
+        "max_hp": 400
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "bark_plate_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 220,
+        "atk": 40,
+        "max_hp": 400
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "bark_plate_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "max_hp": 90,
+        "spe": 22
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "bark_plate_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "max_hp": 90,
+        "spe": 24.22
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "bark_plate_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "max_hp": 90,
+        "spe": 28
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "scorching_vine_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 168,
+        "spe": 6
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "scorching_vine_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 175.4,
+        "spe": 7.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "scorching_vine_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 188,
+        "spe": 10
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "thunder_root_staff",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 158,
+        "spe": 16
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "thunder_root_staff",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 165.4,
+        "spe": 17.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "thunder_root_staff",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 178,
+        "spe": 20
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "blazing_vine_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 147
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "blazing_vine_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 152.92
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "blazing_vine_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 163
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "stormspore_staff",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 137,
+        "spe": 13
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "stormspore_staff",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 142.92,
+        "spe": 14.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "stormspore_staff",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 153,
+        "spe": 17
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "livestone_ember_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 157
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "livestone_ember_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 162.92
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "livestone_ember_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 173
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "livestone_tide_staff",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 152
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "livestone_tide_staff",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 157.92
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "livestone_tide_staff",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 168
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "livestone_thunder_lance",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 162
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "livestone_thunder_lance",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 167.92
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "livestone_thunder_lance",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 178
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "livestone_gale_dagger",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 160
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "livestone_gale_dagger",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 165.92
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "livestone_gale_dagger",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 176
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "livestone_radiance_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 152
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "livestone_radiance_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 157.92
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "livestone_radiance_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 168
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "aberrant_terra_maul",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 230
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "aberrant_terra_maul",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 237.4
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "aberrant_terra_maul",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 250
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "abyssal_void_scythe",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 200,
+        "crit_rate": 0.2
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "abyssal_void_scythe",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 207.4,
+        "crit_rate": 0.2
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "abyssal_void_scythe",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 220,
+        "crit_rate": 0.2
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "aberrant_carapace_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 540,
+        "max_hp": 870
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "aberrant_carapace_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 577.0,
+        "max_hp": 892.2
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "aberrant_carapace_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 640,
+        "max_hp": 930
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "aberrant_carapace_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 360,
+        "max_hp": 675
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "aberrant_carapace_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 382.2,
+        "max_hp": 693.5
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "aberrant_carapace_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 420,
+        "max_hp": 725
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "aberrant_carapace_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 254,
+        "atk": 22,
+        "max_hp": 430
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "aberrant_carapace_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 265.84,
+        "atk": 24.22,
+        "max_hp": 444.8
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "aberrant_carapace_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 286,
+        "atk": 28,
+        "max_hp": 470
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "aberrant_carapace_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 150,
+        "max_hp": 165,
+        "spe": 18
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "aberrant_carapace_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 150,
+        "max_hp": 176.1,
+        "spe": 19.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "aberrant_carapace_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 150,
+        "max_hp": 195,
+        "spe": 22
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "floating_pendant",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.2,
+        "spe": 10
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "floating_pendant",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.2,
+        "spe": 11.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "floating_pendant",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.2,
+        "spe": 14
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "earth_amulet",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "amplify_earth": 0.1,
+        "atk": 19,
+        "max_hp": 160
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "earth_amulet",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "amplify_earth": 0.1,
+        "atk": 21.22,
+        "max_hp": 174.8
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "earth_amulet",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "amplify_earth": 0.1,
+        "atk": 25,
+        "max_hp": 200
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "atalante_boots",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "spe": 40
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "atalante_boots",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "spe": 40
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "atalante_boots",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "spe": 40
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "devotee_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 180,
+        "max_hp": -1700
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "devotee_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 194.8,
+        "max_hp": -1552.0
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "devotee_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 220,
+        "max_hp": -1300
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_dress_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 445,
+        "max_hp": 810
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_dress_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 478.3,
+        "max_hp": 839.6
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_dress_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 535,
+        "max_hp": 890
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_dress_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.1,
+        "armor": 330,
+        "max_hp": 570
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_dress_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.1,
+        "armor": 359.6,
+        "max_hp": 592.2
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_dress_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.1,
+        "armor": 410,
+        "max_hp": 630
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_dress_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 176,
+        "crit_rate": 0.09000000000000001,
+        "max_hp": 425
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_dress_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 186.36,
+        "crit_rate": 0.09740000000000001,
+        "max_hp": 443.5
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_dress_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 204,
+        "crit_rate": 0.11000000000000001,
+        "max_hp": 475
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_dress_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "max_hp": 88,
+        "spe": 27
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_dress_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "max_hp": 96.88,
+        "spe": 29.22
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_dress_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "max_hp": 112,
+        "spe": 33
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_armor_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 540,
+        "max_hp": 1250
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_armor_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 577.0,
+        "max_hp": 1287.0
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_armor_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 640,
+        "max_hp": 1350
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_armor_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 350,
+        "max_hp": 910
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_armor_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 379.6,
+        "max_hp": 939.6
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_armor_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 430,
+        "max_hp": 990
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_armor_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 234,
+        "atk": 44,
+        "max_hp": 570
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_armor_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 245.84,
+        "atk": 48.44,
+        "max_hp": 592.2
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_armor_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 266,
+        "atk": 56,
+        "max_hp": 630
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_armor_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 127,
+        "max_hp": 135,
+        "spe": 18
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_armor_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 136.62,
+        "max_hp": 146.1,
+        "spe": 19.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_armor_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 153,
+        "max_hp": 165,
+        "spe": 22
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "aggregated_element_hoop",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 240
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "aggregated_element_hoop",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 247.4
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "aggregated_element_hoop",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 260
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_core",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 146,
+        "max_hp": 475
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_core",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 156.36,
+        "max_hp": 493.5
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_core",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 174,
+        "max_hp": 525
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_lens",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 29,
+        "crit_dmg": 0.25,
+        "crit_rate": 0.09000000000000001
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_lens",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 33.44,
+        "crit_dmg": 0.25,
+        "crit_rate": 0.09740000000000001
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "cognition_lens",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 41,
+        "crit_dmg": 0.25,
+        "crit_rate": 0.11000000000000001
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "prism_resonance_pendant",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "amplify_dark": 0.15,
+        "amplify_earth": 0.15,
+        "amplify_fire": 0.15,
+        "amplify_light": 0.15,
+        "amplify_lightning": 0.15,
+        "amplify_water": 0.15,
+        "amplify_wind": 0.15
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "prism_resonance_pendant",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "amplify_dark": 0.15,
+        "amplify_earth": 0.15,
+        "amplify_fire": 0.15,
+        "amplify_light": 0.15,
+        "amplify_lightning": 0.15,
+        "amplify_water": 0.15,
+        "amplify_wind": 0.15
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "prism_resonance_pendant",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "amplify_dark": 0.15,
+        "amplify_earth": 0.15,
+        "amplify_fire": 0.15,
+        "amplify_light": 0.15,
+        "amplify_lightning": 0.15,
+        "amplify_water": 0.15,
+        "amplify_wind": 0.15
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "sanctum_decree_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 288,
+        "spe": 9
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "sanctum_decree_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 296.88,
+        "spe": 9.74
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "sanctum_decree_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 312,
+        "spe": 11
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "cathedral_water_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 255,
+        "heal_bonus": 0.2,
+        "max_hp": 940
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "cathedral_water_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 266.1,
+        "heal_bonus": 0.2,
+        "max_hp": 984.4
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "cathedral_water_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 285,
+        "heal_bonus": 0.2,
+        "max_hp": 1060
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "resonant_string_bow",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 228,
+        "spe": 22
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "resonant_string_bow",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 236.88,
+        "spe": 24.22
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "resonant_string_bow",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 252,
+        "spe": 28
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "incandescent_vine_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 288,
+        "spe": 9
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "incandescent_vine_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 296.88,
+        "spe": 9.74
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "incandescent_vine_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 312,
+        "spe": 11
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "fission_spore_staff",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.1,
+        "atk": 258,
+        "spe": 14
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "fission_spore_staff",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.1,
+        "atk": 266.88,
+        "spe": 15.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "fission_spore_staff",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.1,
+        "atk": 282,
+        "spe": 18
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "resonant_terra_maul",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 220,
+        "atk": 288
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "resonant_terra_maul",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 220,
+        "atk": 296.88
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "resonant_terra_maul",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 220,
+        "atk": 312
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "nether_void_scythe",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 258,
+        "crit_rate": 0.2
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "nether_void_scythe",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 266.88,
+        "crit_rate": 0.2
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "nether_void_scythe",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 282,
+        "crit_rate": 0.2
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "silver_knight_lance",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 307,
+        "max_hp": 480
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "silver_knight_lance",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 316.62,
+        "max_hp": 494.8
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "silver_knight_lance",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 333,
+        "max_hp": 520
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "frost_rapier",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 317
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "frost_rapier",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 326.62
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "frost_rapier",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 343
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "windcarve_dart",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 288,
+        "crit_rate": 0.15,
+        "spe": 26
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "windcarve_dart",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 296.88,
+        "crit_rate": 0.15,
+        "spe": 27.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "windcarve_dart",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 312,
+        "crit_rate": 0.15,
+        "spe": 30
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "yan_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 346,
+        "crit_dmg": 0.2,
+        "crit_rate": 0.1,
+        "spe": -7
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "yan_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 356.36,
+        "crit_dmg": 0.2,
+        "crit_rate": 0.1,
+        "spe": -5.52
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "yan_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 374,
+        "crit_dmg": 0.2,
+        "crit_rate": 0.1,
+        "spe": -3
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "mei_lei_tachi",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 288,
+        "spe": 18
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "mei_lei_tachi",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 296.88,
+        "spe": 19.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "mei_lei_tachi",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 312,
+        "spe": 22
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "guardian_shield_axe",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 283,
+        "atk": 317
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "guardian_shield_axe",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 295.58,
+        "atk": 326.62
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "guardian_shield_axe",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 317,
+        "atk": 343
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "withering_javelin",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 317,
+        "crit_rate": 0.15,
+        "max_hp": -520
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "withering_javelin",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 326.62,
+        "crit_rate": 0.15,
+        "max_hp": -505.2
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "withering_javelin",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 343,
+        "crit_rate": 0.15,
+        "max_hp": -480
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "canyon_survey_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 475,
+        "max_hp": 855
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "canyon_survey_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 508.3,
+        "max_hp": 888.3
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "canyon_survey_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 565,
+        "max_hp": 945
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "canyon_survey_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.1,
+        "armor": 330,
+        "max_hp": 570
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "canyon_survey_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.1,
+        "armor": 359.6,
+        "max_hp": 592.2
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "canyon_survey_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.1,
+        "armor": 410,
+        "max_hp": 630
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "canyon_survey_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 176,
+        "atk": 72,
+        "crit_rate": 0.04,
+        "max_hp": 280
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "canyon_survey_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 186.36,
+        "atk": 77.92,
+        "crit_rate": 0.0474,
+        "max_hp": 294.8
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "canyon_survey_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 204,
+        "atk": 88,
+        "crit_rate": 0.06,
+        "max_hp": 320
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "canyon_survey_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 127,
+        "max_hp": 135,
+        "spe": 27
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "canyon_survey_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 136.62,
+        "max_hp": 146.1,
+        "spe": 29.22
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "canyon_survey_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 153,
+        "max_hp": 165,
+        "spe": 33
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "unwritten_survey_coat",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 510,
+        "atk": 90,
+        "max_hp": 1140
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "unwritten_survey_coat",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 547.0,
+        "atk": 97.4,
+        "max_hp": 1184.4
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "unwritten_survey_coat",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 610,
+        "atk": 110,
+        "max_hp": 1260
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "off_map_survey_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.15,
+        "armor": 350,
+        "max_hp": 805,
+        "spe": 8
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "off_map_survey_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.15,
+        "armor": 379.6,
+        "max_hp": 838.3,
+        "spe": 9.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "off_map_survey_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.15,
+        "armor": 430,
+        "max_hp": 895,
+        "spe": 12
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "magpie_knot",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "crit_rate": 0.07,
+        "luck": 7,
+        "max_hp": 77,
+        "spe": 7
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "magpie_knot",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "crit_rate": 0.07,
+        "luck": 7,
+        "max_hp": 77,
+        "spe": 7
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "magpie_knot",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "crit_rate": 0.07,
+        "luck": 7,
+        "max_hp": 77,
+        "spe": 7
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "frost_scale_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 615,
+        "max_hp": 1540
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "frost_scale_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 655.7,
+        "max_hp": 1584.4
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "frost_scale_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 725,
+        "max_hp": 1660
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "frost_scale_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 410,
+        "max_hp": 1135
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "frost_scale_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 439.6,
+        "max_hp": 1168.3
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "frost_scale_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 490,
+        "max_hp": 1225
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "frost_scale_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 283,
+        "atk": 62,
+        "max_hp": 715
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "frost_scale_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 295.58,
+        "atk": 67.92,
+        "max_hp": 740.9
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "frost_scale_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 317,
+        "atk": 78,
+        "max_hp": 785
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "frost_scale_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 146,
+        "max_hp": 180,
+        "spe": 23
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "frost_scale_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 156.36,
+        "max_hp": 194.8,
+        "spe": 25.22
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "frost_scale_shoes",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 174,
+        "max_hp": 220,
+        "spe": 29
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "frost_oath_ember_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 336,
+        "crit_rate": 0.09000000000000001
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "frost_oath_ember_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 346.36,
+        "crit_rate": 0.09740000000000001
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "frost_oath_ember_blade",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 364,
+        "crit_rate": 0.11000000000000001
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "frost_oath_thaw_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 317,
+        "heal_bonus": 0.15,
+        "max_hp": 760
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "frost_oath_thaw_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 326.62,
+        "heal_bonus": 0.15,
+        "max_hp": 789.6
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "frost_oath_thaw_rod",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 343,
+        "heal_bonus": 0.15,
+        "max_hp": 840
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "frost_oath_rime_lance",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.12,
+        "atk": 326,
+        "spe": 19
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "frost_oath_rime_lance",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.12,
+        "atk": 336.36,
+        "spe": 21.22
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "frost_oath_rime_lance",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.12,
+        "atk": 354,
+        "spe": 25
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "ember_of_frost_funeral",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 433,
+        "crit_dmg": 0.25,
+        "crit_rate": 0.11
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "ember_of_frost_funeral",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 445.58,
+        "crit_dmg": 0.25,
+        "crit_rate": 0.1174
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "ember_of_frost_funeral",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 467,
+        "crit_dmg": 0.25,
+        "crit_rate": 0.13
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "last_breath_of_hrimni",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 442,
+        "heal_bonus": 0.25,
+        "max_hp": 1140
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "last_breath_of_hrimni",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 455.32,
+        "heal_bonus": 0.25,
+        "max_hp": 1184.4
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "last_breath_of_hrimni",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 478,
+        "heal_bonus": 0.25,
+        "max_hp": 1260
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "oath_of_skald",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.15,
+        "atk": 422,
+        "crit_rate": 0.08,
+        "spe": 23
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "oath_of_skald",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.15,
+        "atk": 435.32,
+        "crit_rate": 0.08,
+        "spe": 25.22
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "oath_of_skald",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.15,
+        "atk": 458,
+        "crit_rate": 0.08,
+        "spe": 29
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "frozen_teardrop_of_the_wyrm",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 410,
+        "max_hp": 1425
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "frozen_teardrop_of_the_wyrm",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 439.6,
+        "max_hp": 1480.5
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "frozen_teardrop_of_the_wyrm",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 490,
+        "max_hp": 1575
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "hermit_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 400,
+        "spe": 25
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "hermit_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 400,
+        "spe": 25
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "hermit_sword",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 400,
+        "spe": 25
+      },
+      "reinforce_level": 15
+    },
+    "score": null
+  },
+  {
+    "item": {
+      "item_id": "wind_return",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 335,
+        "crit_rate": 0.09000000000000001,
+        "spe": 27
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "wind_return",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 346.1,
+        "crit_rate": 0.09740000000000001,
+        "spe": 29.22
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "wind_return",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 365,
+        "crit_rate": 0.11000000000000001,
+        "spe": 33
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "wind_unbound",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.12,
+        "atk": 420,
+        "crit_rate": 0.11,
+        "spe": 31
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "wind_unbound",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.12,
+        "atk": 434.8,
+        "crit_rate": 0.1174,
+        "spe": 33.22
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "wind_unbound",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.12,
+        "atk": 460,
+        "crit_rate": 0.13,
+        "spe": 37
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "light_dawn",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 355,
+        "luck": 10,
+        "max_hp": 665
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "light_dawn",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 366.1,
+        "luck": 10,
+        "max_hp": 690.9
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "light_dawn",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 385,
+        "luck": 10,
+        "max_hp": 735
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "light_myriad",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 430,
+        "luck": 16,
+        "max_hp": 950
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "light_myriad",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 444.8,
+        "luck": 16,
+        "max_hp": 987.0
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "light_myriad",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 470,
+        "luck": 16,
+        "max_hp": 1050
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "dark_dusk",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 365,
+        "crit_rate": 0.13999999999999999
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "dark_dusk",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 376.1,
+        "crit_rate": 0.14739999999999998
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "dark_dusk",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 395,
+        "crit_rate": 0.15999999999999998
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "dark_eternal",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 450,
+        "crit_dmg": 0.25,
+        "crit_rate": 0.16999999999999998
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "dark_eternal",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 464.8,
+        "crit_dmg": 0.25,
+        "crit_rate": 0.17739999999999997
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "dark_eternal",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 490,
+        "crit_dmg": 0.25,
+        "crit_rate": 0.18999999999999997
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "earth_boundary",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 276,
+        "atk": 375
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "earth_boundary",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 293.76,
+        "atk": 386.1
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "earth_boundary",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 324,
+        "atk": 405
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "earth_mountain",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 368,
+        "atk": 470,
+        "max_hp": 760
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "earth_mountain",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 391.68,
+        "atk": 484.8,
+        "max_hp": 789.6
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "earth_mountain",
+      "slot": "weapon",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 432,
+        "atk": 510,
+        "max_hp": 840
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "field_uniform_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 506,
+        "max_hp": 1140
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "field_uniform_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 538.56,
+        "max_hp": 1184.4
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "field_uniform_top",
+      "slot": "top",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 594,
+        "max_hp": 1260
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "field_uniform_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.12,
+        "armor": 386,
+        "max_hp": 808
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "field_uniform_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.12,
+        "armor": 411.16,
+        "max_hp": 839.08
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "field_uniform_bottom",
+      "slot": "bottom",
+      "kind": "equipment",
+      "override_stats": {
+        "ap_gain_rate": 0.12,
+        "armor": 454,
+        "max_hp": 892
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "field_uniform_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 202,
+        "atk": 47,
+        "crit_rate": 0.1,
+        "max_hp": 570
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "field_uniform_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 215.32,
+        "atk": 52.92,
+        "crit_rate": 0.1,
+        "max_hp": 592.2
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "field_uniform_gloves",
+      "slot": "gloves",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 238,
+        "atk": 63,
+        "crit_rate": 0.1,
+        "max_hp": 630
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "field_uniform_boots",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 92,
+        "max_hp": 171,
+        "spe": 31
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "field_uniform_boots",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 97.92,
+        "max_hp": 177.66,
+        "spe": 33.22
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "field_uniform_boots",
+      "slot": "shoes",
+      "kind": "equipment",
+      "override_stats": {
+        "armor": 108,
+        "max_hp": 189,
+        "spe": 37
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  },
+  {
+    "item": {
+      "item_id": "hermit_feather",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 120,
+        "crit_rate": 0.08,
+        "max_hp": 460,
+        "spe": 10
+      },
+      "reinforce_level": 15
+    },
+    "score": 0.0
+  },
+  {
+    "item": {
+      "item_id": "hermit_feather",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 127.4,
+        "crit_rate": 0.08,
+        "max_hp": 489.6,
+        "spe": 11.48
+      },
+      "reinforce_level": 15
+    },
+    "score": 37.0
+  },
+  {
+    "item": {
+      "item_id": "hermit_feather",
+      "slot": "accessory",
+      "kind": "equipment",
+      "override_stats": {
+        "atk": 140,
+        "crit_rate": 0.08,
+        "max_hp": 540,
+        "spe": 14
+      },
+      "reinforce_level": 15
+    },
+    "score": 100.0
+  }
+]

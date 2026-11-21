@@ -1,0 +1,2231 @@
+{
+  "version": 1,
+  "updated_at": 1795238822,
+  "items": {
+    "old_driver": {
+      "slot": "weapon",
+      "stats": []
+    },
+    "starter_fire_sword": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          55.0,
+          65.0
+        ]
+      ]
+    },
+    "starter_water_rod": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          40.0,
+          50.0
+        ]
+      ]
+    },
+    "starter_lightning_blade": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          45.0,
+          55.0
+        ],
+        [
+          "spe",
+          4.0,
+          8.0
+        ]
+      ]
+    },
+    "starter_earth_hammer": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          75.0,
+          85.0
+        ]
+      ]
+    },
+    "starter_wind_bow": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          25.0,
+          35.0
+        ],
+        [
+          "spe",
+          10.0,
+          20.0
+        ]
+      ]
+    },
+    "starter_light_sword": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          35.0,
+          45.0
+        ]
+      ]
+    },
+    "starter_dark_dagger": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          55.0,
+          65.0
+        ]
+      ]
+    },
+    "old_pants": {
+      "slot": "bottom",
+      "stats": [
+        [
+          "armor",
+          190.0,
+          250.0
+        ],
+        [
+          "max_hp",
+          31.0,
+          39.0
+        ]
+      ]
+    },
+    "old_gloves": {
+      "slot": "gloves",
+      "stats": [
+        [
+          "armor",
+          137.0,
+          163.0
+        ],
+        [
+          "max_hp",
+          17.0,
+          23.0
+        ]
+      ]
+    },
+    "old_boots": {
+      "slot": "shoes",
+      "stats": [
+        [
+          "max_hp",
+          8.0,
+          12.0
+        ],
+        [
+          "spe",
+          8.0,
+          12.0
+        ]
+      ]
+    },
+    "old_suit": {
+      "slot": "top",
+      "stats": [
+        [
+          "armor",
+          250.0,
+          350.0
+        ],
+        [
+          "max_hp",
+          45.0,
+          55.0
+        ]
+      ]
+    },
+    "gm_sword": {
+      "slot": "weapon",
+      "stats": []
+    },
+    "spider_claw": {
+      "slot": "weapon",
+      "stats": []
+    },
+    "element_hoop": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          85.0,
+          95.0
+        ]
+      ]
+    },
+    "ancient_magic_arm": {
+      "slot": "gloves",
+      "stats": [
+        [
+          "armor",
+          166.0,
+          194.0
+        ],
+        [
+          "max_hp",
+          90.0,
+          110.0
+        ]
+      ]
+    },
+    "dragon_knight_sword": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "armor",
+          160.0,
+          220.0
+        ],
+        [
+          "atk",
+          90.0,
+          110.0
+        ]
+      ]
+    },
+    "scavenger_badge": {
+      "slot": "accessory",
+      "stats": [
+        [
+          "armor",
+          85.0,
+          215.0
+        ],
+        [
+          "crit_rate",
+          0.0,
+          0.1
+        ],
+        [
+          "spe",
+          0.0,
+          10.0
+        ]
+      ]
+    },
+    "heavy_sf_bone": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          70.0,
+          130.0
+        ]
+      ]
+    },
+    "wolf_tooth": {
+      "slot": "accessory",
+      "stats": [
+        [
+          "crit_rate",
+          0.08,
+          0.12000000000000001
+        ]
+      ]
+    },
+    "straw_rain_cape": {
+      "slot": "top",
+      "stats": [
+        [
+          "armor",
+          295.0,
+          365.0
+        ],
+        [
+          "max_hp",
+          170.0,
+          250.0
+        ]
+      ]
+    },
+    "dragon_knight_shoes": {
+      "slot": "shoes",
+      "stats": [
+        [
+          "armor",
+          166.0,
+          194.0
+        ],
+        [
+          "max_hp",
+          90.0,
+          110.0
+        ],
+        [
+          "spe",
+          7.0,
+          9.0
+        ]
+      ]
+    },
+    "abyss_pants": {
+      "slot": "bottom",
+      "stats": [
+        [
+          "armor",
+          265.0,
+          335.0
+        ],
+        [
+          "max_hp",
+          380.0,
+          420.0
+        ],
+        [
+          "spe",
+          -22.0,
+          -18.0
+        ]
+      ]
+    },
+    "old_sliver_pendant": {
+      "slot": "accessory",
+      "stats": []
+    },
+    "mamba_glove": {
+      "slot": "gloves",
+      "stats": []
+    },
+    "dedication_ring": {
+      "slot": "accessory",
+      "stats": []
+    },
+    "fixed_driver": {
+      "slot": "weapon",
+      "stats": []
+    },
+    "heavy_iron_top": {
+      "slot": "top",
+      "stats": [
+        [
+          "armor",
+          390.0,
+          470.0
+        ],
+        [
+          "max_hp",
+          430.0,
+          470.0
+        ],
+        [
+          "spe",
+          -7.0,
+          -5.0
+        ]
+      ]
+    },
+    "heavy_iron_bottom": {
+      "slot": "bottom",
+      "stats": [
+        [
+          "armor",
+          285.0,
+          355.0
+        ],
+        [
+          "max_hp",
+          335.0,
+          365.0
+        ],
+        [
+          "spe",
+          -6.0,
+          -4.0
+        ]
+      ]
+    },
+    "heavy_iron_gloves": {
+      "slot": "gloves",
+      "stats": [
+        [
+          "armor",
+          205.0,
+          235.0
+        ],
+        [
+          "max_hp",
+          240.0,
+          260.0
+        ],
+        [
+          "spe",
+          -3.0,
+          -1.0
+        ]
+      ]
+    },
+    "heavy_iron_shoes": {
+      "slot": "shoes",
+      "stats": [
+        [
+          "armor",
+          166.0,
+          194.0
+        ],
+        [
+          "max_hp",
+          140.0,
+          160.0
+        ],
+        [
+          "spe",
+          2.0,
+          4.0
+        ]
+      ]
+    },
+    "shadow_light_top": {
+      "slot": "top",
+      "stats": [
+        [
+          "armor",
+          330.0,
+          410.0
+        ],
+        [
+          "max_hp",
+          285.0,
+          315.0
+        ]
+      ]
+    },
+    "shadow_light_bottom": {
+      "slot": "bottom",
+      "stats": [
+        [
+          "armor",
+          264.0,
+          296.0
+        ],
+        [
+          "max_hp",
+          238.0,
+          262.0
+        ]
+      ]
+    },
+    "shadow_light_gloves": {
+      "slot": "gloves",
+      "stats": [
+        [
+          "armor",
+          176.0,
+          204.0
+        ],
+        [
+          "max_hp",
+          152.0,
+          168.0
+        ]
+      ]
+    },
+    "shadow_light_shoes": {
+      "slot": "shoes",
+      "stats": [
+        [
+          "armor",
+          146.0,
+          174.0
+        ],
+        [
+          "max_hp",
+          85.0,
+          95.0
+        ],
+        [
+          "spe",
+          8.0,
+          12.0
+        ]
+      ]
+    },
+    "leather_top": {
+      "slot": "top",
+      "stats": [
+        [
+          "armor",
+          264.0,
+          296.0
+        ],
+        [
+          "max_hp",
+          150.0,
+          170.0
+        ],
+        [
+          "spe",
+          4.0,
+          6.0
+        ]
+      ]
+    },
+    "leather_bottom": {
+      "slot": "bottom",
+      "stats": [
+        [
+          "armor",
+          205.0,
+          235.0
+        ],
+        [
+          "max_hp",
+          122.0,
+          138.0
+        ],
+        [
+          "spe",
+          4.0,
+          6.0
+        ]
+      ]
+    },
+    "leather_gloves": {
+      "slot": "gloves",
+      "stats": [
+        [
+          "armor",
+          146.0,
+          174.0
+        ],
+        [
+          "max_hp",
+          70.0,
+          80.0
+        ],
+        [
+          "spe",
+          4.0,
+          6.0
+        ]
+      ]
+    },
+    "leather_shoes": {
+      "slot": "shoes",
+      "stats": [
+        [
+          "armor",
+          127.0,
+          153.0
+        ],
+        [
+          "max_hp",
+          30.0,
+          40.0
+        ],
+        [
+          "spe",
+          14.0,
+          16.0
+        ]
+      ]
+    },
+    "eroded_blade": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          100.0,
+          120.0
+        ],
+        [
+          "spe",
+          7.0,
+          9.0
+        ]
+      ]
+    },
+    "stonecrusher_mace": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          140.0,
+          180.0
+        ],
+        [
+          "spe",
+          -9.0,
+          -7.0
+        ]
+      ]
+    },
+    "corrupted_staff": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          120.0,
+          130.0
+        ]
+      ]
+    },
+    "galewind_bow": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          100.0,
+          110.0
+        ],
+        [
+          "spe",
+          20.0,
+          24.0
+        ]
+      ]
+    },
+    "sanctum_blade": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          147.0,
+          163.0
+        ],
+        [
+          "spe",
+          7.0,
+          9.0
+        ]
+      ]
+    },
+    "eroded_plate": {
+      "slot": "top",
+      "stats": [
+        [
+          "armor",
+          475.0,
+          565.0
+        ],
+        [
+          "max_hp",
+          495.0,
+          545.0
+        ],
+        [
+          "spe",
+          -11.0,
+          -9.0
+        ]
+      ]
+    },
+    "eroded_greaves": {
+      "slot": "bottom",
+      "stats": [
+        [
+          "armor",
+          315.0,
+          385.0
+        ],
+        [
+          "max_hp",
+          360.0,
+          400.0
+        ],
+        [
+          "spe",
+          -7.0,
+          -5.0
+        ]
+      ]
+    },
+    "eroded_gauntlets": {
+      "slot": "gloves",
+      "stats": [
+        [
+          "armor",
+          205.0,
+          235.0
+        ],
+        [
+          "atk",
+          22.0,
+          28.0
+        ],
+        [
+          "max_hp",
+          265.0,
+          295.0
+        ]
+      ]
+    },
+    "darkwalker_boots": {
+      "slot": "shoes",
+      "stats": [
+        [
+          "evasion_rate",
+          0.07,
+          0.09
+        ],
+        [
+          "max_hp",
+          50.0,
+          70.0
+        ],
+        [
+          "spe",
+          16.0,
+          20.0
+        ]
+      ]
+    },
+    "abyssal_weave": {
+      "slot": "top",
+      "stats": [
+        [
+          "armor",
+          315.0,
+          385.0
+        ],
+        [
+          "max_hp",
+          275.0,
+          325.0
+        ]
+      ]
+    },
+    "erosion_crystal": {
+      "slot": "accessory",
+      "stats": [
+        [
+          "atk",
+          13.0,
+          17.0
+        ],
+        [
+          "crit_rate",
+          0.07,
+          0.09
+        ]
+      ]
+    },
+    "heart_of_corruption": {
+      "slot": "accessory",
+      "stats": [
+        [
+          "atk",
+          27.0,
+          33.0
+        ],
+        [
+          "crit_rate",
+          0.11,
+          0.13
+        ]
+      ]
+    },
+    "crystal_eroded_top": {
+      "slot": "top",
+      "stats": [
+        [
+          "armor",
+          510.0,
+          610.0
+        ],
+        [
+          "max_hp",
+          620.0,
+          680.0
+        ],
+        [
+          "spe",
+          -1.0,
+          1.0
+        ]
+      ]
+    },
+    "crystal_eroded_bottom": {
+      "slot": "bottom",
+      "stats": [
+        [
+          "armor",
+          350.0,
+          430.0
+        ],
+        [
+          "max_hp",
+          455.0,
+          505.0
+        ],
+        [
+          "spe",
+          -1.0,
+          1.0
+        ]
+      ]
+    },
+    "crystal_eroded_gloves": {
+      "slot": "gloves",
+      "stats": [
+        [
+          "armor",
+          234.0,
+          266.0
+        ],
+        [
+          "atk",
+          28.0,
+          36.0
+        ],
+        [
+          "max_hp",
+          332.0,
+          368.0
+        ]
+      ]
+    },
+    "crystal_eroded_shoes": {
+      "slot": "shoes",
+      "stats": [
+        [
+          "max_hp",
+          66.0,
+          90.0
+        ],
+        [
+          "spe",
+          20.0,
+          24.0
+        ]
+      ]
+    },
+    "crystal_driver_fire": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          150.0,
+          170.0
+        ],
+        [
+          "spe",
+          6.0,
+          10.0
+        ]
+      ]
+    },
+    "crystal_driver_water": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          150.0,
+          170.0
+        ],
+        [
+          "spe",
+          6.0,
+          10.0
+        ]
+      ]
+    },
+    "crystal_driver_lightning": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          150.0,
+          170.0
+        ],
+        [
+          "spe",
+          6.0,
+          10.0
+        ]
+      ]
+    },
+    "crystal_driver_earth": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          150.0,
+          170.0
+        ],
+        [
+          "spe",
+          6.0,
+          10.0
+        ]
+      ]
+    },
+    "crystal_driver_wind": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          150.0,
+          170.0
+        ],
+        [
+          "spe",
+          6.0,
+          10.0
+        ]
+      ]
+    },
+    "crystal_driver_light": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          150.0,
+          170.0
+        ],
+        [
+          "spe",
+          6.0,
+          10.0
+        ]
+      ]
+    },
+    "crystal_driver_dark": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          150.0,
+          170.0
+        ],
+        [
+          "spe",
+          6.0,
+          10.0
+        ]
+      ]
+    },
+    "church_water_rod": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          135.0,
+          165.0
+        ],
+        [
+          "max_hp",
+          450.0,
+          550.0
+        ]
+      ]
+    },
+    "swinging_bow": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          110.0,
+          130.0
+        ],
+        [
+          "spe",
+          21.0,
+          27.0
+        ]
+      ]
+    },
+    "withered_bark_armor": {
+      "slot": "top",
+      "stats": [
+        [
+          "armor",
+          390.0,
+          470.0
+        ],
+        [
+          "max_hp",
+          355.0,
+          405.0
+        ]
+      ]
+    },
+    "withered_bark_greaves": {
+      "slot": "bottom",
+      "stats": [
+        [
+          "armor",
+          303.0,
+          337.0
+        ],
+        [
+          "max_hp",
+          290.0,
+          330.0
+        ]
+      ]
+    },
+    "withered_bark_gloves": {
+      "slot": "gloves",
+      "stats": [
+        [
+          "armor",
+          185.0,
+          215.0
+        ],
+        [
+          "atk",
+          19.0,
+          25.0
+        ]
+      ]
+    },
+    "withered_bark_shoes": {
+      "slot": "shoes",
+      "stats": [
+        [
+          "max_hp",
+          90.0,
+          110.0
+        ],
+        [
+          "spe",
+          11.0,
+          15.0
+        ]
+      ]
+    },
+    "ember_blade": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          112.0,
+          128.0
+        ]
+      ]
+    },
+    "thunder_vine_rod": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          104.0,
+          120.0
+        ]
+      ]
+    },
+    "forest_amulet": {
+      "slot": "accessory",
+      "stats": [
+        [
+          "atk",
+          17.0,
+          23.0
+        ],
+        [
+          "max_hp",
+          145.0,
+          175.0
+        ]
+      ]
+    },
+    "bark_plate_top": {
+      "slot": "top",
+      "stats": [
+        [
+          "max_hp",
+          700.0,
+          800.0
+        ]
+      ]
+    },
+    "bark_plate_bottom": {
+      "slot": "bottom",
+      "stats": [
+        [
+          "max_hp",
+          510.0,
+          590.0
+        ]
+      ]
+    },
+    "bark_plate_gloves": {
+      "slot": "gloves",
+      "stats": [
+        [
+          "atk",
+          30.0,
+          40.0
+        ]
+      ]
+    },
+    "bark_plate_shoes": {
+      "slot": "shoes",
+      "stats": [
+        [
+          "spe",
+          22.0,
+          28.0
+        ]
+      ]
+    },
+    "scorching_vine_blade": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          168.0,
+          188.0
+        ],
+        [
+          "spe",
+          6.0,
+          10.0
+        ]
+      ]
+    },
+    "thunder_root_staff": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          158.0,
+          178.0
+        ],
+        [
+          "spe",
+          16.0,
+          20.0
+        ]
+      ]
+    },
+    "blazing_vine_sword": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          147.0,
+          163.0
+        ]
+      ]
+    },
+    "stormspore_staff": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          137.0,
+          153.0
+        ],
+        [
+          "spe",
+          13.0,
+          17.0
+        ]
+      ]
+    },
+    "livestone_ember_blade": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          157.0,
+          173.0
+        ]
+      ]
+    },
+    "livestone_tide_staff": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          152.0,
+          168.0
+        ]
+      ]
+    },
+    "livestone_thunder_lance": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          162.0,
+          178.0
+        ]
+      ]
+    },
+    "livestone_gale_dagger": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          160.0,
+          176.0
+        ]
+      ]
+    },
+    "livestone_radiance_rod": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          152.0,
+          168.0
+        ]
+      ]
+    },
+    "aberrant_terra_maul": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          230.0,
+          250.0
+        ]
+      ]
+    },
+    "abyssal_void_scythe": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          200.0,
+          220.0
+        ]
+      ]
+    },
+    "aberrant_carapace_top": {
+      "slot": "top",
+      "stats": [
+        [
+          "armor",
+          540.0,
+          640.0
+        ],
+        [
+          "max_hp",
+          870.0,
+          930.0
+        ]
+      ]
+    },
+    "aberrant_carapace_bottom": {
+      "slot": "bottom",
+      "stats": [
+        [
+          "armor",
+          360.0,
+          420.0
+        ],
+        [
+          "max_hp",
+          675.0,
+          725.0
+        ]
+      ]
+    },
+    "aberrant_carapace_gloves": {
+      "slot": "gloves",
+      "stats": [
+        [
+          "armor",
+          254.0,
+          286.0
+        ],
+        [
+          "atk",
+          22.0,
+          28.0
+        ],
+        [
+          "max_hp",
+          430.0,
+          470.0
+        ]
+      ]
+    },
+    "aberrant_carapace_shoes": {
+      "slot": "shoes",
+      "stats": [
+        [
+          "max_hp",
+          165.0,
+          195.0
+        ],
+        [
+          "spe",
+          18.0,
+          22.0
+        ]
+      ]
+    },
+    "floating_pendant": {
+      "slot": "accessory",
+      "stats": [
+        [
+          "spe",
+          10.0,
+          14.0
+        ]
+      ]
+    },
+    "earth_amulet": {
+      "slot": "accessory",
+      "stats": [
+        [
+          "atk",
+          19.0,
+          25.0
+        ],
+        [
+          "max_hp",
+          160.0,
+          200.0
+        ]
+      ]
+    },
+    "atalante_boots": {
+      "slot": "shoes",
+      "stats": []
+    },
+    "devotee_gloves": {
+      "slot": "gloves",
+      "stats": [
+        [
+          "atk",
+          180.0,
+          220.0
+        ],
+        [
+          "max_hp",
+          -1700.0,
+          -1300.0
+        ]
+      ]
+    },
+    "cognition_dress_top": {
+      "slot": "top",
+      "stats": [
+        [
+          "armor",
+          445.0,
+          535.0
+        ],
+        [
+          "max_hp",
+          810.0,
+          890.0
+        ]
+      ]
+    },
+    "cognition_dress_bottom": {
+      "slot": "bottom",
+      "stats": [
+        [
+          "armor",
+          330.0,
+          410.0
+        ],
+        [
+          "max_hp",
+          570.0,
+          630.0
+        ]
+      ]
+    },
+    "cognition_dress_gloves": {
+      "slot": "gloves",
+      "stats": [
+        [
+          "armor",
+          176.0,
+          204.0
+        ],
+        [
+          "crit_rate",
+          0.09000000000000001,
+          0.11
+        ],
+        [
+          "max_hp",
+          425.0,
+          475.0
+        ]
+      ]
+    },
+    "cognition_dress_shoes": {
+      "slot": "shoes",
+      "stats": [
+        [
+          "max_hp",
+          88.0,
+          112.0
+        ],
+        [
+          "spe",
+          27.0,
+          33.0
+        ]
+      ]
+    },
+    "cognition_armor_top": {
+      "slot": "top",
+      "stats": [
+        [
+          "armor",
+          540.0,
+          640.0
+        ],
+        [
+          "max_hp",
+          1250.0,
+          1350.0
+        ]
+      ]
+    },
+    "cognition_armor_bottom": {
+      "slot": "bottom",
+      "stats": [
+        [
+          "armor",
+          350.0,
+          430.0
+        ],
+        [
+          "max_hp",
+          910.0,
+          990.0
+        ]
+      ]
+    },
+    "cognition_armor_gloves": {
+      "slot": "gloves",
+      "stats": [
+        [
+          "armor",
+          234.0,
+          266.0
+        ],
+        [
+          "atk",
+          44.0,
+          56.0
+        ],
+        [
+          "max_hp",
+          570.0,
+          630.0
+        ]
+      ]
+    },
+    "cognition_armor_shoes": {
+      "slot": "shoes",
+      "stats": [
+        [
+          "armor",
+          127.0,
+          153.0
+        ],
+        [
+          "max_hp",
+          135.0,
+          165.0
+        ],
+        [
+          "spe",
+          18.0,
+          22.0
+        ]
+      ]
+    },
+    "aggregated_element_hoop": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          240.0,
+          260.0
+        ]
+      ]
+    },
+    "cognition_core": {
+      "slot": "accessory",
+      "stats": [
+        [
+          "armor",
+          146.0,
+          174.0
+        ],
+        [
+          "max_hp",
+          475.0,
+          525.0
+        ]
+      ]
+    },
+    "cognition_lens": {
+      "slot": "accessory",
+      "stats": [
+        [
+          "atk",
+          29.0,
+          41.0
+        ],
+        [
+          "crit_rate",
+          0.09000000000000001,
+          0.11
+        ]
+      ]
+    },
+    "prism_resonance_pendant": {
+      "slot": "accessory",
+      "stats": []
+    },
+    "sanctum_decree_blade": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          288.0,
+          312.0
+        ],
+        [
+          "spe",
+          9.0,
+          11.0
+        ]
+      ]
+    },
+    "cathedral_water_rod": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          255.0,
+          285.0
+        ],
+        [
+          "max_hp",
+          940.0,
+          1060.0
+        ]
+      ]
+    },
+    "resonant_string_bow": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          228.0,
+          252.0
+        ],
+        [
+          "spe",
+          22.0,
+          28.0
+        ]
+      ]
+    },
+    "incandescent_vine_blade": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          288.0,
+          312.0
+        ],
+        [
+          "spe",
+          9.0,
+          11.0
+        ]
+      ]
+    },
+    "fission_spore_staff": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          258.0,
+          282.0
+        ],
+        [
+          "spe",
+          14.0,
+          18.0
+        ]
+      ]
+    },
+    "resonant_terra_maul": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          288.0,
+          312.0
+        ]
+      ]
+    },
+    "nether_void_scythe": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          258.0,
+          282.0
+        ]
+      ]
+    },
+    "silver_knight_lance": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          307.0,
+          333.0
+        ],
+        [
+          "max_hp",
+          480.0,
+          520.0
+        ]
+      ]
+    },
+    "frost_rapier": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          317.0,
+          343.0
+        ]
+      ]
+    },
+    "windcarve_dart": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          288.0,
+          312.0
+        ],
+        [
+          "spe",
+          26.0,
+          30.0
+        ]
+      ]
+    },
+    "yan_blade": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          346.0,
+          374.0
+        ],
+        [
+          "spe",
+          -7.0,
+          -3.0
+        ]
+      ]
+    },
+    "mei_lei_tachi": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          288.0,
+          312.0
+        ],
+        [
+          "spe",
+          18.0,
+          22.0
+        ]
+      ]
+    },
+    "guardian_shield_axe": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "armor",
+          283.0,
+          317.0
+        ],
+        [
+          "atk",
+          317.0,
+          343.0
+        ]
+      ]
+    },
+    "withering_javelin": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          317.0,
+          343.0
+        ],
+        [
+          "max_hp",
+          -520.0,
+          -480.0
+        ]
+      ]
+    },
+    "canyon_survey_top": {
+      "slot": "top",
+      "stats": [
+        [
+          "armor",
+          475.0,
+          565.0
+        ],
+        [
+          "max_hp",
+          855.0,
+          945.0
+        ]
+      ]
+    },
+    "canyon_survey_bottom": {
+      "slot": "bottom",
+      "stats": [
+        [
+          "armor",
+          330.0,
+          410.0
+        ],
+        [
+          "max_hp",
+          570.0,
+          630.0
+        ]
+      ]
+    },
+    "canyon_survey_gloves": {
+      "slot": "gloves",
+      "stats": [
+        [
+          "armor",
+          176.0,
+          204.0
+        ],
+        [
+          "atk",
+          72.0,
+          88.0
+        ],
+        [
+          "crit_rate",
+          0.04,
+          0.060000000000000005
+        ],
+        [
+          "max_hp",
+          280.0,
+          320.0
+        ]
+      ]
+    },
+    "canyon_survey_shoes": {
+      "slot": "shoes",
+      "stats": [
+        [
+          "armor",
+          127.0,
+          153.0
+        ],
+        [
+          "max_hp",
+          135.0,
+          165.0
+        ],
+        [
+          "spe",
+          27.0,
+          33.0
+        ]
+      ]
+    },
+    "unwritten_survey_coat": {
+      "slot": "top",
+      "stats": [
+        [
+          "armor",
+          510.0,
+          610.0
+        ],
+        [
+          "atk",
+          90.0,
+          110.0
+        ],
+        [
+          "max_hp",
+          1140.0,
+          1260.0
+        ]
+      ]
+    },
+    "off_map_survey_bottom": {
+      "slot": "bottom",
+      "stats": [
+        [
+          "armor",
+          350.0,
+          430.0
+        ],
+        [
+          "max_hp",
+          805.0,
+          895.0
+        ],
+        [
+          "spe",
+          8.0,
+          12.0
+        ]
+      ]
+    },
+    "magpie_knot": {
+      "slot": "accessory",
+      "stats": []
+    },
+    "frost_scale_top": {
+      "slot": "top",
+      "stats": [
+        [
+          "armor",
+          615.0,
+          725.0
+        ],
+        [
+          "max_hp",
+          1540.0,
+          1660.0
+        ]
+      ]
+    },
+    "frost_scale_bottom": {
+      "slot": "bottom",
+      "stats": [
+        [
+          "armor",
+          410.0,
+          490.0
+        ],
+        [
+          "max_hp",
+          1135.0,
+          1225.0
+        ]
+      ]
+    },
+    "frost_scale_gloves": {
+      "slot": "gloves",
+      "stats": [
+        [
+          "armor",
+          283.0,
+          317.0
+        ],
+        [
+          "atk",
+          62.0,
+          78.0
+        ],
+        [
+          "max_hp",
+          715.0,
+          785.0
+        ]
+      ]
+    },
+    "frost_scale_shoes": {
+      "slot": "shoes",
+      "stats": [
+        [
+          "armor",
+          146.0,
+          174.0
+        ],
+        [
+          "max_hp",
+          180.0,
+          220.0
+        ],
+        [
+          "spe",
+          23.0,
+          29.0
+        ]
+      ]
+    },
+    "frost_oath_ember_blade": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          336.0,
+          364.0
+        ],
+        [
+          "crit_rate",
+          0.09000000000000001,
+          0.11
+        ]
+      ]
+    },
+    "frost_oath_thaw_rod": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          317.0,
+          343.0
+        ],
+        [
+          "max_hp",
+          760.0,
+          840.0
+        ]
+      ]
+    },
+    "frost_oath_rime_lance": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          326.0,
+          354.0
+        ],
+        [
+          "spe",
+          19.0,
+          25.0
+        ]
+      ]
+    },
+    "ember_of_frost_funeral": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          433.0,
+          467.0
+        ],
+        [
+          "crit_rate",
+          0.11,
+          0.13
+        ]
+      ]
+    },
+    "last_breath_of_hrimni": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          442.0,
+          478.0
+        ],
+        [
+          "max_hp",
+          1140.0,
+          1260.0
+        ]
+      ]
+    },
+    "oath_of_skald": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          422.0,
+          458.0
+        ],
+        [
+          "spe",
+          23.0,
+          29.0
+        ]
+      ]
+    },
+    "frozen_teardrop_of_the_wyrm": {
+      "slot": "accessory",
+      "stats": [
+        [
+          "armor",
+          410.0,
+          490.0
+        ],
+        [
+          "max_hp",
+          1425.0,
+          1575.0
+        ]
+      ]
+    },
+    "hermit_sword": {
+      "slot": "weapon",
+      "stats": []
+    },
+    "wind_return": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          335.0,
+          365.0
+        ],
+        [
+          "crit_rate",
+          0.09000000000000001,
+          0.11
+        ],
+        [
+          "spe",
+          27.0,
+          33.0
+        ]
+      ]
+    },
+    "wind_unbound": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          420.0,
+          460.0
+        ],
+        [
+          "crit_rate",
+          0.11,
+          0.13
+        ],
+        [
+          "spe",
+          31.0,
+          37.0
+        ]
+      ]
+    },
+    "light_dawn": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          355.0,
+          385.0
+        ],
+        [
+          "max_hp",
+          665.0,
+          735.0
+        ]
+      ]
+    },
+    "light_myriad": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          430.0,
+          470.0
+        ],
+        [
+          "max_hp",
+          950.0,
+          1050.0
+        ]
+      ]
+    },
+    "dark_dusk": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          365.0,
+          395.0
+        ],
+        [
+          "crit_rate",
+          0.13999999999999999,
+          0.16
+        ]
+      ]
+    },
+    "dark_eternal": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "atk",
+          450.0,
+          490.0
+        ],
+        [
+          "crit_rate",
+          0.16999999999999998,
+          0.19
+        ]
+      ]
+    },
+    "earth_boundary": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "armor",
+          276.0,
+          324.0
+        ],
+        [
+          "atk",
+          375.0,
+          405.0
+        ]
+      ]
+    },
+    "earth_mountain": {
+      "slot": "weapon",
+      "stats": [
+        [
+          "armor",
+          368.0,
+          432.0
+        ],
+        [
+          "atk",
+          470.0,
+          510.0
+        ],
+        [
+          "max_hp",
+          760.0,
+          840.0
+        ]
+      ]
+    },
+    "field_uniform_top": {
+      "slot": "top",
+      "stats": [
+        [
+          "armor",
+          506.0,
+          594.0
+        ],
+        [
+          "max_hp",
+          1140.0,
+          1260.0
+        ]
+      ]
+    },
+    "field_uniform_bottom": {
+      "slot": "bottom",
+      "stats": [
+        [
+          "armor",
+          386.0,
+          454.0
+        ],
+        [
+          "max_hp",
+          808.0,
+          892.0
+        ]
+      ]
+    },
+    "field_uniform_gloves": {
+      "slot": "gloves",
+      "stats": [
+        [
+          "armor",
+          202.0,
+          238.0
+        ],
+        [
+          "atk",
+          47.0,
+          63.0
+        ],
+        [
+          "max_hp",
+          570.0,
+          630.0
+        ]
+      ]
+    },
+    "field_uniform_boots": {
+      "slot": "shoes",
+      "stats": [
+        [
+          "armor",
+          92.0,
+          108.0
+        ],
+        [
+          "max_hp",
+          171.0,
+          189.0
+        ],
+        [
+          "spe",
+          31.0,
+          37.0
+        ]
+      ]
+    },
+    "hermit_feather": {
+      "slot": "accessory",
+      "stats": [
+        [
+          "atk",
+          120.0,
+          140.0
+        ],
+        [
+          "max_hp",
+          460.0,
+          540.0
+        ],
+        [
+          "spe",
+          10.0,
+          14.0
+        ]
+      ]
+    }
+  },
+  "labels": {
+    "atk": {
+      "label": "攻击力",
+      "percent": false
+    },
+    "spe": {
+      "label": "速度",
+      "percent": false
+    },
+    "armor": {
+      "label": "护甲",
+      "percent": false
+    },
+    "max_hp": {
+      "label": "最大生命",
+      "percent": false
+    },
+    "crit_rate": {
+      "label": "暴击率",
+      "percent": true
+    },
+    "evasion_rate": {
+      "label": "闪避率",
+      "percent": true
+    }
+  }
+}
