@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.31.1
+// @version      0.31.2
 // @description  官网多角色桌面、背包筛选与数据云同步、跨角色物品查找、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -16,7 +16,7 @@
 (() => {
   'use strict';
   if(location.origin!=='https://game.diving-fish.com'||!location.pathname.startsWith('/aether/'))return;
-  const SCRIPT_VERSION='0.31.1';
+  const SCRIPT_VERSION='0.31.2';
   const ACTIVE='aether_active_character',CONFIG='aether-multiview-layout-v1',PREFIX='aether-multiview:',CHANNEL='aether-multiview-state',ORIGIN=location.origin;
   const ready=fn=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn,{once:true}):fn();
   const element=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node;};
@@ -129,8 +129,8 @@
     let showing=enabled();function visibility(){showing=enabled();document.documentElement.classList.toggle('amv-quality-hidden',!showing);}
     const style=element('style');style.id='aether-equipment-quality-style';style.textContent=`
       [data-amv-quality-tier=gray]{--amv-quality-color:#909bac}[data-amv-quality-tier=blue]{--amv-quality-color:#61bfff}[data-amv-quality-tier=purple]{--amv-quality-color:#bd91ff}[data-amv-quality-tier=gold]{--amv-quality-color:#ffd272}[data-amv-quality-tier=prism]{--amv-quality-color:#8ce5e5}
-      html:not(.amv-quality-hidden) :is(.bag-grid-item,.item-chip)[data-amv-quality-tier]{outline:1px solid var(--amv-quality-color);outline-offset:2px}
-      html:not(.amv-quality-hidden) :is(.bag-grid-item,.item-chip)[data-amv-quality-tier=prism]:before{content:'';position:absolute;inset:-3px;padding:1px;border-radius:inherit;background:linear-gradient(135deg,#74e0e8,#bb96ff 48%,#ffcf83);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:4}
+      html:not(.amv-quality-hidden) .bag-grid-item[data-amv-quality-tier] .bag-grid-slot,html:not(.amv-quality-hidden) .bag-grid-item[data-amv-quality-tier] .bag-grid-slot .v-icon,html:not(.amv-quality-hidden) .item-chip[data-amv-quality-tier] .item-chip-icon{color:var(--amv-quality-color)!important}
+      html:not(.amv-quality-hidden) .bag-grid-item[data-amv-quality-tier=prism] .bag-grid-slot .v-icon:before,html:not(.amv-quality-hidden) .item-chip[data-amv-quality-tier=prism] .item-chip-icon:before{background:linear-gradient(135deg,#74e0e8,#bb96ff 48%,#ffcf83);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
       html:not(.amv-quality-hidden) .decompose-footer{z-index:10}
       .amv-quality-badge,html:not(.amv-quality-hidden) .item-chip[data-amv-quality-score]:after{position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);padding:1px 4px;border-radius:4px;background:#102032;color:var(--amv-quality-color);font:600 10px/1.2 system-ui;font-variant-numeric:tabular-nums;white-space:nowrap;pointer-events:none;z-index:6}
       html:not(.amv-quality-hidden) .item-chip[data-amv-quality-score]:after{content:attr(data-amv-quality-score)}
@@ -915,7 +915,7 @@
         const action=(title,description,glyph,props)=>vnode('button',{type:'button',class:'amv-settings-action',...props},[icon(glyph),copy(title,description),text('span','\u203a',{class:'amv-settings-chevron','aria-hidden':'true'})]);
         return vnode('div',{class:'settings-body amv-settings-page','data-amv-settings-page':''},[
           text('h3','\u754c\u9762'),vnode('label',{class:'amv-settings-row'},[icon('mdi-monitor'),copy('\u9690\u85cf\u5de6\u4fa7\u7a7a\u95f2\u9ed1\u5c4f','\u591a\u89d2\u8272\u7a97\u53e3\u5171\u7528\uff0c\u5267\u60c5\u4e0e\u6218\u6597\u64ad\u653e\u4ecd\u4fdd\u7559\u3002'),vnode('input',{type:'checkbox',role:'switch',class:'amv-settings-switch','aria-label':'\u9690\u85cf\u5de6\u4fa7\u7a7a\u95f2\u9ed1\u5c4f','data-amv-hide-idle':'',checked:preferences.hideIdleCanvas,onChange:event=>{preferences={hideIdleCanvas:event.target.checked};try{localStorage.setItem(KEY,JSON.stringify(preferences));state.message='\u5df2\u4fdd\u5b58\uff0c\u6240\u6709\u6e38\u620f\u7a97\u53e3\u7acb\u5373\u751f\u6548\u3002';}catch{state.message='\u5f53\u524d\u6d4f\u89c8\u5668\u4e0d\u5141\u8bb8\u4fdd\u5b58\uff0c\u4ec5\u672c\u9875\u751f\u6548\u3002';}apply();}},null)]),
-          vnode('label',{class:'amv-settings-row'},[icon('mdi-star-four-points-outline'),copy('\u88c5\u5907\u8bcd\u6761\u8bc4\u5206','\u6309\u968f\u673a\u5c5e\u6027\u54c1\u8d28\u663e\u793a\u8bc4\u5206\u4e0e\u5f69\u8272\u8fb9\u6846\u3002'),vnode('input',{type:'checkbox',role:'switch',class:'amv-settings-switch','aria-label':'\u88c5\u5907\u8bcd\u6761\u8bc4\u5206',checked:window[Symbol.for('aether.equipment.quality')]?.enabled()!==false,onChange:event=>{window[Symbol.for('aether.equipment.quality')]?.setEnabled(event.target.checked);apply();}},null)]),
+          vnode('label',{class:'amv-settings-row'},[icon('mdi-star-four-points-outline'),copy('\u88c5\u5907\u8bcd\u6761\u8bc4\u5206','\u6309\u968f\u673a\u5c5e\u6027\u54c1\u8d28\u663e\u793a\u8bc4\u5206\u4e0e\u7269\u54c1\u7c7b\u578b\u56fe\u6807\u989c\u8272\u3002'),vnode('input',{type:'checkbox',role:'switch',class:'amv-settings-switch','aria-label':'\u88c5\u5907\u8bcd\u6761\u8bc4\u5206',checked:window[Symbol.for('aether.equipment.quality')]?.enabled()!==false,onChange:event=>{window[Symbol.for('aether.equipment.quality')]?.setEnabled(event.target.checked);apply();}},null)]),
           text('h3','\u540c\u6b65'),action('\u6570\u636e\u540c\u6b65','\u540c\u6b65\u72b6\u6001\u3001\u5f3a\u5316\u8bfb\u53d6\u4e0e\u8bbe\u5907\u8fde\u63a5\u3002','mdi-cloud-sync-outline',{'data-amv-pin-open':'','aria-label':'\u6570\u636e\u540c\u6b65',onClick:()=>dispatch('aether-pins-settings')}),
           text('h3','\u7248\u672c'),action('\u68c0\u67e5\u66f4\u65b0','AetherOS v'+SCRIPT_VERSION,'mdi-update',{'data-amv-check-update':'',id:'aether-nav-update','aria-label':'\u68c0\u67e5\u66f4\u65b0',onClick:()=>dispatch('aether-userscript-check-updates')}),
           text('p',state.message,{role:'status'})]);

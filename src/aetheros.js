@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.31.1
+// @version      0.31.2
 // @description  官网多角色桌面、背包筛选与数据云同步、跨角色物品查找、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -129,8 +129,8 @@
     let showing=enabled();function visibility(){showing=enabled();document.documentElement.classList.toggle('amv-quality-hidden',!showing);}
     const style=element('style');style.id='aether-equipment-quality-style';style.textContent=`
       [data-amv-quality-tier=gray]{--amv-quality-color:#909bac}[data-amv-quality-tier=blue]{--amv-quality-color:#61bfff}[data-amv-quality-tier=purple]{--amv-quality-color:#bd91ff}[data-amv-quality-tier=gold]{--amv-quality-color:#ffd272}[data-amv-quality-tier=prism]{--amv-quality-color:#8ce5e5}
-      html:not(.amv-quality-hidden) :is(.bag-grid-item,.item-chip)[data-amv-quality-tier]{outline:1px solid var(--amv-quality-color);outline-offset:2px}
-      html:not(.amv-quality-hidden) :is(.bag-grid-item,.item-chip)[data-amv-quality-tier=prism]:before{content:'';position:absolute;inset:-3px;padding:1px;border-radius:inherit;background:linear-gradient(135deg,#74e0e8,#bb96ff 48%,#ffcf83);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:4}
+      html:not(.amv-quality-hidden) .bag-grid-item[data-amv-quality-tier] .bag-grid-slot,html:not(.amv-quality-hidden) .bag-grid-item[data-amv-quality-tier] .bag-grid-slot .v-icon,html:not(.amv-quality-hidden) .item-chip[data-amv-quality-tier] .item-chip-icon{color:var(--amv-quality-color)!important}
+      html:not(.amv-quality-hidden) .bag-grid-item[data-amv-quality-tier=prism] .bag-grid-slot .v-icon:before,html:not(.amv-quality-hidden) .item-chip[data-amv-quality-tier=prism] .item-chip-icon:before{background:linear-gradient(135deg,#74e0e8,#bb96ff 48%,#ffcf83);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
       html:not(.amv-quality-hidden) .decompose-footer{z-index:10}
       .amv-quality-badge,html:not(.amv-quality-hidden) .item-chip[data-amv-quality-score]:after{position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);padding:1px 4px;border-radius:4px;background:#102032;color:var(--amv-quality-color);font:600 10px/1.2 system-ui;font-variant-numeric:tabular-nums;white-space:nowrap;pointer-events:none;z-index:6}
       html:not(.amv-quality-hidden) .item-chip[data-amv-quality-score]:after{content:attr(data-amv-quality-score)}
@@ -915,7 +915,7 @@
         const action=(title,description,glyph,props)=>vnode('button',{type:'button',class:'amv-settings-action',...props},[icon(glyph),copy(title,description),text('span','›',{class:'amv-settings-chevron','aria-hidden':'true'})]);
         return vnode('div',{class:'settings-body amv-settings-page','data-amv-settings-page':''},[
           text('h3','界面'),vnode('label',{class:'amv-settings-row'},[icon('mdi-monitor'),copy('隐藏左侧空闲黑屏','多角色窗口共用，剧情与战斗播放仍保留。'),vnode('input',{type:'checkbox',role:'switch',class:'amv-settings-switch','aria-label':'隐藏左侧空闲黑屏','data-amv-hide-idle':'',checked:preferences.hideIdleCanvas,onChange:event=>{preferences={hideIdleCanvas:event.target.checked};try{localStorage.setItem(KEY,JSON.stringify(preferences));state.message='已保存，所有游戏窗口立即生效。';}catch{state.message='当前浏览器不允许保存，仅本页生效。';}apply();}},null)]),
-          vnode('label',{class:'amv-settings-row'},[icon('mdi-star-four-points-outline'),copy('装备词条评分','按随机属性品质显示评分与彩色边框。'),vnode('input',{type:'checkbox',role:'switch',class:'amv-settings-switch','aria-label':'装备词条评分',checked:window[Symbol.for('aether.equipment.quality')]?.enabled()!==false,onChange:event=>{window[Symbol.for('aether.equipment.quality')]?.setEnabled(event.target.checked);apply();}},null)]),
+          vnode('label',{class:'amv-settings-row'},[icon('mdi-star-four-points-outline'),copy('装备词条评分','按随机属性品质显示评分与物品类型图标颜色。'),vnode('input',{type:'checkbox',role:'switch',class:'amv-settings-switch','aria-label':'装备词条评分',checked:window[Symbol.for('aether.equipment.quality')]?.enabled()!==false,onChange:event=>{window[Symbol.for('aether.equipment.quality')]?.setEnabled(event.target.checked);apply();}},null)]),
           text('h3','同步'),action('数据同步','同步状态、强化读取与设备连接。','mdi-cloud-sync-outline',{'data-amv-pin-open':'','aria-label':'数据同步',onClick:()=>dispatch('aether-pins-settings')}),
           text('h3','版本'),action('检查更新','AetherOS v'+SCRIPT_VERSION,'mdi-update',{'data-amv-check-update':'',id:'aether-nav-update','aria-label':'检查更新',onClick:()=>dispatch('aether-userscript-check-updates')}),
           text('p',state.message,{role:'status'})]);
