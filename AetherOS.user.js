@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.30.1
+// @version      0.30.2
 // @description  官网多角色桌面、背包筛选与数据云同步、跨角色物品查找、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -16,7 +16,7 @@
 (() => {
   'use strict';
   if(location.origin!=='https://game.diving-fish.com'||!location.pathname.startsWith('/aether/'))return;
-  const SCRIPT_VERSION='0.30.1';
+  const SCRIPT_VERSION='0.30.2';
   const ACTIVE='aether_active_character',CONFIG='aether-multiview-layout-v1',PREFIX='aether-multiview:',CHANNEL='aether-multiview-state',ORIGIN=location.origin;
   const ready=fn=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn,{once:true}):fn();
   const element=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node;};
@@ -1026,8 +1026,8 @@
       .amv-dg-toggle:hover{background:#ffffff06}.amv-dg-toggle:focus-visible{outline:2px solid #68ddd1;outline-offset:-2px}
       .amv-dg-name{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
       .amv-dg-count{font-size:12px;color:#9aabc2;white-space:nowrap}.amv-dg-count[data-selected]{color:#66dfd1}
-      .amv-dg-kind>.item-grid{padding:0 10px 10px}.amv-dg-kind>.item-grid>.item-chip{min-width:0;padding-right:1.85rem;transition:background-color .15s,border-color .15s,color .15s}
-      .amv-dg-kind>.item-grid>.item-chip>.item-chip-check{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);pointer-events:none}
+      .amv-dg-kind>.item-grid{padding:0 10px 10px}.amv-dg-kind>.item-grid>.item-chip{min-width:0;transition:background-color .15s,border-color .15s,color .15s}
+      .amv-dg-kind>.item-grid>.item-chip>.item-chip-check{position:absolute;right:-.25rem;top:-.25rem;transform:none;font-size:.85rem;line-height:1;background:#101c30;border-radius:50%;pointer-events:none}
       .amv-dg-selected{box-shadow:inset 3px 0 #5ad9ca}
       @media(max-width:600px){.amv-dg-toggle{padding:10px;gap:7px}}
     `;document.head.append(style);
