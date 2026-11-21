@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.29.2
+// @version      0.30.0
 // @description  官网多角色桌面、背包筛选与数据云同步、跨角色物品查找、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -16,7 +16,7 @@
 (() => {
   'use strict';
   if(location.origin!=='https://game.diving-fish.com'||!location.pathname.startsWith('/aether/'))return;
-  const SCRIPT_VERSION='0.29.2';
+  const SCRIPT_VERSION='0.30.0';
   const ACTIVE='aether_active_character',CONFIG='aether-multiview-layout-v1',PREFIX='aether-multiview:',CHANNEL='aether-multiview-state',ORIGIN=location.origin;
   const ready=fn=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn,{once:true}):fn();
   const element=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node;};
@@ -1015,6 +1015,74 @@
     function dispose(){disposed=true;if(run)run.cancelled=true;unsubscribe();panel.removeEventListener('click',block,true);box.remove();historyBox.remove();progress.remove();style.remove();notes.forEach(node=>node.remove());panel.classList.remove('amv-voucher-running','amv-reinforce-assistant');}
     return {capture,sync,dispose};
   }
+  function initDecomposeGroups(){
+    const KEY=Symbol.for('aether.decompose.groups');if(window[KEY])return;window[KEY]=true;
+    const root=document.getElementById('app');if(!root)return;const MARK=Symbol('decompose.groups'),views=new Set();
+    const style=element('style');style.id='aether-decompose-groups-style';style.textContent=`
+      .rarity-panels .rarity-panel-title{width:100%}
+      .amv-dg-list{display:flex;flex-direction:column;gap:8px;min-width:0}
+      .amv-dg-kind{border:1px solid #ffffff15;border-radius:8px;background:#ffffff03;min-width:0;overflow:hidden}
+      .amv-dg-toggle{display:flex;align-items:center;gap:9px;width:100%;min-height:44px;padding:10px 12px;box-sizing:border-box;border:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer}
+      .amv-dg-toggle:hover{background:#ffffff06}.amv-dg-toggle:focus-visible{outline:2px solid #68ddd1;outline-offset:-2px}
+      .amv-dg-name{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      .amv-dg-count{font-size:12px;color:#9aabc2;white-space:nowrap}.amv-dg-count[data-selected]{color:#66dfd1}
+      .amv-dg-kind>.item-grid{padding:0 10px 10px}.amv-dg-kind>.item-grid>.item-chip{min-width:0}
+      .amv-dg-selected{box-shadow:inset 3px 0 #5ad9ca}
+      @media(max-width:600px){.amv-dg-toggle{padding:10px;gap:7px}}
+    `;document.head.append(style);
+    function type(node){return node?.type?.name||node?.type?.__name||'';}
+    function hasClass(node,name){const value=node?.props?.class;return typeof value==='string'?value.split(/\s+/).includes(name):Array.isArray(value)?value.some(value=>typeof value==='string'&&value.split(/\s+/).includes(name)):false;}
+    function dom(tag,props,children,scopeId,key=null){return {__v_isVNode:true,__v_skip:true,type:tag,props,key,ref:null,scopeId,slotScopeIds:null,children,component:null,suspense:null,ssContent:null,ssFallback:null,dirs:null,transition:null,el:null,anchor:null,target:null,targetStart:null,targetAnchor:null,staticCount:0,shapeFlag:1|(Array.isArray(children)?16:typeof children==='string'?8:0),patchFlag:0,dynamicProps:null,dynamicChildren:null,appContext:null,ctx:null};}
+    function groupFor(view,key){let group=view.groups.get(key);if(!group){group={open:new Set(),items:[],kinds:[],vnode:null};view.groups.set(key,group);}return group;}
+    function grouped(result,view,group,key){
+      let grid=null;function find(node){if(!node||grid)return;if(Array.isArray(node)){node.forEach(find);return;}if(hasClass(node,'item-grid')){grid=node;return;}if(Array.isArray(node.children))node.children.forEach(find);}find(result);
+      const fragment=grid?.children?.find(node=>Array.isArray(node?.children)&&node.patchFlag===128),all=fragment?.children;
+      if(!Array.isArray(all)||all.some(node=>type(node)!=='ItemChip'||typeof node.props?.item?.uuid!=='string'))return result;
+      const items=all.map(node=>node.props.item);
+      if(items.length!==group.items.length||items.some((item,index)=>item!==group.items[index])){
+        const kinds=new Map();for(let index=0;index<items.length;index++){const item=items[index],id=typeof item.item_id==='string'&&item.item_id?item.item_id:JSON.stringify([item.slot||'',item.name||'',item.rarity]);let kind=kinds.get(id);if(!kind){kind={id,item,indices:[]};kinds.set(id,kind);}kind.indices.push(index);}
+        group.items=items;group.kinds=[...kinds.values()];for(const id of group.open)if(!kinds.has(id))group.open.delete(id);
+      }
+      const scope=grid.scopeId,children=[];
+      for(const kind of group.kinds){
+        const selected=kind.indices.reduce((sum,index)=>sum+Number(!!all[index].props.selected),0),expanded=group.open.has(kind.id),item=kind.item,color=({0:'#9eb4ff',1:'#d4d4d4',2:'#6fcf97',3:'#56ccf2',4:'#bb6bd9',5:'#f2994a'})[item.rarity]||'#9eb4ff';
+        const header=dom('button',{type:'button',class:'amv-dg-toggle','aria-expanded':String(expanded),'data-amv-decompose-kind':kind.id,onClick:()=>{if(group.open.has(kind.id))group.open.delete(kind.id);else group.open.add(kind.id);group.vnode?.component?.proxy?.$forceUpdate();}},[
+          dom('i',{class:'mdi '+(GEAR_SLOTS[item.slot]?.[1]||'mdi-sword'),style:{color},'aria-hidden':'true'},null,scope),
+          dom('span',{class:'amv-dg-name',style:{color}},item.name||item.item_id||'\u672a\u547d\u540d\u88c5\u5907',scope),
+          dom('span',{class:'amv-dg-count',...(selected?{'data-selected':''}:{})},(selected?'\u5df2\u9009 '+selected+' / ':'')+kind.indices.length+' \u4ef6',scope),
+          dom('i',{class:'mdi '+(expanded?'mdi-chevron-up':'mdi-chevron-down'),'aria-hidden':'true'},null,scope)
+        ],scope);
+        const content=[header];if(expanded)content.push(dom('div',{class:'item-grid','data-amv-decompose-items':kind.id},kind.indices.map(index=>({...all[index],props:{...all[index].props,'data-amv-decompose-uuid':all[index].props.item.uuid}})),scope));
+        children.push(dom('section',{class:'amv-dg-kind'+(selected?' amv-dg-selected':''),'data-amv-decompose-kind-card':kind.id},content,scope,kind.id));
+      }
+      grid.props={...grid.props,class:'amv-dg-list','data-amv-decompose-rarity':key};grid.children=children;grid.dynamicChildren=null;return result;
+    }
+    function enhance(node,view,key='root'){
+      if(!node||typeof node!=='object')return node;if(Array.isArray(node))return node.map(value=>enhance(value,view,key));
+      const name=type(node),children=node.children,groupKey=name==='VExpansionPanel'?String(node.key):key;
+      if(['VExpansionPanels','VExpansionPanel','VExpansionPanelText'].includes(name)&&children&&typeof children==='object'&&!Array.isArray(children)&&typeof children.default==='function'){
+        const original=children.default;let next,props=node.props;
+        if(name==='VExpansionPanels')props={...props,modelValue:view.stars,'onUpdate:modelValue':value=>{view.stars=Array.isArray(value)?value.map(String):[];view.instance.proxy?.$forceUpdate();}};
+        if(name==='VExpansionPanelText'){
+          const group=groupFor(view,groupKey);next=function(...args){if(!view.stars.includes(groupKey))return [];const result=original.apply(this,args);try{return grouped(result,view,group,groupKey);}catch{return result;}};
+          Object.assign(next,original);const copy={...node,children:{...children,default:next},dynamicChildren:null};group.vnode=copy;return copy;
+        }
+        next=function(...args){return enhance(original.apply(this,args),view,groupKey);};Object.assign(next,original);return {...node,props,children:{...children,default:next},dynamicChildren:null};
+      }
+      if(Array.isArray(children))return {...node,children:children.map(value=>enhance(value,view,groupKey)),dynamicChildren:null};return node;
+    }
+    function attach(instance){
+      if(instance[MARK]||typeof instance.render!=='function')return;const original=instance.render,view={instance,panel:instance.subTree?.el,stars:[],groups:new Map()};instance[MARK]=view;views.add(view);
+      instance.render=function(...args){const result=original.apply(this,args);try{return enhance(result,view);}catch{return result;}};instance.proxy?.$forceUpdate();
+    }
+    function discover(){
+      for(const view of views)if(view.instance.isUnmounted)views.delete(view);
+      function walk(node){if(!node||typeof node!=='object')return;const instance=node.component,name=instance?.type?.__name||instance?.type?.name;if(name==='DecomposerPanel'){attach(instance);return;}if(['ItemChip','BackpackPanel','ReinforcerPanel'].includes(name))return;if(instance)walk(instance.subTree);else if(node.suspense)walk(node.suspense.activeBranch);else if(Array.isArray(node.children))node.children.forEach(walk);}
+      walk(root.__vue_app__?._container?._vnode);
+    }
+    new MutationObserver(records=>{for(const record of records){if([...views].some(view=>view.panel?.contains(record.target)))continue;for(const node of record.addedNodes)if(node.nodeType===1&&(node.matches('.feature-panel')||node.querySelector('.feature-panel'))){discover();return;}}}).observe(root,{childList:true,subtree:true});discover();
+  }
+
   function initReinforceFilters(){
     const guard=Symbol.for('aether.reinforce.filters');if(window[guard])return;window[guard]=true;
     const root=document.getElementById('app');if(!root)return;const bridge=createReinforceBridge(),controllers=new Set(),PAGE_SIZE=30,elements={fire:['\u706b','mdi-fire','#ff7a5c'],water:['\u6c34','mdi-water','#62d1ff'],lightning:['\u96f7','mdi-lightning-bolt','#ffd451'],earth:['\u5730','mdi-terrain','#9bd36e'],wind:['\u98ce','mdi-weather-windy','#6eeedc'],light:['\u5149','mdi-white-balance-sunny','#f9ffb5'],dark:['\u6697','mdi-moon-waning-crescent','#a98bff'],none:['\u672a\u6807\u6ce8','mdi-circle-outline','#a3acbb']},rarities={1:'#9ea3b0',2:'#6ddc8e',3:'#5db8ff',4:'#c47aff',5:'#ffc84a',6:'#ff5b5b'};
@@ -1698,7 +1766,7 @@
       prototype.removeItem=function(name){if(this===storage&&String(name)===ACTIVE){character='';try{set.call(storage,key,'""');}catch{}notify();return;}return remove.call(this,name);};
       const activate=()=>window.parent.postMessage({type:CHANNEL,id:context.id,activate:true},ORIGIN);document.addEventListener('pointerdown',activate,true);document.addEventListener('focusin',activate,true);document.addEventListener('keydown',event=>{if(event.key==='Escape')window.parent.postMessage({type:CHANNEL,id:context.id,dismiss:true},ORIGIN);},true);
       set.call(storage,key,JSON.stringify(character));if(storage.getItem(ACTIVE)!==character)throw new Error('\u89d2\u8272\u9694\u79bb\u672a\u751f\u6548');notify();
-      ready(initEquipmentHoverCompare);ready(initSpectrumLevelTooltips);ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initOfficialRoleNotes);ready(initSupportPicker);ready(initBackpackFilters);ready(initReinforceFilters);ready(initCustomLoadouts);
+      ready(initEquipmentHoverCompare);ready(initSpectrumLevelTooltips);ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initOfficialRoleNotes);ready(initSupportPicker);ready(initBackpackFilters);ready(initReinforceFilters);ready(initDecomposeGroups);ready(initCustomLoadouts);
     }catch{
       window.stop();window.parent.postMessage({type:CHANNEL,id:context.id,error:true},ORIGIN);
       ready(()=>{const text=element('div','\u89d2\u8272\u9694\u79bb\u672a\u5c31\u7eea\uff0c\u8bf7\u5173\u95ed\u6b64\u533a\u57df\u540e\u91cd\u5f00\u3002');text.style.cssText='position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;padding:24px;background:#111b29;color:#e4edf5;font:14px sans-serif';document.body.append(text);});
@@ -1706,7 +1774,7 @@
     return;
   }
   if(window.top!==window)return;
-  ready(initEquipmentHoverCompare);ready(initBackpackFilters);ready(initReinforceFilters);
+  ready(initEquipmentHoverCompare);ready(initBackpackFilters);ready(initReinforceFilters);ready(initDecomposeGroups);
   ready(initSpectrumLevelTooltips);ready(initPluginSettings);ready(initOfficialRolePreferences);ready(initOfficialRoleNotes);ready(initSupportPicker);ready(initCustomLoadouts);
   ready(initScriptUpdates);
   ready(initScriptNavigation);
