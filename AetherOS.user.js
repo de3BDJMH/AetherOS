@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.31.3
+// @version      0.32.0
 // @description  官网多角色桌面、背包筛选与数据云同步、跨角色物品查找、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -16,7 +16,7 @@
 (() => {
   'use strict';
   if(location.origin!=='https://game.diving-fish.com'||!location.pathname.startsWith('/aether/'))return;
-  const SCRIPT_VERSION='0.31.3';
+  const SCRIPT_VERSION='0.32.0';
   const ACTIVE='aether_active_character',CONFIG='aether-multiview-layout-v1',PREFIX='aether-multiview:',CHANNEL='aether-multiview-state',ORIGIN=location.origin;
   const ready=fn=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn,{once:true}):fn();
   const element=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node;};
@@ -1171,6 +1171,51 @@
     let scheduled=false;function syncAll(){scheduled=false;for(const controller of controllers)if(controller.instance.isUnmounted||!controller.panel.isConnected){controller.dispose();controllers.delete(controller);}if(root.querySelector('.reinforce-layout')&&[...root.querySelectorAll('.reinforce-layout')].some(layout=>![...controllers].some(controller=>controller.panel.contains(layout))))walk(root.__vue_app__?._container?._vnode,vnode=>{const instance=vnode.component,panel=instance?.subTree?.el;if(instance?.type?.__name==='ReinforcerPanel'&&panel?.nodeType===1&&![...controllers].some(controller=>controller.instance===instance))attach(instance,panel);},true);controllers.forEach(controller=>controller.sync());}
     function queueSync(){if(!scheduled){scheduled=true;requestAnimationFrame(syncAll);}}new MutationObserver(records=>{if(records.some(record=>{const target=record.target.nodeType===1?record.target:null;if(target?.closest('.amv-reinforce-tools,.amv-reinforce-pages'))return false;if(target?.closest('.reinforce-layout'))return true;return [...record.addedNodes,...record.removedNodes].some(node=>node.nodeType===1&&(node.matches('.reinforce-layout')||node.querySelector('.reinforce-layout')));}))queueSync();}).observe(root,{childList:true,subtree:true});window.addEventListener('storage',event=>{for(const controller of controllers)if(event.key===null||event.key===controller.pinKey)controller.reloadPins();});window.addEventListener('aether-pin-change',event=>{for(const controller of controllers)if(controller.pinKey==='aether-bag-pins-v1:'+event.detail?.character)controller.reloadPins();});syncAll();
   }
+  function attachEquipmentToolPickers(tree){
+    const MARK=Symbol.for('aether.equipment.tool.picker');
+    function type(node){return node?.type?.__name||node?.type?.name||'';}
+    function has(node,name){const value=node?.props?.class;return typeof value==='string'?value.split(/\s+/).includes(name):Array.isArray(value)?value.some(part=>typeof part==='string'?part.split(/\s+/).includes(name):part&&typeof part==='object'&&part[name]):!!value&&typeof value==='object'&&!!value[name];}
+    function dom(tag,props,children,scopeId,key=null){return {__v_isVNode:true,__v_skip:true,type:tag,props,key,ref:null,scopeId,slotScopeIds:null,children,component:null,suspense:null,ssContent:null,ssFallback:null,dirs:null,transition:null,el:null,anchor:null,target:null,targetStart:null,targetAnchor:null,staticCount:0,shapeFlag:1|(Array.isArray(children)?16:typeof children==='string'?8:0),patchFlag:0,dynamicProps:null,dynamicChildren:null,appContext:null,ctx:null};}
+    function force(view){if(!view.instance.isUnmounted)view.instance.proxy?.$forceUpdate();}
+    function list(node,view,visible,side){
+      const fragment=node.children?.find(child=>Array.isArray(child?.children)&&child.patchFlag===128),rows=fragment?.children;if(!Array.isArray(rows))return node;
+      if(!view.open||!visible)return {...node,children:[],dynamicChildren:null};
+      const entries=[];for(const row of rows){const chip=Array.isArray(row.children)&&row.children.find(child=>type(child)==='ItemChip'),item=chip?.props?.item;if(!(has(row,'rf-list-row')||has(row,'tm-list-row'))||typeof row.key!=='string'||typeof item?.uuid!=='string')return node;entries.push({row,chip,item});}
+      const mode=side==='source'||side==='target'?side:'refine';let state=view.states.get(mode);if(!state){state={query:'',page:0,stars:new Set(),slots:new Set()};view.states.set(mode,state);}
+      const query=state.query.trim().toLocaleLowerCase(),matched=entries.filter(({item})=>(!query||String(item.name||'').toLocaleLowerCase().includes(query)||item.uuid.toLocaleLowerCase().includes(query))&&(!state.stars.size||state.stars.has(item.rarity??0))&&(!state.slots.size||state.slots.has(equipmentSlot(item)))),pages=Math.max(1,Math.ceil(matched.length/30));state.page=Math.max(0,Math.min(state.page,pages-1));
+      const scope=node.scopeId,input=dom('input',{type:'search',class:'amv-tool-query',value:state.query,placeholder:'\u641c\u7d22\u88c5\u5907\u540d\u79f0\u6216\u7f16\u53f7','aria-label':'\u641c\u7d22\u53ef\u9009\u88c5\u5907',onInput:event=>{state.query=event.target.value.slice(0,200);state.page=0;clearTimeout(view.timer);view.timer=setTimeout(()=>force(view),120);}},null,scope,'query');
+      function toggle(set,value){if(set.has(value))set.delete(value);else set.add(value);state.page=0;force(view);}
+      const slots=[...new Set(entries.map(({item})=>equipmentSlot(item)))],slotButtons=slots.map(slot=>dom('button',{type:'button',class:'amv-tool-chip','data-amv-tool-slot':slot,'aria-pressed':String(state.slots.has(slot)),onClick:()=>toggle(state.slots,slot)},[dom('i',{class:'mdi '+GEAR_SLOTS[slot][1],'aria-hidden':'true'},null,scope),dom('span',null,GEAR_SLOTS[slot][0],scope)],scope,slot));
+      const stars=[...new Set(entries.map(({item})=>item.rarity??0))].sort((a,b)=>a-b),starButtons=stars.map(star=>dom('button',{type:'button',class:'amv-tool-chip','data-amv-tool-star':star,'aria-pressed':String(state.stars.has(star)),style:{color:({1:'#9ea3b0',2:'#6ddc8e',3:'#5db8ff',4:'#c47aff',5:'#ffc84a',6:'#ff5b5b'})[star]||'#9ea3b0'},onClick:()=>toggle(state.stars,star)},star>0?star+'\u2605':'\u672a\u6807\u661f',scope,String(star)));
+      const tools=dom('div',{class:'amv-tool-controls'},[input,dom('div',{class:'amv-tool-chips'},slotButtons,scope),dom('div',{class:'amv-tool-chips'},[...starButtons,dom('button',{type:'button',class:'amv-tool-chip','data-amv-tool-clear':'',onClick:()=>{state.query='';state.page=0;state.stars.clear();state.slots.clear();force(view);}},'\u6e05\u7a7a',scope,'clear')],scope),dom('small',{class:'amv-tool-count'},'\u7b26\u5408 '+matched.length+' / '+entries.length+' \u4ef6',scope)],scope,'tools');
+      const visibleRows=matched.slice(state.page*30,(state.page+1)*30).map(({row,chip,item})=>{window[Symbol.for('aether.equipment.quality')]?.vnode(chip,item);return {...row,props:{...row.props,'data-amv-tool-uuid':item.uuid,'data-amv-tool-key':String(row.key)}};});
+      if(!visibleRows.length)visibleRows.push(dom('p',{class:'amv-tool-empty'},'\u672a\u627e\u5230\u5339\u914d\u7684\u88c5\u5907',scope,'empty'));
+      const controls=dom('div',{class:'amv-tool-pages'},[dom('button',{type:'button','data-amv-tool-prev':'',disabled:state.page===0,onClick:()=>{state.page--;force(view);}},'\u4e0a\u4e00\u9875',scope),dom('span',{'data-amv-tool-page':''},(state.page+1)+' / '+pages,scope),dom('button',{type:'button','data-amv-tool-next':'',disabled:state.page>=pages-1,onClick:()=>{state.page++;force(view);}},'\u4e0b\u4e00\u9875',scope)],scope,'pages');
+      return dom('div',{class:'amv-tool-picker','data-amv-tool-mode':mode},[tools,{...node,children:visibleRows,dynamicChildren:null},controls],scope,'picker-'+mode);
+    }
+    function enhance(node,view,visible=true,side=null){
+      if(!node||typeof node!=='object')return node;if(Array.isArray(node))return node.map(child=>enhance(child,view,visible,side));
+      for(const binding of node.dirs||[])if(binding.dir&&typeof binding.dir==='object'&&'beforeMount'in binding.dir&&'updated'in binding.dir){visible=visible&&!!binding.value;if(binding.value==='source'||binding.value==='target')side=binding.value;}
+      if(has(node,'rf-list')||has(node,'tm-list'))return list(node,view,visible,side);
+      if(type(node)==='ItemChip'&&visible&&node.props?.item)window[Symbol.for('aether.equipment.quality')]?.vnode(node,node.props.item);
+      const children=node.children;if(children&&typeof children==='object'&&!Array.isArray(children)&&typeof children.default==='function'){
+        const original=children.default,next=function(...args){return enhance(original.apply(this,args),view,visible,side);};Object.assign(next,original);return {...node,children:{...children,default:next,_:2},patchFlag:(node.patchFlag>0?node.patchFlag:0)|1024,dynamicChildren:null};
+      }
+      if(Array.isArray(children))return {...node,children:children.map(child=>enhance(child,view,visible,side)),dynamicChildren:null};return node;
+    }
+    function attach(instance){
+      if(instance[MARK]||typeof instance.render!=='function')return;const original=instance.render,view={instance,open:false,states:new Map(),timer:null};instance[MARK]=view;
+      instance.render=function(...args){const open=instance.props.modelValue===true;if(open&&!view.open)view.states.clear();if(!open)clearTimeout(view.timer);view.open=open;const result=original.apply(this,args);try{return enhance(result,view);}catch{return result;}};
+      force(view);if(!document.getElementById('aether-tool-picker-style')){const style=element('style');style.id='aether-tool-picker-style';style.textContent=`
+        .amv-tool-picker{display:flex;flex-direction:column;gap:8px;min-width:0}.amv-tool-controls{display:flex;flex-direction:column;gap:6px}.amv-tool-query{width:100%;box-sizing:border-box;padding:7px 9px;border:1px solid #ffffff20;border-radius:6px;background:#112033;color:#e6ecff;font:inherit;font-size:12px}
+        .amv-tool-chips{display:flex;flex-wrap:wrap;gap:4px}.amv-tool-chip,.amv-tool-pages button{display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:3px 7px;border:1px solid #ffffff1b;border-radius:5px;background:#ffffff04;color:inherit;font:inherit;font-size:11px;cursor:pointer}.amv-tool-chip[aria-pressed=true]{border-color:#7be1d1;background:#74d7ce12}.amv-tool-count,.amv-tool-pages{font-size:11px;color:#a7b7cc}.amv-tool-pages{display:flex;align-items:center;justify-content:space-between;gap:8px}.amv-tool-pages button:disabled{opacity:.35;cursor:default}.amv-tool-empty{text-align:center;color:#9aadc5;font-size:12px}
+        .amv-tool-query:focus-visible,.amv-tool-chip:focus-visible,.amv-tool-pages button:focus-visible{outline:2px solid #87d9c3;outline-offset:2px}
+      `;document.head.append(style);}
+    }
+    function walk(node){if(!node||typeof node!=='object')return;const instance=node.component,name=type(node);if(instance&&['RefinerDialog','TransferMapperDialog'].includes(name)){attach(instance);return;}if(['ItemChip','VTooltip'].includes(name))return;if(instance)walk(instance.subTree);else if(node.suspense)walk(node.suspense.activeBranch);else if(Array.isArray(node.children))node.children.forEach(walk);}
+    walk(tree);
+  }
+
   function initBackpackFilters(){
     const guard=Symbol.for('aether.backpack.filters');if(window[guard])return;window[guard]=true;
     const root=document.getElementById('app');if(!root)return;
@@ -1185,6 +1230,7 @@
     function character(){try{return sessionStorage.getItem(ACTIVE)||'current';}catch{return 'current';}}
     function load(key,fallback){try{const value=JSON.parse(localStorage.getItem(key)||'null');return value??fallback;}catch{return fallback;}}
     function attach(instance,bag){
+      attachEquipmentToolPickers(instance.subTree);
       const props=instance.props,keys=['backpackEquipment','backpackConsumables'];if(!props||keys.some(key=>!Array.isArray(props[key])||!Object.getOwnPropertyDescriptor(props,key)?.configurable||Object.getOwnPropertyDescriptor(props,key)?.get))return;
       const who=character(),pinKey='aether-bag-pins-v1:'+who,viewKey='aether-bag-view-v1:'+who,stored=load(viewKey,{}),sources=new Map(keys.map(key=>[key,props[key]])),old=new Map(keys.map(key=>[key,Object.getOwnPropertyDescriptor(props,key)])),state={enabled:true,failed:false,pinMode:false,expanded:stored.expanded!==false,kind:'equipment',selling:false};let pins=load(pinKey,[]);pins=new Set(Array.isArray(pins)?pins.filter(value=>typeof value==='string').slice(0,2000):[]);
       const views={};for(const kind of ['equipment','consumables']){const value=stored[kind]||{};views[kind]={q:typeof value.q==='string'?value.q.slice(0,200):'',stars:new Set(Array.isArray(value.stars)?value.stars.filter(Number.isFinite):[]),elements:new Set(Array.isArray(value.elements)?value.elements.filter(key=>Object.hasOwn(elements,key)):[]),slots:new Set(Array.isArray(value.slots)?value.slots.filter(key=>Object.hasOwn(GEAR_SLOTS,key)):[]),type:['skill','prism','other'].includes(value.type)?value.type:'all'};}
