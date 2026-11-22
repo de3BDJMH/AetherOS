@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Aether 多角色同屏
 // @namespace    mugen.aether.multiview
-// @version      0.32.0
+// @version      0.32.1
 // @description  官网多角色桌面、背包筛选与数据云同步、跨角色物品查找、强化预测及手动启动的连续用券。
 // @match        https://game.diving-fish.com/aether/*
 // @run-at       document-start
@@ -16,7 +16,7 @@
 (() => {
   'use strict';
   if(location.origin!=='https://game.diving-fish.com'||!location.pathname.startsWith('/aether/'))return;
-  const SCRIPT_VERSION='0.32.0';
+  const SCRIPT_VERSION='0.32.1';
   const ACTIVE='aether_active_character',CONFIG='aether-multiview-layout-v1',PREFIX='aether-multiview:',CHANNEL='aether-multiview-state',ORIGIN=location.origin;
   const ready=fn=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn,{once:true}):fn();
   const element=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node;};
@@ -280,11 +280,18 @@
     }
     const states=new WeakMap();
     function sync(tip){
+      // Retained Vuetify tooltips are mounted while closed. Ignore them without
+      // forcing layout or resolving inventory/VNode ownership.
+      if(tip.closest('.v-overlay:not(.v-overlay--active)'))return;
+      for(let node=tip;node&&node!==document.body;node=node.parentElement)if(node.hidden||node.style.display==='none'||node.getAttribute('aria-hidden')==='true')return;
       const qualityItem=window[Symbol.for('aether.equipment.quality')]?.tooltip(tip);
       if(tip.matches('.item-sheet'))window[Symbol.for('aether.equipment.hover.compare')]?.sheet(tip);
       const host=tip.matches('.item-sheet')?tip.querySelector('.item-sheet__info'):tip.matches('.equip-tooltip-surface')?tip.querySelector('.equip-tooltip'):tip;
       if(!host)return;
-      const value=(qualityItem||window[Symbol.for('aether.equipment.hover.compare')]?.owns(tip))?null:owner(tip)||byTitle(tip),previous=states.get(tip),signature=value?value.id+':'+value.level:'';
+      // Native ItemChip declares equipment even when it has no random-stat score.
+      // Do not search the whole app for a spectrum owner on every equipment hover.
+      const equipment=tip.matches('.item-chip-tooltip')&&tip.querySelector('.tooltip-kind')?.textContent.trim()==='\u88c5\u5907';
+      const value=(equipment||qualityItem||window[Symbol.for('aether.equipment.hover.compare')]?.owns(tip))?null:owner(tip)||byTitle(tip),previous=states.get(tip),signature=value?value.id+':'+value.level:'';
       if(previous?.signature===signature&&(!value||tip.querySelector('[data-amv-spectrum-levels]')))return;
       host.querySelector(':scope > [data-amv-spectrum-levels]')?.remove();
       if(!value){if(previous){tip.classList.remove('amv-spectrum-tip');if(tip.matches('.item-chip-tooltip'))tip.setAttribute('style',previous.style);}states.delete(tip);return;}
@@ -299,11 +306,11 @@
     function schedule(node){if(!node||node.nodeType!==1)return;const parent=node.closest(supported);if(parent)pending.add(parent);if(node.matches(supported))pending.add(node);node.querySelectorAll(supported).forEach(tip=>pending.add(tip));if(pending.size&&!scheduled){scheduled=true;requestAnimationFrame(()=>{scheduled=false;for(const tip of pending)if(tip.isConnected)sync(tip);pending.clear();});}}
     new MutationObserver(records=>{
       window[Symbol.for('aether.equipment.hover.compare')]?.pruneSheet();
-      // ItemChip teleports append several comments per item directly to body.
-      // Scan each mutation root once; a body scan already includes added subtrees.
+      // Body-level teleport comments do not change every cached tooltip.
+      // Revisit only a changed tooltip or an added/activated subtree.
       const roots=new Set();
-      for(const record of records){const target=record.target.nodeType===1?record.target:record.target.parentElement;if(target)roots.add(target);for(const node of record.addedNodes)if(node.nodeType===1)roots.add(node);}
-      if(roots.has(document.body))schedule(document.body);else for(const node of roots)schedule(node);
+      for(const record of records){const target=record.target.nodeType===1?record.target:record.target.parentElement;if(target){const tip=target.closest(supported);if(tip)roots.add(tip);else if(record.type==='attributes'&&target!==document.body)roots.add(target);}for(const node of record.addedNodes)if(node.nodeType===1)roots.add(node);}
+      for(const node of roots)schedule(node);
     }).observe(document.body,{childList:true,characterData:true,attributes:true,attributeFilter:['class'],subtree:true});
     schedule(document.body);
   }
